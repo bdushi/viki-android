@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Viki</string>
+    <string name="new_order">Porosi e Re</string>
+    <string name="new_request">Kerkes e Re</string>
+    <string name="visit_your_profile">Shiko profilin</string>
+    <string name="share">Shpernda</string>
+    <string name="settings">Cilesimet</string>
+    <string name="properties">Properties</string>
+    <string name="map_view">Map View</string>
+</resources>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Viki</string>
+    <string name="new_order">New Order</string>
+    <string name="new_request">New Request</string>
+    <string name="visit_your_profile">Visit your profile</string>
+    <string name="share">Share</string>
+    <string name="settings">Settings</string>
+    <string name="properties">Properties</string>
+    <string name="map_view">Map View</string>
+</resources>
