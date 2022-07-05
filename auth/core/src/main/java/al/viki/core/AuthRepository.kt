@@ -4,6 +4,7 @@ import al.viki.core.remote.AuthRemoteDataSource
 import al.viki.core.local.AuthLocalDataSource
 import al.viki.core.request.model.AuthRequest
 import al.viki.core.response.model.AuthResponse
+import al.bruno.core.Result
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -14,20 +15,20 @@ class AuthRepository @Inject constructor(
     private val authLocalDataSource: AuthLocalDataSource
 ) {
 
-    suspend fun auth(authRequest: AuthRequest): al.bruno.core.Result<AuthResponse> {
+    suspend fun auth(authRequest: AuthRequest): Result<AuthResponse> {
         return try {
             val response = authRemoteDataSource.auth(authRequest)
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 authLocalDataSource.token(body.accessToken)
-                al.bruno.core.Result.Success(body)
+                Result.Success(body)
             } else if (response.code() == 401) {
-                al.bruno.core.Result.Unauthorized
+                Result.Unauthorized
             } else {
-                al.bruno.core.Result.Error(response.message())
+                Result.Error(response.message())
             }
         } catch (ex: Exception) {
-            al.bruno.core.Result.Error(ex.message)
+            Result.Error(ex.message)
         }
     }
 

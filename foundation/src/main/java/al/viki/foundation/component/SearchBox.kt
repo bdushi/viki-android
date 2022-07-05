@@ -26,7 +26,7 @@ import androidx.compose.ui.window.SecureFlagPolicy
 @Composable
 fun SearchBox(
     searchMenu: SearchMenu,
-    addLeave: (String) -> String
+    menuCallback: (Int) -> Unit
 ) {
     var searchValue by remember { mutableStateOf("") }
     var showMenu by remember { mutableStateOf(false) }
@@ -105,7 +105,7 @@ fun SearchBox(
                                 )
                             }
                         }, onClick = {
-
+                            menuCallback.invoke(index)
                         }, leadingIcon = {
                             Icon(
                                 painterResource(id = element.icon),

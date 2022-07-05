@@ -10,6 +10,8 @@ import al.viki.ui.theme.VikiTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun Viki() {
+fun Viki(vikiViewModel: VikiViewModel) {
     VikiTheme {
         Column(
             horizontalAlignment = Alignment.Start,
@@ -64,8 +66,12 @@ fun Viki() {
                         subTitle = R.string.visit_your_profile
                     )
                 ),
-                addLeave = {
-                    it
+                menuCallback = {
+                    when(it) {
+                        0 -> {
+
+                        }
+                    }
                 })
             Header(
                 al.viki.foundation.ui.model.Header(
@@ -75,14 +81,7 @@ fun Viki() {
                     R.string.properties
                 )
             )
+            PropertyPagingItemsList(vikiViewModel.pagedProperties)
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    VikiTheme {
-        Viki()
     }
 }
