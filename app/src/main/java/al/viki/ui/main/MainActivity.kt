@@ -2,8 +2,9 @@ package al.viki.ui.main
 
 import al.bruno.core.interceptor.AuthInterceptor
 import al.viki.authentication.AuthenticationActivity
-import al.viki.ui.home.Viki
+import al.viki.ui.viki.Viki
 import al.viki.ui.home.VikiViewModel
+import al.viki.ui.property.PropertyViewModel
 import al.viki.ui.theme.VikiTheme
 import android.content.Intent
 import android.os.Bundle
@@ -13,9 +14,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -26,6 +25,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
     private val mainViewModel: MainViewModel by viewModels()
     private val vikiViewModel: VikiViewModel by viewModels()
+    private val propertyViewModel: PropertyViewModel by viewModels()
 
     @Inject
     lateinit var authInterceptor: AuthInterceptor
@@ -43,7 +43,14 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.fillMaxSize(),
                                 color = MaterialTheme.colorScheme.background
                             ) {
-                                Viki(vikiViewModel)
+                                Viki(
+                                    vikiViewModel = vikiViewModel,
+                                    propertyViewModel = propertyViewModel,
+                                    logOut = {
+                                        startActivity(Intent(this@MainActivity, AuthenticationActivity::class.java))
+                                        finish()
+                                    }
+                                )
                             }
                         }
                     }

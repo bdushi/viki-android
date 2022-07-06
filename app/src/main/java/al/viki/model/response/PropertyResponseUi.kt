@@ -1,4 +1,4 @@
-package al.viki.ui.model.response
+package al.viki.model.response
 
 data class PropertyResponseUi(
     val id: Long,

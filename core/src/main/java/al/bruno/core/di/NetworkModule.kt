@@ -1,6 +1,7 @@
 package al.bruno.core.di
 
 import al.bruno.core.BuildConfig
+import al.bruno.core.data.source.remote.service.CityService
 import al.bruno.core.data.source.remote.service.PropertyService
 import al.bruno.core.interceptor.AuthInterceptor
 import al.bruno.core.interceptor.ErrorHandler
@@ -77,4 +78,8 @@ class NetworkModule {
     @Provides
     @Reusable
     fun propertyService(retrofit: Retrofit): PropertyService = retrofit.create(PropertyService::class.java)
+
+    @Provides
+    @Reusable
+    fun cityService(retrofit: Retrofit): CityService = retrofit.create(CityService::class.java)
 }

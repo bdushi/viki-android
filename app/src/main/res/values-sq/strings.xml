@@ -7,4 +7,8 @@
     <string name="settings">Cilesimet</string>
     <string name="properties">Properties</string>
     <string name="map_view">Map View</string>
+    <string name="description">Pershkrimi</string>
+    <string name="title">Titulli</string>
+    <string name="save">Ruaj</string>
+    <string name="logout">LogOut</string>
 </resources>

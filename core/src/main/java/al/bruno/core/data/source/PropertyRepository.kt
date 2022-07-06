@@ -1,6 +1,5 @@
 package al.bruno.core.data.source
 
-import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.remote.PropertyRemoteDataSource
 import al.viki.domain.Property
 import al.bruno.core.Result

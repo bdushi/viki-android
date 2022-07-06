@@ -2,6 +2,7 @@ package al.viki.foundation.component
 
 import al.viki.foundation.ui.model.SearchMenu
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,19 +27,19 @@ import androidx.compose.ui.window.SecureFlagPolicy
 @Composable
 fun SearchBox(
     searchMenu: SearchMenu,
-    menuCallback: (Int) -> Unit
+    menuCallback: (Int) -> Unit,
+    viewYourProfileCallback: () -> Unit,
+    onQueryChanged: (String) -> Unit,
+    query: String,
 ) {
-    var searchValue by remember { mutableStateOf("") }
     var showMenu by remember { mutableStateOf(false) }
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
         OutlinedTextField(
-            value = searchValue,
-            onValueChange = {
-                searchValue = it
-            },
+            value = query,
+            onValueChange = onQueryChanged,
             modifier = Modifier
                 .weight(8F, true),
             shape = RoundedCornerShape(16.dp)
@@ -83,8 +84,9 @@ fun SearchBox(
                             text = stringResource(id = searchMenu.profile.title)
                         )
                         Text(
+                            modifier = Modifier.clickable(onClick = viewYourProfileCallback),
                             text = stringResource(id = searchMenu.profile.subTitle),
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
                         )
                     }
                 }

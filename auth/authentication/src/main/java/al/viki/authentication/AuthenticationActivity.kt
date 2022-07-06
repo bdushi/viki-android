@@ -1,5 +1,6 @@
 package al.viki.authentication
 
+import al.bruno.core.State
 import al.viki.authentication.databinding.ActivityAuthenticationBinding
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -35,20 +36,20 @@ class AuthenticationActivity : AppCompatActivity() {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 authenticationViewModel.authentication.collectLatest { response ->
                     when (response) {
-                        is UiState.Error -> response.error?.let {
+                        is State.Error -> response.error?.let {
                             Snackbar.make(
                                 findViewById(android.R.id.content),
                                 it, Snackbar.LENGTH_SHORT
                             ).show()
                         }
-                        is UiState.Unauthorized -> {
+                        is State.Unauthorized -> {
                             Snackbar.make(
                                 findViewById(android.R.id.content),
                                 "Unauthorized",
                                 Snackbar.LENGTH_SHORT
                             ).show()
                         }
-                        is UiState.Success -> {
+                        is State.Success -> {
                             finish()
                         }
                         else -> {

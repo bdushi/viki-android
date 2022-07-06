@@ -1,14 +1,16 @@
 package al.viki.authentication
 
+import al.bruno.core.Result
+import al.bruno.core.State
 import al.viki.core.AuthRepository
 import al.viki.core.request.model.AuthRequest
+import al.viki.core.response.model.AuthResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,9 +21,9 @@ class AuthenticationViewModel @Inject constructor(private val authRepository: Au
     val password = MutableStateFlow<String?>(null)
 
     // Backing property to avoid state updates from other classes
-    private val _authentication = MutableStateFlow<UiState<Nothing>?>(null)
+    private val _authentication = MutableStateFlow<State<AuthResponse>?>(null)
     // The UI collects from this StateFlow to get its state updates
-    val authentication: StateFlow<UiState<Nothing>?> = _authentication
+    val authentication: StateFlow<State<AuthResponse>?> = _authentication
 
     private val _progress = MutableStateFlow(false)
     val progress: StateFlow<Boolean> = _progress
@@ -34,19 +36,19 @@ class AuthenticationViewModel @Inject constructor(private val authRepository: Au
                     password.value
                 )
             )) {
-                is al.bruno.core.Result.Loading -> {
+                is Result.Loading -> {
                     _progress.value = true
                 }
-                is al.bruno.core.Result.Unauthorized -> {
-                   _authentication.value = UiState.Unauthorized
+                is Result.Unauthorized -> {
+                   _authentication.value = State.Unauthorized
                     _progress.value = false
                 }
-                is al.bruno.core.Result.Success -> {
-                    _authentication.value = UiState.Success
+                is Result.Success -> {
+                    _authentication.value = State.Success(response.data)
                     _progress.value = false
                 }
-                is al.bruno.core.Result.Error -> {
-                    _authentication.value = UiState.Error(response.error)
+                is Result.Error -> {
+                    _authentication.value = State.Error(response.error)
                     _progress.value = false
                 }
             }
