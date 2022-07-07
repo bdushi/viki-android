@@ -2,7 +2,7 @@ package al.viki.ui.home
 
 import al.bruno.core.data.source.PropertyRepository
 import al.bruno.core.data.source.model.response.PropertyResponse
-import al.viki.PropertiesPageSource
+import al.viki.common.NETWORK_PAGE_SIZE
 import androidx.lifecycle.ViewModel
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -12,15 +12,17 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
-class VikiViewModel @Inject constructor(private val propertyRepository: PropertyRepository): ViewModel() {
-    val pagedProperties: Flow<PagingData<PropertyResponse>> = Pager(
-        PagingConfig(
+class HomeViewModel @Inject constructor(private val propertyRepository: PropertyRepository): ViewModel() {
+    fun collectionPagedList(): Flow<PagingData<PropertyResponse>> = Pager(
+        config = PagingConfig(
             pageSize = NETWORK_PAGE_SIZE,
             enablePlaceholders = true
-        )
-    ) {
-        PropertiesPageSource(leaveRepository = propertyRepository)
-    }.flow
+        ),
+        pagingSourceFactory = {
+            PropertiesPagingSource(
+                propertyRepository = propertyRepository
+            )
+        }
+    ).flow
 }
 
-const val NETWORK_PAGE_SIZE = 10

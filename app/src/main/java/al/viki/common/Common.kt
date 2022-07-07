@@ -1,43 +1,50 @@
 package al.viki.common
 
-import al.viki.R
-import al.viki.foundation.ui.model.MenuItem
+import al.bruno.core.data.source.model.response.PropertyResponse
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.DiffUtil
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collectLatest
 
 
-val menus = arrayListOf(
-    MenuItem(
-        icon = R.drawable.ic_outlined_arrow_right,
-        title = R.string.new_order,
-        contentDescription = R.string.new_order
-    ),
-    MenuItem(
-        icon = R.drawable.ic_outlined_arrow_left,
-        title = R.string.new_request,
-        contentDescription = R.string.new_request
-    ),
-    MenuItem(
-        icon = R.drawable.ic_outlined_arrow_left,
-        title = R.string.new_request,
-        contentDescription = R.string.new_request
-    ),
-    MenuItem(
-        icon = R.drawable.ic_outlined_arrow_left,
-        title = R.string.new_request,
-        contentDescription = R.string.new_request
-    ),
-    MenuItem(
-        icon = R.drawable.ic_outlined_share,
-        title = R.string.share,
-        contentDescription = R.string.share
-    ),
-    MenuItem(
-        icon = R.drawable.ic_outlined_settings,
-        title = R.string.settings,
-        contentDescription = R.string.settings
-    ),
-    MenuItem(
-        icon = R.drawable.ic_logout,
-        title = R.string.logout,
-        contentDescription = R.string.logout
-    )
-)
+val diffUtil: DiffUtil.ItemCallback<PropertyResponse> =
+    object : DiffUtil.ItemCallback<PropertyResponse>() {
+        override fun areItemsTheSame(oldItem: PropertyResponse, newItem: PropertyResponse): Boolean {
+            return oldItem === newItem
+        }
+
+        override fun areContentsTheSame(oldItem: PropertyResponse, newItem: PropertyResponse): Boolean {
+            return oldItem.id == newItem.id
+        }
+    }
+inline fun <T> LifecycleOwner.collectFlow(
+    flow: Flow<T>,
+    crossinline collector: suspend (T) -> Unit
+) {
+    lifecycleScope.launchWhenStarted {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.catch { e -> e.printStackTrace() }
+                .collect {
+                    collector(it)
+                }
+        }
+    }
+}
+
+inline fun <T> LifecycleOwner.collectLatestFlow(
+    flow: Flow<T>,
+    crossinline collector: suspend (T) -> Unit
+) {
+    lifecycleScope.launchWhenStarted {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow.catch { e -> e.printStackTrace() }
+                .collectLatest {
+                    collector(it)
+                }
+        }
+    }
+}

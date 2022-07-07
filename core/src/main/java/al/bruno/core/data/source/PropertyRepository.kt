@@ -11,6 +11,7 @@ import javax.inject.Inject
 
 class PropertyRepository @Inject constructor(
     private val propertyRemoteDataSource: PropertyRemoteDataSource) {
+
     suspend fun properties(page: Int, size: Int) : Result<PropertyPageResponse> {
         return try {
             val response = propertyRemoteDataSource.properties(page, size)

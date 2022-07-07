@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Viki</string>
+    <string name="search_property">Kerko per Entitete</string>
     <string name="new_order">Porosi e Re</string>
     <string name="new_request">Kerkes e Re</string>
     <string name="visit_your_profile">Shiko profilin</string>
@@ -8,7 +9,16 @@
     <string name="properties">Properties</string>
     <string name="map_view">Map View</string>
     <string name="description">Pershkrimi</string>
+    <string name="city">Qytet</string>
+    <string name="apartment">Apartament</string>
     <string name="title">Titulli</string>
     <string name="save">Ruaj</string>
     <string name="logout">LogOut</string>
+    <string name="new_request_title">Kerkes e Re</string>
+    <!-- Property Item -->
+    <string name="property_title">Apartament</string>
+    <string name="property_price">%f m<sup>2</sup></string>
+    <string name="property_address">Rruga Robert Zhvarc</string>
+    <string name="property_floor_plan">4 + 1</string>
+    <string name="property_area">%s m<sup>2</sup></string>
 </resources>

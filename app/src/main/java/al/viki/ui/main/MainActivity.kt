@@ -1,32 +1,27 @@
 package al.viki.ui.main
 
 import al.bruno.core.interceptor.AuthInterceptor
+import al.viki.R
 import al.viki.authentication.AuthenticationActivity
-import al.viki.ui.viki.Viki
-import al.viki.ui.home.VikiViewModel
-import al.viki.ui.property.PropertyViewModel
-import al.viki.ui.theme.VikiTheme
+import al.viki.databinding.ActivityMainBinding
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.ui.Modifier
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels()
-    private val vikiViewModel: VikiViewModel by viewModels()
-    private val propertyViewModel: PropertyViewModel by viewModels()
 
+    private lateinit var appBarConfiguration: AppBarConfiguration
+    private lateinit var binding: ActivityMainBinding
     @Inject
     lateinit var authInterceptor: AuthInterceptor
 
@@ -36,24 +31,19 @@ class MainActivity : ComponentActivity() {
             mainViewModel.token().collectLatest {
                 it?.let {
                     authInterceptor.token = it
-                    setContent {
-                        VikiTheme {
-                            // A surface container using the 'background' color from the theme
-                            Surface(
-                                modifier = Modifier.fillMaxSize(),
-                                color = MaterialTheme.colorScheme.background
-                            ) {
-                                Viki(
-                                    vikiViewModel = vikiViewModel,
-                                    propertyViewModel = propertyViewModel,
-                                    logOut = {
-                                        startActivity(Intent(this@MainActivity, AuthenticationActivity::class.java))
-                                        finish()
-                                    }
-                                )
-                            }
-                        }
-                    }
+                    binding = ActivityMainBinding.inflate(layoutInflater)
+                    val navHostFragment: NavHostFragment =
+                        supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                    setContentView(binding.root)
+                    val navController = navHostFragment.navController
+//                    appBarConfiguration = AppBarConfiguration(
+//                        setOf(
+//                            R.id.nav_home,
+//                            R.id.nav_settings,
+//                            R.id.nav_imprint
+//                        )
+//                    )
+//                    setupActionBarWithNavController(navController, appBarConfiguration)
                 } ?: run {
                     startActivity(Intent(this@MainActivity, AuthenticationActivity::class.java))
                 }

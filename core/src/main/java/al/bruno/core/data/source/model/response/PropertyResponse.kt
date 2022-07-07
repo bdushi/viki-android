@@ -4,6 +4,7 @@ data class PropertyResponse(
     val id: Long,
     val title: String,
     val description: String,
+    val operation: String,
     val city: String,
     val zipCode: String,
     val country: String,
@@ -12,9 +13,10 @@ data class PropertyResponse(
     val address: String,
     val currency: String,
     val type: String,
-    val area: String,
+    val area: Double,
     val price: Double,
     val florPlan: String,
+    val unit: String,
     val longitude: Double,
     val latitude: Double
     )

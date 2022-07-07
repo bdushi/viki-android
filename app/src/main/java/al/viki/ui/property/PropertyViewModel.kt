@@ -4,10 +4,6 @@ import al.bruno.core.Result
 import al.bruno.core.State
 import al.bruno.core.data.source.CityRepository
 import al.viki.model.response.CityUi
-import al.viki.model.response.CountryUi
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,8 +21,8 @@ class PropertyViewModel @Inject constructor(private val cityRepository: CityRepo
     // The UI collects from this StateFlow to get its state updates
     val cities: StateFlow<State<List<CityUi>>> = _cities
 
-    var citiesUi: List<CityUi> by mutableStateOf(listOf())
-        private set
+//    var citiesUi: List<CityUi> by mutableStateOf(listOf())
+//        private set
 
     private val _progress = MutableStateFlow(false)
     val progress: StateFlow<Boolean> = _progress
@@ -45,18 +41,18 @@ class PropertyViewModel @Inject constructor(private val cityRepository: CityRepo
                     _cities.value = State.Unauthorized
                 }
                 is Result.Success -> {
-                    citiesUi = response.data.map {
-                        CityUi(
-                            it.id,
-                            it.city,
-                            it.zipCode,
-                            CountryUi(
-                                it.countryResponse.id,
-                                it.countryResponse.country,
-                                it.countryResponse.countryCode
-                            )
-                        )
-                    }
+//                    cities.value = response.data.map {
+//                        CityUi(
+//                            it.id,
+//                            it.city,
+//                            it.zipCode,
+//                            CountryUi(
+//                                it.countryResponse.id,
+//                                it.countryResponse.country,
+//                                it.countryResponse.countryCode
+//                            )
+//                        )
+//                    }
                     _progress.value = false
                 }
                 is Result.Error -> {
