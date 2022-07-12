@@ -15,6 +15,6 @@
     </fragment>
     <fragment
         android:id="@+id/newPropertyFragment"
-        android:name="al.viki.ui.property.NewRequestFragment"
+        android:name="al.viki.ui.property.NewPropertyFragment"
         android:label="NewPropertyFragment" />
 </navigation>

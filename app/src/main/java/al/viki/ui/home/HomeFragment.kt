@@ -3,10 +3,12 @@ package al.viki.ui.home
 import al.bruno.adapter.PagedListAdapter
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.viki.R
+import al.viki.authentication.NotifyAuthenticationChange
 import al.viki.common.collectLatestFlow
 import al.viki.common.diffUtil
 import al.viki.databinding.FragmentHomeBinding
 import al.viki.databinding.PropertiesItemBinding
+import android.content.Context
 import android.graphics.drawable.InsetDrawable
 import android.os.Build
 import android.os.Bundle
@@ -17,7 +19,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MenuRes
 import androidx.appcompat.view.menu.MenuBuilder
+import androidx.appcompat.view.menu.SubMenuBuilder
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -26,6 +30,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
+    private var notifyAuthenticationChange: NotifyAuthenticationChange? = null
     private val homeViewModel: HomeViewModel  by viewModels()
     private val adapter by lazy {
         PagedListAdapter<PropertyResponse, PropertiesItemBinding>(
@@ -67,7 +72,8 @@ class HomeFragment : Fragment() {
         popup.menuInflater.inflate(menuRes, popup.menu)
         if (popup.menu is MenuBuilder) {
             val menuBuilder = popup.menu as MenuBuilder
-            menuBuilder.setGroupVisible(R.id.group_menu_share, true)
+            MenuCompat.setGroupDividerEnabled(menuBuilder, true)
+//            menuBuilder.setGroupVisible(R.id.group_menu_share, true)
             menuBuilder.setOptionalIconsVisible(true)
             for (item in menuBuilder.visibleItems) {
                 val iconMarginPx =
@@ -81,11 +87,12 @@ class HomeFragment : Fragment() {
         }
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
-                R.id.menu_new_request -> {
+                R.id.menu_new_property -> {
                     findNavController().navigate(R.id.action_homeFragment_to_newPropertyFragment)
                     true
                 }
                 R.id.menu_logout -> {
+                    notifyAuthenticationChange?.onSignOut()
                     true
                 }
                 else -> {
@@ -98,5 +105,12 @@ class HomeFragment : Fragment() {
         }
         // Show the popup menu.
         popup.show()
+    }
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        when (context) {
+            is NotifyAuthenticationChange -> notifyAuthenticationChange = context
+            else -> throw RuntimeException("$context must implement NotifyLanguageChange")
+        }
     }
 }

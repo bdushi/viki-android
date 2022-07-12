@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Viki</string>
     <string name="search_property">Search Property</string>
-    <string name="new_order">New Order</string>
+    <string name="new_property">New Property</string>
     <string name="new_request">New Request</string>
     <string name="visit_your_profile">Visit your profile</string>
     <string name="share">Share</string>
@@ -10,6 +10,14 @@
     <string name="map_view">Map View</string>
     <string name="description">Description</string>
     <string name="city">City</string>
+    <string name="property_type">Property Type</string>
+    <string name="property_floor_plan">Floor Plan</string>
+    <string name="property_price">Price</string>
+    <string name="property_currency">Currency</string>
+    <string name="property_area">Area</string>
+    <string name="property_unit">Unit</string>
+    <string name="operation">Sales / Rent</string>
+    <string name="address">Address</string>
     <string name="apartment">Apartment</string>
     <string name="title">Title</string>
     <string name="save">Save</string>
@@ -17,8 +25,8 @@
     <string name="new_request_title">New Request</string>
     <!-- Property Item -->
     <string name="property_title">Apartment</string>
-    <string name="property_price">%f m<sup>2</sup></string>
+    <string name="property_price_itme">%f %s/m<sup>2</sup></string>
     <string name="property_address">Rruga Robert Zhvarc</string>
-    <string name="property_floor_plan">4 + 1</string>
-    <string name="property_area">%s m<sup>2</sup></string>
+    <string name="property_floor_plan_item">4 + 1</string>
+    <string name="property_area_item">%s m<sup>2</sup></string>
 </resources>

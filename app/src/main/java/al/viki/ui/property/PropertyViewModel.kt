@@ -3,7 +3,7 @@ package al.viki.ui.property
 import al.bruno.core.Result
 import al.bruno.core.State
 import al.bruno.core.data.source.CityRepository
-import al.viki.model.response.CityUi
+import al.viki.model.CityUi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel

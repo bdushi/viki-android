@@ -3,6 +3,7 @@ package al.viki.ui.main
 import al.bruno.core.interceptor.AuthInterceptor
 import al.viki.R
 import al.viki.authentication.AuthenticationActivity
+import al.viki.authentication.NotifyAuthenticationChange
 import al.viki.databinding.ActivityMainBinding
 import android.content.Intent
 import android.os.Bundle
@@ -17,10 +18,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
     private val mainViewModel: MainViewModel by viewModels()
-
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     @Inject
     lateinit var authInterceptor: AuthInterceptor
@@ -32,22 +31,15 @@ class MainActivity : AppCompatActivity() {
                 it?.let {
                     authInterceptor.token = it
                     binding = ActivityMainBinding.inflate(layoutInflater)
-                    val navHostFragment: NavHostFragment =
-                        supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
                     setContentView(binding.root)
-                    val navController = navHostFragment.navController
-//                    appBarConfiguration = AppBarConfiguration(
-//                        setOf(
-//                            R.id.nav_home,
-//                            R.id.nav_settings,
-//                            R.id.nav_imprint
-//                        )
-//                    )
-//                    setupActionBarWithNavController(navController, appBarConfiguration)
                 } ?: run {
                     startActivity(Intent(this@MainActivity, AuthenticationActivity::class.java))
                 }
             }
         }
+    }
+
+    override fun onSignOut() {
+        startActivity(Intent(this@MainActivity, AuthenticationActivity::class.java))
     }
 }

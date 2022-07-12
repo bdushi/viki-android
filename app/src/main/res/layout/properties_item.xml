@@ -33,7 +33,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/property_price(property.price)}"
+                android:text="@{@string/property_price((property.price * property.area), property.currency)}"
                 android:textColor="@color/vikiColorRed"
                 android:layout_marginTop="@dimen/micro_dimen"
                 tools:text="@string/property_price"/>
@@ -63,7 +63,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/property_price(property.price * property.area)}"
+                    android:text="@{@string/property_price((property.price * property.area), property.currency)}"
                     android:layout_marginEnd="@dimen/normal_dimen"
                     tools:text="@string/property_price"/>
                 <com.google.android.material.textview.MaterialTextView
