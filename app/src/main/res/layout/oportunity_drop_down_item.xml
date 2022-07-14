@@ -3,7 +3,7 @@
     <data>
         <variable
             name="operation"
-            type="al.viki.model.request.OperationUi" />
+            type="al.viki.model.OperationUi" />
     </data>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"

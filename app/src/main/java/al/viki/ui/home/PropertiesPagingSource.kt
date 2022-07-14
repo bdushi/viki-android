@@ -27,7 +27,7 @@ class PropertiesPagingSource constructor(
             is Result.Success -> LoadResult.Page(
                 data = response.data.pageResponse ?: arrayListOf(),
                 prevKey = if (position == 1) null else position - 1,
-                nextKey = if (response.data.empty) null else position + (params.loadSize / NETWORK_PAGE_SIZE) //position + 1
+                nextKey = if (response.data.empty) null else position + 1 //position + (params.loadSize / NETWORK_PAGE_SIZE)
             )
             else -> LoadResult.Error(Throwable())
         }

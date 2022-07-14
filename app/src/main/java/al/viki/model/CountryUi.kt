@@ -1,4 +1,4 @@
-package al.viki.model.response
+package al.viki.model
 
 data class CountryUi(
     val id: Long,

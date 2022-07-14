@@ -1,9 +1,9 @@
 package al.bruno.core.di
 
 import al.bruno.core.BuildConfig
-import al.bruno.core.data.source.remote.service.CityService
-import al.bruno.core.data.source.remote.service.PropertyService
+import al.bruno.core.data.source.remote.service.*
 import al.bruno.core.interceptor.AuthInterceptor
+import al.bruno.core.interceptor.AuthorizationInterceptor
 import al.bruno.core.interceptor.ErrorHandler
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -25,11 +25,13 @@ class NetworkModule {
     @Singleton
     fun okHttpClient(
         authInterceptor: AuthInterceptor,
+        authorizationInterceptor: AuthorizationInterceptor,
         httpLoggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         return OkHttpClient
             .Builder()
             .addInterceptor(httpLoggingInterceptor)
+            .addInterceptor(authorizationInterceptor)
             .addInterceptor(authInterceptor)
             .build()
     }
@@ -79,7 +81,32 @@ class NetworkModule {
     @Reusable
     fun propertyService(retrofit: Retrofit): PropertyService = retrofit.create(PropertyService::class.java)
 
+
     @Provides
     @Reusable
     fun cityService(retrofit: Retrofit): CityService = retrofit.create(CityService::class.java)
+
+    @Provides
+    @Reusable
+    fun currencyService(retrofit: Retrofit): CurrencyService = retrofit.create(CurrencyService::class.java)
+
+
+    @Provides
+    @Reusable
+    fun floorPlanService(retrofit: Retrofit): FloorPlanService = retrofit.create(FloorPlanService::class.java)
+
+
+    @Provides
+    @Reusable
+    fun operationService(retrofit: Retrofit): OperationService = retrofit.create(OperationService::class.java)
+
+
+    @Provides
+    @Reusable
+    fun propertyTypeService(retrofit: Retrofit): PropertyTypeService = retrofit.create(PropertyTypeService::class.java)
+
+
+    @Provides
+    @Reusable
+    fun unitService(retrofit: Retrofit): UnitService = retrofit.create(UnitService::class.java)
 }

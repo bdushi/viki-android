@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
     <data>
         <variable
-            name="newRequest"
-            type="al.viki.model.request.NewRequestUi" />
+            name="newProperty"
+            type="al.viki.model.NewPropertyUi" />
+        <variable
+            name="propertyTypeAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+        <variable
+            name="floorPlanAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+        <variable
+            name="operationAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+        <variable
+            name="currencyAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+        <variable
+            name="unitAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+        <variable
+            name="cityAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+        <variable
+            name="onClick"
+            type="android.view.View.OnClickListener" />
+
+        <import type="android.view.View"/>
     </data>
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,18 +58,19 @@
                 android:layout_margin="@dimen/small_dimen">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/new_request_photo"
+                    android:id="@+id/new_property_photo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/normal_dimen"
                     android:layout_margin="@dimen/micro_dimen"
+                    android:onClick="@{onClick::onClick}"
                     app:srcCompat="@drawable/ic_outlined_add_photo"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintBottom_toTopOf="@+id/new_request_title"/>
+                    app:layout_constraintBottom_toTopOf="@+id/new_property_title"/>
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/new_request_title"
+                    android:id="@+id/new_property_title"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -53,70 +78,78 @@
                     app:endIconMode="clear_text"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_request_photo">
+                    app:layout_constraintTop_toBottomOf="@+id/new_property_photo">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        android:text="@={newRequest.title}" />
+                        android:text="@={newProperty.title}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/new_request_description"
+                    android:id="@+id/new_property_description"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/micro_dimen"
                     android:hint="@string/description"
+                    app:endIconMode="clear_text"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_request_title">
+                    app:layout_constraintTop_toBottomOf="@+id/new_property_title">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
                         android:maxLines="2"
-                        android:text="@={newRequest.description}" />
+                        android:text="@={newProperty.description}"
+                        android:imeOptions="actionNext"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/new_request_type"
+                    android:id="@+id/new_property_type"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/micro_dimen"
                     android:hint="@string/property_type"
-                    app:layout_constraintEnd_toStartOf="@+id/new_request_floor_plan"
+                    app:layout_constraintEnd_toStartOf="@+id/new_property_floor_plan"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_request_description">
+                    app:layout_constraintTop_toBottomOf="@+id/new_property_description">
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/new_property_type_item"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:onItemSelected="@{newRequest.operationSelectedListener::onItemSelected}"
-                        android:text="@={newRequest.operation}" />
+                        bind:onItemClick="@{newProperty.propertyTypeListener::onItemClick}"
+                        bind:adapter="@{propertyTypeAdapter}"
+                        android:imeOptions="actionNext"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/new_request_floor_plan"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                    android:id="@+id/new_property_floor_plan"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:hint="@string/property_floor_plan"
                     android:layout_marginStart="@dimen/micro_dimen"
+                    android:visibility="@{newProperty.apartment ? View.VISIBLE : View.GONE }"
+                    app:endIconMode="clear_text"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/new_request_type"
-                    app:layout_constraintTop_toTopOf="@+id/new_request_type"
-                    app:layout_constraintBottom_toBottomOf="@+id/new_request_type">
-                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                    app:layout_constraintStart_toEndOf="@id/new_property_type"
+                    app:layout_constraintTop_toTopOf="@+id/new_property_type"
+                    app:layout_constraintBottom_toBottomOf="@+id/new_property_type">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/new_property_floor_plan_item"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:onItemSelected="@{newRequest.operationSelectedListener::onItemSelected}"
-                        android:text="@={newRequest.operation}" />
+                        android:inputType="text"
+                        android:text="@{newProperty.floorPlan}"
+                        android:imeOptions="actionNext"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/new_request_operation"
+                    android:id="@+id/new_property_operation"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -124,118 +157,128 @@
                     android:hint="@string/operation"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_request_type">
+                    app:layout_constraintTop_toBottomOf="@+id/new_property_type">
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/new_property_operation_item"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:onItemSelected="@{newRequest.operationSelectedListener::onItemSelected}"
-                        android:text="@={newRequest.operation}" />
+                        bind:onItemClick="@{newProperty.operationListener::onItemClick}"
+                        bind:adapter="@{operationAdapter}"
+                        android:imeOptions="actionNext"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/new_request_price"
+                    android:id="@+id/new_property_price"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/micro_dimen"
                     android:hint="@string/property_price"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    app:layout_constraintEnd_toStartOf="@+id/new_request_currency"
+                    app:layout_constraintEnd_toStartOf="@+id/new_property_currency"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_request_operation">
+                    app:layout_constraintTop_toBottomOf="@+id/new_property_operation">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textMultiLine"
+                        android:inputType="numberDecimal"
                         android:maxLines="2"
-                        android:text="@={newRequest.apartment}" />
+                        android:text="@={newProperty.price}"
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/new_request_currency"
+                    android:id="@+id/new_property_currency"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:hint="@string/property_currency"
                     android:layout_marginStart="@dimen/micro_dimen"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/new_request_price"
-                    app:layout_constraintTop_toTopOf="@+id/new_request_price"
-                    app:layout_constraintBottom_toBottomOf="@+id/new_request_price">
+                    app:layout_constraintStart_toEndOf="@id/new_property_price"
+                    app:layout_constraintTop_toTopOf="@+id/new_property_price"
+                    app:layout_constraintBottom_toBottomOf="@+id/new_property_price">
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/new_property_currency_item"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:onItemSelected="@{newRequest.operationSelectedListener::onItemSelected}"
-                        android:text="@={newRequest.operation}" />
+                        bind:onItemClick="@{newProperty.currencyListener::onItemClick}"
+                        bind:adapter="@{currencyAdapter}"
+                        android:imeOptions="actionNext"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/new_request_area"
+                    android:id="@+id/new_property_area"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/micro_dimen"
                     android:hint="@string/property_area"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                    app:layout_constraintEnd_toStartOf="@+id/new_request_unit"
+                    app:layout_constraintEnd_toStartOf="@+id/new_property_unit"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_request_price">
+                    app:layout_constraintTop_toBottomOf="@+id/new_property_price">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="textMultiLine"
+                        android:inputType="numberDecimal"
                         android:maxLines="2"
-                        android:text="@={newRequest.apartment}" />
+                        android:text="@={newProperty.area}"
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/new_request_unit"
+                    android:id="@+id/new_property_unit"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="@dimen/micro_dimen"
                     android:hint="@string/property_unit"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/new_request_area"
-                    app:layout_constraintTop_toTopOf="@+id/new_request_area"
-                    app:layout_constraintBottom_toBottomOf="@+id/new_request_area">
+                    app:layout_constraintStart_toEndOf="@id/new_property_area"
+                    app:layout_constraintTop_toTopOf="@+id/new_property_area"
+                    app:layout_constraintBottom_toBottomOf="@+id/new_property_area">
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/new_property_unit_item"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:onItemSelected="@{newRequest.operationSelectedListener::onItemSelected}"
-                        android:text="@={newRequest.operation}" />
+                        bind:onItemClick="@{newProperty.unitListener::onItemClick}"
+                        bind:adapter="@{unitAdapter}"
+                        android:imeOptions="actionNext"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/new_request_address"
+                    android:id="@+id/new_property_address"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginTop="@dimen/micro_dimen"
                     android:hint="@string/address"
-                    app:layout_constraintEnd_toStartOf="@+id/new_request_location"
+                    app:layout_constraintEnd_toStartOf="@+id/new_property_location"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_request_area">
+                    app:layout_constraintTop_toBottomOf="@+id/new_property_area">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
                         android:maxLines="2"
-                        android:text="@={newRequest.address}" />
+                        android:text="@={newProperty.address}"
+                        android:imeOptions="actionNext" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/new_request_location"
+                    android:id="@+id/new_property_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/small_dimen"
                     android:layout_marginTop="@dimen/micro_dimen"
+                    android:onClick="@{onClick::onClick}"
                     app:srcCompat="@drawable/ic_outlined_my_location"
-                    app:layout_constraintStart_toEndOf="@+id/new_request_address"
-                    app:layout_constraintTop_toTopOf="@+id/new_request_address"
-                    app:layout_constraintBottom_toBottomOf="@+id/new_request_address"
+                    app:layout_constraintStart_toEndOf="@+id/new_property_address"
+                    app:layout_constraintTop_toTopOf="@+id/new_property_address"
+                    app:layout_constraintBottom_toBottomOf="@+id/new_property_address"
                     app:layout_constraintEnd_toEndOf="parent"/>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/new_request_cities"
+                    android:id="@+id/new_property_city"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
@@ -243,24 +286,29 @@
                     android:hint="@string/city"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_request_address">
+                    app:layout_constraintTop_toBottomOf="@+id/new_property_address">
                     <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/new_property_city_item"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:onItemSelected="@{newRequest.citySelectedListener::onItemSelected}"
-                        android:text="@={newRequest.city}" />
+                        bind:onItemClick="@{newProperty.cityListener::onItemClick}"
+                        bind:adapter="@{cityAdapter}"
+                        android:imeOptions="actionDone" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/new_property_save"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/save"
                     android:layout_marginTop="@dimen/normal_dimen"
+                    android:onClick="@{onClick::onClick}"
+                    android:enabled="@{newProperty.enable}"
                     style="@style/Widget.Material3.Button.TonalButton"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_request_cities" />
+                    app:layout_constraintTop_toBottomOf="@+id/new_property_city" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </LinearLayout>

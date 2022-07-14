@@ -1,7 +1,5 @@
 package al.viki.domain
 
-import java.time.OffsetDateTime
-
 data class Property(
     val id: Long,
     val title: String,

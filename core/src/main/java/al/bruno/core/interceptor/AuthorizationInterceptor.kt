@@ -2,8 +2,11 @@ package al.bruno.core.interceptor
 
 import al.bruno.foodies.interceptor.Session
 import okhttp3.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class AuthorizationInterceptor : Interceptor {
+@Singleton
+class AuthorizationInterceptor @Inject constructor() : Interceptor {
     private lateinit var session: Session
     override fun intercept(chain: Interceptor.Chain): Response {
         val mainResponse = chain.proceed(chain.request())

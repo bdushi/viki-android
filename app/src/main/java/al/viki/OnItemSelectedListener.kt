@@ -5,5 +5,5 @@ import android.widget.Adapter
 import android.widget.AdapterView
 
 interface OnItemSelectedListener {
-    fun onItemSelected(p0: AdapterView<*>, p1: View, p2: Int, p3: Long)
+    fun onItemSelected(adapter: AdapterView<*>, view: View, position: Int, id: Long)
 }

@@ -1,9 +1,7 @@
 package al.bruno.core.di
 
-import al.bruno.core.data.source.CityDataSource
-import al.bruno.core.data.source.PropertyDataSource
-import al.bruno.core.data.source.remote.CityRemoteDataSource
-import al.bruno.core.data.source.remote.PropertyRemoteDataSource
+import al.bruno.core.data.source.*
+import al.bruno.core.data.source.remote.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,4 +15,22 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun provideCityRemoteDataSource(cityRemoteDataSource: CityRemoteDataSource): CityDataSource
+
+    @Binds
+    abstract fun provideCurrencyRemoteDataSource(currencyRemoteDataSource: CurrencyRemoteDataSource): CurrencyDataSource
+
+    @Binds
+    abstract fun provideFloorPlanRemoteDataSource(floorPlanRemoteDataSource: FloorPlanRemoteDataSource): FloorPlanDataSource
+
+    @Binds
+    abstract fun provideOperationRemoteDataSource(operationRemoteDataSource: OperationRemoteDataSource): OperationDataSource
+
+    @Binds
+    abstract fun providePropertyTypeRemoteDataSource(propertyTypeRemoteDataSource: PropertyTypeRemoteDataSource): PropertyTypeDataSource
+
+    @Binds
+    abstract fun provideUnitRemoteDataSource(unitRemoteDataSource: UnitRemoteDataSource): UnitDataSource
+
+
+
 }

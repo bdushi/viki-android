@@ -31,7 +31,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private var notifyAuthenticationChange: NotifyAuthenticationChange? = null
-    private val homeViewModel: HomeViewModel  by viewModels()
+    private val homeViewModel: HomeViewModel by viewModels()
     private val adapter by lazy {
         PagedListAdapter<PropertyResponse, PropertiesItemBinding>(
             R.layout.properties_item, { t, vm ->

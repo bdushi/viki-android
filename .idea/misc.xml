@@ -19,6 +19,9 @@
         <entry key="app/src/main/res/drawable/ic_outlined_add_photo.xml" value="0.174" />
         <entry key="app/src/main/res/drawable/ic_outlined_arrow_left.xml" value="0.1405" />
         <entry key="app/src/main/res/drawable/ic_outlined_arrow_right.xml" value="0.1405" />
+        <entry key="app/src/main/res/drawable/ic_outlined_chech.xml" value="0.1645" />
+        <entry key="app/src/main/res/drawable/ic_outlined_check.xml" value="0.1645" />
+        <entry key="app/src/main/res/drawable/ic_outlined_close.xml" value="0.1645" />
         <entry key="app/src/main/res/drawable/ic_outlined_settings.xml" value="0.1405" />
         <entry key="app/src/main/res/drawable/ic_outlined_share.xml" value="0.1405" />
         <entry key="app/src/main/res/drawable/ic_outlined_swap_vert.xml" value="0.1405" />
@@ -28,7 +31,9 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.246875" />
         <entry key="app/src/main/res/layout/category_drop_down_single_item.xml" value="0.246875" />
         <entry key="app/src/main/res/layout/city_drop_down_item.xml" value="0.246875" />
+        <entry key="app/src/main/res/layout/drop_down_item.xml" value="0.25333333333333335" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.246875" />
+        <entry key="app/src/main/res/layout/fragment_new_property.xml" value="0.25729166666666664" />
         <entry key="app/src/main/res/layout/fragment_new_request.xml" value="0.246875" />
         <entry key="app/src/main/res/layout/oportunity_drop_down_item.xml" value="0.24583333333333332" />
         <entry key="app/src/main/res/layout/properties_item.xml" value="0.246875" />

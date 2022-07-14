@@ -1,7 +1,6 @@
 package al.viki.ui.main
 
 import al.bruno.core.interceptor.AuthInterceptor
-import al.viki.R
 import al.viki.authentication.AuthenticationActivity
 import al.viki.authentication.NotifyAuthenticationChange
 import al.viki.databinding.ActivityMainBinding
@@ -10,8 +9,6 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -40,6 +37,7 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
     }
 
     override fun onSignOut() {
+        mainViewModel.clear()
         startActivity(Intent(this@MainActivity, AuthenticationActivity::class.java))
     }
 }
