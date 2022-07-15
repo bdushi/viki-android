@@ -23,10 +23,13 @@
     <string name="save">Save</string>
     <string name="logout">LogOut</string>
     <string name="new_request_title">New Request</string>
+
+    <string name="permission_denied">Permission Denied</string>
     <!-- Property Item -->
     <string name="property_title">Apartment</string>
-    <string name="property_price_itme">%f %s/m<sup>2</sup></string>
+    <string name="property_price_item">%f %s/%s</string>
     <string name="property_address">Rruga Robert Zhvarc</string>
     <string name="property_floor_plan_item">4 + 1</string>
-    <string name="property_area_item">%s m<sup>2</sup></string>
+    <string name="property_area_item">%s %s</string>
+    <string name="property_operation_item">For Sales</string>
 </resources>

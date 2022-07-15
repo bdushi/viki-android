@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="vikiColorPrimary">#8E8E8E</color>
+    <color name="success">#009A06</color>
     <color name="vikiColorRed">#910000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

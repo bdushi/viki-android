@@ -2,19 +2,29 @@ package al.viki.ui.property
 
 import al.bruno.adapter.DropDownAdapter
 import al.bruno.core.State
+import al.viki.BuildConfig
 import al.viki.R
+import al.viki.common.REQUEST_PERMISSION_LOCATION
 import al.viki.common.collectFlow
 import al.viki.databinding.DropDownItemBinding
 import al.viki.databinding.FragmentNewPropertyBinding
 import al.viki.model.*
 import al.viki.model.NewPropertyUi
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -165,6 +175,48 @@ class NewPropertyFragment : Fragment() {
                 }
             }
         }
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            when {
+                it.getOrDefault(
+                    Manifest.permission.ACCESS_FINE_LOCATION, false
+                ) || it.getOrDefault(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    false
+                ) -> {
+                    val location = LocationServices
+                        .getFusedLocationProviderClient(requireContext())
+                        .lastLocation
+                        .result
+                    newPropertyUi.location = LocationUi(
+                        location.longitude,
+                        location.latitude
+                    )
+                }
+                else -> {
+                    binding?.let { newPropertyView ->
+                        Snackbar
+                        .make(
+                            newPropertyView.newPropertyRootView,
+                            getString(R.string.permission_denied),
+                            Snackbar.LENGTH_LONG
+                        )
+                        .setAction(R.string.settings) {
+                            startActivity(
+                                Intent(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+                                )
+                            )
+                        }.show()
+                    }
+                }
+            }
+        }.launch(
+            arrayOf(
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            )
+        )
     }
 }
 

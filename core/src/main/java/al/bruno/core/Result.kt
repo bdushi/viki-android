@@ -13,7 +13,7 @@ sealed class Result<out R> {
         return when (this) {
             is Success<*> -> "Success[data=$data]"
             is Error -> "Error[exception=$error]"
-            Unauthorized -> "Unauthorized"
+            is Unauthorized -> "Unauthorized"
         }
     }
 }

@@ -10,53 +10,75 @@ import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
 
 class NewPropertyUi : Observable {
+    @get:Bindable
     var title: String? = null
+        set(value) {
+            field = value
+            propertyChangeRegistry.notifyChange(this, BR.title)
+        }
+    @get:Bindable
     var description: String? = null
+        set(value) {
+            field = value
+            propertyChangeRegistry.notifyChange(this, BR.description)
+        }
     var floorPlan: String? = null
+    @get:Bindable
     var city: CityUi? = null
+        set(value) {
+            field = value
+            propertyChangeRegistry.notifyChange(this, BR.city)
+        }
+    @get:Bindable
     var operation: OperationUi? = null
-        @Bindable
-        get
         set(value) {
             field = value
             propertyChangeRegistry.notifyChange(this, BR.operation)
         }
+    @get:Bindable
     var propertyType: PropertyTypeUi? = null
-        @Bindable
-        get
         set(value) {
             field = value
             propertyChangeRegistry.notifyChange(this, BR.propertyType)
         }
+    @get:Bindable
     var currency: CurrencyUi? = null
-    var unit: UnitUi? = null
-    var address: String? = null
-    var area: String? = null
-    var price: String? = null
-    var location: LocationUi? = null
-
-    var enable = true
-        @Bindable
-        get
         set(value) {
             field = value
-            propertyChangeRegistry.notifyChange(this, BR.enable)
+            propertyChangeRegistry.notifyChange(this, BR.currency)
         }
-//        title != null &&
-//                description != null &&
-//                city != null &&
-//                operation != null &&
-//                propertyType != null &&
-//                floorPlan != null &&
-//                currency != null &&
-//                unit != null &&
-//                area != null &&
-//                price != null &&
-//                address != null
-
-    var apartment = propertyType?.propertyType == "Apartament" || propertyType?.propertyType == "Apartment"
-        @Bindable
-        get
+    @get:Bindable
+    var unit: UnitUi? = null
+        set(value) {
+            field = value
+            propertyChangeRegistry.notifyChange(this, BR.unit)
+        }
+    @get:Bindable
+    var address: String? = null
+        set(value) {
+            field = value
+            propertyChangeRegistry.notifyChange(this, BR.address)
+        }
+    @get:Bindable
+    var area: String? = null
+        set(value) {
+            field = value
+            propertyChangeRegistry.notifyChange(this, BR.area)
+        }
+    @get:Bindable
+    var price: String? = null
+        set(value) {
+            field = value
+            propertyChangeRegistry.notifyChange(this, BR.price)
+        }
+    @get:Bindable
+    var location: LocationUi? = null
+        set(value) {
+            field = value
+            propertyChangeRegistry.notifyChange(this, BR.price)
+        }
+    @get:Bindable
+    var apartment = false
         set(value) {
             field = value
             propertyChangeRegistry.notifyChange(this, BR.apartment)
@@ -66,6 +88,7 @@ class NewPropertyUi : Observable {
 
     val propertyTypeListener = AdapterView.OnItemClickListener { adapterView, _, position, _ ->
         propertyType = adapterView?.getItemAtPosition(position) as PropertyTypeUi?
+        apartment = propertyType?.propertyType == "Apartament" || propertyType?.propertyType == "Apartment"
     }
     val operationListener = AdapterView.OnItemClickListener { adapterView, _, position, _ ->
         operation = adapterView?.getItemAtPosition(position) as OperationUi?

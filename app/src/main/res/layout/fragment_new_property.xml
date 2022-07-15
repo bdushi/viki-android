@@ -37,6 +37,7 @@
         <import type="al.bruno.core.State"/>
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/new_property_root_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -140,9 +141,9 @@
                         android:id="@+id/new_property_type_item"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
                         bind:onItemClick="@{newProperty.propertyTypeListener::onItemClick}"
-                        bind:adapter="@{propertyTypeAdapter}"
-                        android:imeOptions="actionNext"/>
+                        bind:adapter="@{propertyTypeAdapter}"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -322,7 +323,7 @@
                     android:text="@string/save"
                     android:layout_marginTop="@dimen/normal_dimen"
                     android:onClick="@{onClick::onClick}"
-                    android:enabled="@{newProperty.enable}"
+                    android:enabled="@{ newProperty.title != null &amp; newProperty.description != null &amp; newProperty.propertyType != null &amp; newProperty.operation != null &amp; newProperty.price != null &amp; newProperty.currency != null &amp; newProperty.area != null &amp; newProperty.unit != null &amp; newProperty.address != null &amp; newProperty.city != null &amp; newProperty.location != null }"
                     style="@style/Widget.Material3.Button.TonalButton"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

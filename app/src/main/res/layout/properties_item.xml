@@ -33,7 +33,7 @@
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/property_price((property.price * property.area), property.currency)}"
+                android:text="@{@string/property_price_item((property.price * property.area), property.currency, property.unit)}"
                 android:textColor="@color/vikiColorRed"
                 android:layout_marginTop="@dimen/micro_dimen"
                 tools:text="@string/property_price"/>
@@ -57,13 +57,13 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/property_area(property.area)}"
+                    android:text="@{@string/property_area_item(property.area, property.unit)}"
                     android:layout_marginEnd="@dimen/normal_dimen"
                     tools:text="@string/property_area"/>
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/property_price((property.price * property.area), property.currency)}"
+                    android:text="@{@string/property_price_item((property.price * property.area), property.currency, property.unit)}"
                     android:layout_marginEnd="@dimen/normal_dimen"
                     tools:text="@string/property_price"/>
                 <com.google.android.material.textview.MaterialTextView
@@ -72,7 +72,7 @@
                     android:text="@{property.operation}"
                     android:layout_gravity="end"
                     android:gravity="end"
-                    tools:text="@string/property_address"/>
+                    tools:text="@string/property_operation_item"/>
             </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>

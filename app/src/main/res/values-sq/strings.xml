@@ -11,6 +11,11 @@
     <string name="description">Pershkrimi</string>
     <string name="city">Qytet</string>
     <string name="property_type">Tipi i Prones</string>
+    <string name="property_floor_plan">Planimetria</string>
+    <string name="property_price">Cmimi</string>
+    <string name="property_currency">Monedha</string>
+    <string name="property_area">Siperfaqija</string>
+    <string name="property_unit">Njesija</string>
     <string name="operation">Shitje / Qira</string>
     <string name="address">Adresa</string>
     <string name="apartment">Apartament</string>
@@ -18,10 +23,13 @@
     <string name="save">Ruaj</string>
     <string name="logout">LogOut</string>
     <string name="new_request_title">Kerkes e Re</string>
+
+    <string name="permission_denied">Autorizim u mohua</string>
     <!-- Property Item -->
     <string name="property_title">Apartament</string>
-    <string name="property_price">%f %s/m<sup>2</sup></string>
+    <string name="property_price_item">%f %s/%s</string>
     <string name="property_address">Rruga Robert Zhvarc</string>
-    <string name="property_floor_plan">4 + 1</string>
-    <string name="property_area">%s m<sup>2</sup></string>
+    <string name="property_floor_plan_item">4 + 1</string>
+    <string name="property_area_item">%s %s</string>
+    <string name="property_operation_item">Shitje</string>
 </resources>
