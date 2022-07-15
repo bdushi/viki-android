@@ -18,7 +18,7 @@ data class PropertyResponse(
     val type: String,
     val area: Double,
     val price: Double,
-    val florPlan: String,
+    val floorPlan: String?,
     val unit: String,
     val longitude: Double,
     val latitude: Double

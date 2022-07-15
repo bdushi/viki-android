@@ -3,7 +3,6 @@
     <style name="Theme.Viki" parent="Theme.Material3.DayNight.NoActionBar">
         <item name="colorPrimary">@color/vikiColorPrimary</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="colorPrimaryContainer">#8A0505</item>
         <item name="textInputStyle">@style/Widget.Design.TextInputLayout</item>
     </style>
 </resources>

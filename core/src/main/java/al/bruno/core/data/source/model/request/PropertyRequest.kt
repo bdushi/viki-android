@@ -5,6 +5,7 @@ import al.bruno.core.data.source.model.*
 data class PropertyRequest(
     val title: String?,
     val description: String?,
+    val floorPlan: String?,
     val propertyType: PropertyType,
     val operation: Operation,
     val attribute: Attribute,

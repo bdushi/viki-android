@@ -23,11 +23,13 @@
     <string name="save">Ruaj</string>
     <string name="logout">LogOut</string>
     <string name="new_request_title">Kerkes e Re</string>
+    <string name="request_location">Kerko Vendodhjen</string>
 
     <string name="permission_denied">Autorizim u mohua</string>
     <!-- Property Item -->
     <string name="property_title">Apartament</string>
-    <string name="property_price_item">%f %s/%s</string>
+    <string name="property_price_item">%f %s</string>
+    <string name="property_price_item_per_unit">%.2f %s/%s</string>
     <string name="property_address">Rruga Robert Zhvarc</string>
     <string name="property_floor_plan_item">4 + 1</string>
     <string name="property_area_item">%s %s</string>

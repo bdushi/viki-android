@@ -242,6 +242,7 @@ class PropertyViewModel @Inject constructor(
                 PropertyRequest(
                     newPropertyUi.title,
                     newPropertyUi.description,
+                    newPropertyUi.floorPlan,
                     PropertyType(
                         newPropertyUi.propertyType?.id,
                         newPropertyUi.propertyType?.propertyType
@@ -281,8 +282,8 @@ class PropertyViewModel @Inject constructor(
                         )
                     ),
                     Location(
-                        0.0,
-                        0.0
+                        newPropertyUi.location?.longitude ?: 0.0,
+                        newPropertyUi.location?.latitude ?: 0.0
                     )
                 )
             )) {

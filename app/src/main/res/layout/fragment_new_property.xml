@@ -164,7 +164,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:text="@{newProperty.floorPlan}"
+                        android:text="@={newProperty.floorPlan}"
                         android:imeOptions="actionNext"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -291,6 +291,7 @@
                     android:padding="@dimen/small_dimen"
                     android:layout_marginTop="@dimen/micro_dimen"
                     android:onClick="@{onClick::onClick}"
+                    android:tint="@{newProperty.location != null ? @color/vikiColorPrimary : @color/success}"
                     app:srcCompat="@drawable/ic_outlined_my_location"
                     app:layout_constraintStart_toEndOf="@+id/new_property_address"
                     app:layout_constraintTop_toTopOf="@+id/new_property_address"
