@@ -87,9 +87,6 @@ class PropertyViewModel @Inject constructor(
     private fun units() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = unitRepository.units()) {
-                is Result.Loading -> {
-                    _progress.value = true
-                }
                 is Result.Unauthorized -> {
                     _cities.value = State.Unauthorized
                 }
@@ -114,9 +111,6 @@ class PropertyViewModel @Inject constructor(
     private fun propertyTypes() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = propertyTypeRepository.propertyTypes()) {
-                is Result.Loading -> {
-                    _progress.value = true
-                }
                 is Result.Unauthorized -> {
                     _cities.value = State.Unauthorized
                 }
@@ -141,9 +135,6 @@ class PropertyViewModel @Inject constructor(
     private fun operations() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = operationRepository.operations()) {
-                is Result.Loading -> {
-                    _progress.value = true
-                }
                 is Result.Unauthorized -> {
                     _cities.value = State.Unauthorized
                 }
@@ -168,9 +159,6 @@ class PropertyViewModel @Inject constructor(
     private fun floorPlans() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = floorPlanRepository.floorPlans()) {
-                is Result.Loading -> {
-                    _progress.value = true
-                }
                 is Result.Unauthorized -> {
                     _cities.value = State.Unauthorized
                 }
@@ -195,9 +183,6 @@ class PropertyViewModel @Inject constructor(
     private fun currencies() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = currencyRepository.currencies()) {
-                is Result.Loading -> {
-                    _progress.value = true
-                }
                 is Result.Unauthorized -> {
                     _cities.value = State.Unauthorized
                 }
@@ -222,9 +207,6 @@ class PropertyViewModel @Inject constructor(
     private fun cities() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = cityRepository.cities()) {
-                is Result.Loading -> {
-                    _progress.value = true
-                }
                 is Result.Unauthorized -> {
                     _cities.value = State.Unauthorized
                 }
@@ -255,7 +237,7 @@ class PropertyViewModel @Inject constructor(
 
     fun save(newPropertyUi: NewPropertyUi) {
         viewModelScope.launch(Dispatchers.IO) {
-            _progress.value = true
+            _properties.value = State.Loading
             when(val response = propertyRepository.properties(
                 PropertyRequest(
                     newPropertyUi.title,
@@ -305,7 +287,6 @@ class PropertyViewModel @Inject constructor(
                 )
             )) {
                 is Result.Error -> _properties.value = State.Error(response.error)
-                is Result.Loading -> _progress.value = false
                 is Result.Success -> _properties.value = State.Success(response.data)
                 is Result.Unauthorized -> _properties.value = State.Unauthorized
             }

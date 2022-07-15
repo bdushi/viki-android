@@ -15,6 +15,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,21 +25,26 @@ class NewPropertyFragment : Fragment() {
     private var _binding: FragmentNewPropertyBinding? = null
     private val binding get() = _binding
 
-    private val cityAdapter = DropDownAdapter<CityUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
-        vm.selection = t
-    }
-    private val currencyAdapter = DropDownAdapter<CurrencyUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
-        vm.selection = t
-    }
-    private val propertyTypeAdapter = DropDownAdapter<PropertyTypeUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
-        vm.selection = t
-    }
-    private val unitAdapter = DropDownAdapter<UnitUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
-        vm.selection = t
-    }
-    private val operationAdapter = DropDownAdapter<OperationUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
-        vm.selection = t
-    }
+    private val cityAdapter =
+        DropDownAdapter<CityUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
+            vm.selection = t
+        }
+    private val currencyAdapter =
+        DropDownAdapter<CurrencyUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
+            vm.selection = t
+        }
+    private val propertyTypeAdapter =
+        DropDownAdapter<PropertyTypeUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
+            vm.selection = t
+        }
+    private val unitAdapter =
+        DropDownAdapter<UnitUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
+            vm.selection = t
+        }
+    private val operationAdapter =
+        DropDownAdapter<OperationUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
+            vm.selection = t
+        }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,84 +58,92 @@ class NewPropertyFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         collectFlow(propertyViewModel.cities) {
-            when(it) {
-                is State.Success-> {
+            when (it) {
+                is State.Success -> {
                     it.t?.let { cities ->
                         cityAdapter.setItem(cities)
                     }
-                } is State.Error -> {
-
-                } is State.Unauthorized -> {
-
                 }
+                is State.Error -> {}
+                is State.Unauthorized -> {}
+                is State.Loading -> TODO()
             }
         }
 
         collectFlow(propertyViewModel.propertyTypes) {
-            when(it) {
-                is State.Success-> {
+            when (it) {
+                is State.Success -> {
                     it.t?.let { propertyType ->
                         propertyTypeAdapter.setItem(propertyType)
                     }
-                } is State.Error -> {
-
-            } is State.Unauthorized -> {
-
-            }
+                }
+                is State.Error -> {}
+                is State.Unauthorized -> {}
+                is State.Loading -> TODO()
             }
         }
 
         collectFlow(propertyViewModel.currencies) {
-            when(it) {
-                is State.Success-> {
+            when (it) {
+                is State.Success -> {
                     it.t?.let { currencies ->
                         currencyAdapter.setItem(currencies)
                     }
-                } is State.Error -> {
+                }
+                is State.Error -> {
 
-            } is State.Unauthorized -> {
+                }
+                is State.Unauthorized -> {
 
-            }
+                }
+                is State.Loading -> TODO()
             }
         }
 
         collectFlow(propertyViewModel.units) {
-            when(it) {
-                is State.Success-> {
+            when (it) {
+                is State.Success -> {
                     it.t?.let { units ->
                         unitAdapter.setItem(units)
                     }
-                } is State.Error -> {
+                }
+                is State.Error -> {
 
-            } is State.Unauthorized -> {
+                }
+                is State.Unauthorized -> {
 
-            }
+                }
+                is State.Loading -> TODO()
             }
         }
 
         collectFlow(propertyViewModel.operations) {
-            when(it) {
-                is State.Success-> {
+            when (it) {
+                is State.Success -> {
                     it.t?.let { operations ->
                         operationAdapter.setItem(operations)
                     }
                 }
                 is State.Error -> {}
                 is State.Unauthorized -> {}
+                is State.Loading -> TODO()
             }
         }
 
         collectFlow(propertyViewModel.properties) {
-            when(it) {
-                is State.Error -> TODO()
+            when (it) {
+                is State.Error -> {}
                 is State.Success -> {
-                    if(it.t == 201)
+                    if (it.t == 201)
                         findNavController().popBackStack()
                 }
-                is State.Unauthorized -> TODO()
+                is State.Unauthorized -> {}
+                is State.Loading -> {}
             }
         }
 
+        binding?.lifecycleOwner = this
+        binding?.propertyViewModel = propertyViewModel
         binding?.newProperty = newPropertyUi
         binding?.cityAdapter = cityAdapter
         binding?.currencyAdapter = currencyAdapter
@@ -137,7 +151,7 @@ class NewPropertyFragment : Fragment() {
         binding?.unitAdapter = unitAdapter
         binding?.operationAdapter = operationAdapter
         binding?.onClick = View.OnClickListener {
-            when(it.id) {
+            when (it.id) {
                 R.id.new_property_photo -> {
 
                 }

@@ -61,6 +61,12 @@ class HomeFragment : Fragment() {
         binding?.menu?.setOnClickListener {
             showMenu(it, R.menu.menu_home)
         }
+        binding?.refreshProperty?.setOnRefreshListener {
+            collectLatestFlow(homeViewModel.collectionPagedList()) {
+                adapter.submitData(it)
+            }
+            binding?.refreshProperty?.isRefreshing = false
+        }
     }
 
     override fun onDestroyView() {

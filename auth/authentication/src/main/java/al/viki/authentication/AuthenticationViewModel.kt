@@ -25,9 +25,6 @@ class AuthenticationViewModel @Inject constructor(private val authRepository: Au
     // The UI collects from this StateFlow to get its state updates
     val authentication: StateFlow<State<AuthResponse>?> = _authentication
 
-    private val _progress = MutableStateFlow(false)
-    val progress: StateFlow<Boolean> = _progress
-
     fun auth() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = authRepository.auth(
@@ -36,20 +33,14 @@ class AuthenticationViewModel @Inject constructor(private val authRepository: Au
                     password.value
                 )
             )) {
-                is Result.Loading -> {
-                    _progress.value = true
-                }
                 is Result.Unauthorized -> {
                    _authentication.value = State.Unauthorized
-                    _progress.value = false
                 }
                 is Result.Success -> {
                     _authentication.value = State.Success(response.data)
-                    _progress.value = false
                 }
                 is Result.Error -> {
                     _authentication.value = State.Error(response.error)
-                    _progress.value = false
                 }
             }
         }
