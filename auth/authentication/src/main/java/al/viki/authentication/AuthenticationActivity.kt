@@ -45,7 +45,7 @@ class AuthenticationActivity : AppCompatActivity() {
                         is State.Unauthorized -> {
                             Snackbar.make(
                                 findViewById(android.R.id.content),
-                                "Unauthorized",
+                                R.string.unauthorized,
                                 Snackbar.LENGTH_SHORT
                             ).show()
                         }

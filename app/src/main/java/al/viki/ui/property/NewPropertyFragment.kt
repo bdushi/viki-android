@@ -1,5 +1,6 @@
 package al.viki.ui.property
 
+import al.bruno.adapter.CustomListAdapter
 import al.bruno.adapter.DropDownAdapter
 import al.bruno.core.State
 import al.viki.BuildConfig
@@ -7,10 +8,12 @@ import al.viki.R
 import al.viki.common.collectFlow
 import al.viki.databinding.DropDownItemBinding
 import al.viki.databinding.FragmentNewPropertyBinding
+import al.viki.databinding.NewPropertyPhotoItemBinding
 import al.viki.model.*
 import al.viki.ui.location.RequestLocationActivity
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
@@ -21,12 +24,13 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,6 +64,25 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
             vm.selection = t
         }
 
+    private val photoAdapter =
+        CustomListAdapter<PhotoUi, NewPropertyPhotoItemBinding>(
+            R.layout.new_property_photo_item, { t, vm ->
+                vm.photo = t
+                vm.onClick = View.OnClickListener {
+
+                }
+            },
+            object : DiffUtil.ItemCallback<PhotoUi>() {
+                override fun areItemsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
+                    return oldItem == newItem
+                }
+
+                override fun areContentsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
+                    return oldItem.path == newItem.path
+                }
+            }
+        )
+
     private val mStartForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
@@ -71,27 +94,30 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
 
     private val startForResult =
         registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()
-        ) { result: ActivityResult ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
-                result.data?.data?.let {
-                    requireActivity().contentResolver.query(
-                        it,
-                        filePathColumn,
-                        null,
-                        null,
+            object : ActivityResultContract<Intent, Uri?>() {
+                override fun createIntent(context: Context, input: Intent): Intent {
+                    return input
+                }
+
+                override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+                    return if (resultCode == Activity.RESULT_OK) {
+                        intent?.data
+                    } else {
                         null
-                    )?.let { cursor ->
-                        cursor.moveToFirst()
-                        while (!cursor.isAfterLast) {
-                            val picturePath =
-                                cursor.getString(cursor.getColumnIndex(filePathColumn[0]))
-                            cursor.moveToNext()
-//                            Compressor.compress(requireContext(), File(picturePath))
-                        }
-                        cursor.close()
                     }
+                }
+            }
+        ) { uri: Uri? ->
+            val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
+            uri?.let {
+                requireActivity().contentResolver.query(
+                    it,
+                    filePathColumn,
+                    null,
+                    null,
+                    null
+                )?.let { cursor ->
+                    propertyViewModel.photoUi(cursor, filePathColumn)
                 }
             }
         }
@@ -221,14 +247,22 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
 
         collectFlow(propertyViewModel.properties) {
             when (it) {
-                is State.Error -> {}
+                is State.Error -> {
+
+                }
                 is State.Success -> {
                     if (it.t == 201)
                         findNavController().popBackStack()
                 }
-                is State.Unauthorized -> {}
+                is State.Unauthorized -> {
+
+                }
                 is State.Loading -> {}
             }
+        }
+
+        collectFlow(propertyViewModel.photo) {
+            photoAdapter.submitList(it)
         }
 
         binding?.lifecycleOwner = this
@@ -239,6 +273,8 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
         binding?.propertyTypeAdapter = propertyTypeAdapter
         binding?.unitAdapter = unitAdapter
         binding?.operationAdapter = operationAdapter
+        binding?.photoAdapter = photoAdapter
+        // android:visibility="@{photoAdapter.isEmpty() ? View.GONE : View.VISIBLE }"
         binding?.onClick = this
         when (PackageManager.PERMISSION_GRANTED) {
             checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION),
@@ -252,7 +288,8 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
                             loc.result.latitude
                         )
                     }
-            } else -> {
+            }
+            else -> {
                 requestLocationPermissions.launch(
                     arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
@@ -261,18 +298,34 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
                 )
             }
         }
+
+        binding?.topAppBar?.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
+
+        binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.new_photo -> {
+                    val intent =
+                        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+                    intent.type = "image/*"
+//                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//                intent.action = Intent.ACTION_GET_CONTENT
+//                intent.putExtra(
+//                    Intent.EXTRA_MIME_TYPES,
+//                    arrayOf("image/png", "image/jpeg", "image/gif")
+//                )
+                    startForResult.launch(intent)
+                    true
+                }
+                else -> false
+            }
+        }
+
     }
 
     override fun onClick(view: View?) {
         when (view?.id) {
-            R.id.new_property_photo -> {
-                val intent =
-                    Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                intent.type = "image/*"
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                intent.action = Intent.ACTION_GET_CONTENT
-                startForResult.launch(intent)
-            }
             R.id.new_property_location -> {
                 mStartForResult.launch(
                     Intent(

@@ -19,4 +19,6 @@ class CustomListAdapter<T, VM: ViewDataBinding>(
     override fun onBindViewHolder(holder: CustomViewHolder<T, VM>, position: Int) {
         getItem(position)?.let{ holder.bind(it) }
     }
+
+    fun isEmpty() = currentList.isEmpty()
 }

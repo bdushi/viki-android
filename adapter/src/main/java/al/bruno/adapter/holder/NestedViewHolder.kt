@@ -1,4 +1,4 @@
-package al.bruno.adapter
+package al.bruno.adapter.holder
 
 import android.view.View
 import androidx.databinding.DataBindingUtil

@@ -8,6 +8,7 @@ import al.bruno.core.data.source.model.request.*
 import al.viki.model.*
 import al.viki.model.CountryUi
 import al.viki.model.NewPropertyUi
+import android.database.Cursor
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -68,6 +69,11 @@ class PropertyViewModel @Inject constructor(
 
     // The UI collects from this StateFlow to get its state updates
     val properties: StateFlow<State<Int>> = _properties
+
+    private val photoList: MutableList<PhotoUi> = mutableListOf()
+
+    private val _photo = MutableStateFlow<List<PhotoUi>>(photoList)
+    val photo: StateFlow<List<PhotoUi>> = _photo
 
 //    var citiesUi: List<CityUi> by mutableStateOf(listOf())
 //        private set
@@ -191,7 +197,10 @@ class PropertyViewModel @Inject constructor(
                         response.data.map {
                             CurrencyUi(
                                 it.id ?: 0,
-                                it.currency ?: ""
+                                it.currency ?: "",
+                                it.symbol ?: "",
+                                it.code ?: "",
+                                it.decimalMark ?: ""
                             )
                         }
                     )
@@ -235,6 +244,17 @@ class PropertyViewModel @Inject constructor(
         }
     }
 
+    fun photoUi(cursor: Cursor, filePathColumn: Array<String>) {
+        cursor.moveToFirst()
+        while (!cursor.isAfterLast) {
+            photoList.add(PhotoUi(cursor.getString(cursor.getColumnIndex(filePathColumn[0]))))
+            _photo.value = photoList
+            cursor.moveToNext()
+//            Compressor.compress(requireContext(), File(picturePath))
+        }
+        cursor.close()
+    }
+
     fun save(newPropertyUi: NewPropertyUi) {
         viewModelScope.launch(Dispatchers.IO) {
             _properties.value = State.Loading
@@ -256,7 +276,10 @@ class PropertyViewModel @Inject constructor(
                         newPropertyUi.area,
                         Currency(
                             newPropertyUi.currency?.id,
-                            newPropertyUi.currency?.currency
+                            newPropertyUi.currency?.currency,
+                            newPropertyUi.currency?.symbol,
+                            newPropertyUi.currency?.code,
+                            newPropertyUi.currency?.decimalMark
                         ),
                         Unit(
                             newPropertyUi.unit?.id,

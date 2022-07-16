@@ -1,5 +1,6 @@
 package al.bruno.adapter
 
+import al.bruno.adapter.holder.NestedViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding

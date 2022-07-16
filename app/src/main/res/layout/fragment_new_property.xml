@@ -31,6 +31,9 @@
         <variable
             name="propertyViewModel"
             type="al.viki.ui.property.PropertyViewModel" />
+        <variable
+            name="photoAdapter"
+            type="al.bruno.adapter.CustomListAdapter" />
 
         <import type="android.view.View"/>
 
@@ -58,10 +61,11 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/new_property_scroll_view">
             <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/topAppBar"
+                android:id="@+id/top_app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:navigationIcon="@drawable/ic_outlined_close"
+                app:menu="@menu/menu_new_photo"
                 app:title="@string/new_request_title" />
         </com.google.android.material.appbar.AppBarLayout>
         <androidx.core.widget.NestedScrollView
@@ -76,29 +80,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_margin="@dimen/small_dimen">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/new_property_photo"
-                    android:layout_width="wrap_content"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/new_property_photo_item"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/normal_dimen"
-                    android:layout_margin="@dimen/micro_dimen"
-                    android:onClick="@{onClick::onClick}"
-                    app:srcCompat="@drawable/ic_outlined_add_photo"
+                    android:orientation="horizontal"
+                    android:adapter="@{photoAdapter}"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toTopOf="@+id/new_property_title"/>
+
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/new_property_title"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:hint="@string/title"
+                    android:layout_marginTop="@dimen/micro_dimen"
                     app:endIconMode="clear_text"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/new_property_photo">
+                    app:layout_constraintTop_toBottomOf="@+id/new_property_photo_item">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

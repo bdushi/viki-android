@@ -22,6 +22,7 @@ class AuthenticationViewModel @Inject constructor(private val authRepository: Au
 
     // Backing property to avoid state updates from other classes
     private val _authentication = MutableStateFlow<State<AuthResponse>?>(null)
+
     // The UI collects from this StateFlow to get its state updates
     val authentication: StateFlow<State<AuthResponse>?> = _authentication
 
@@ -34,7 +35,7 @@ class AuthenticationViewModel @Inject constructor(private val authRepository: Au
                 )
             )) {
                 is Result.Unauthorized -> {
-                   _authentication.value = State.Unauthorized
+                    _authentication.value = State.Unauthorized
                 }
                 is Result.Success -> {
                     _authentication.value = State.Success(response.data)

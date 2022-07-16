@@ -5,6 +5,9 @@ import al.bruno.adapter.Selection
 data class CurrencyUi(
     val id: Long?,
     val currency: String,
+    val symbol: String?,
+    val code: String?,
+    val decimalMark: String?,
     var selection: Boolean = false
     ) : Selection {
     override fun selection(selection: Boolean) {
