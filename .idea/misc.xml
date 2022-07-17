@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/drawable/ic_outline_image_not_supported.xml" value="0.1715" />
         <entry key="app/src/main/res/drawable/ic_outline_menu.xml" value="0.22" />
         <entry key="app/src/main/res/drawable/ic_outline_my_location.xml" value="0.2095" />
+        <entry key="app/src/main/res/drawable/ic_outline_open_in_full.xml" value="0.2155" />
         <entry key="app/src/main/res/drawable/ic_outlined_add_photo.xml" value="0.174" />
         <entry key="app/src/main/res/drawable/ic_outlined_arrow_left.xml" value="0.1405" />
         <entry key="app/src/main/res/drawable/ic_outlined_arrow_right.xml" value="0.1405" />
@@ -39,7 +40,7 @@
         <entry key="app/src/main/res/layout/fragment_new_property.xml" value="0.25729166666666664" />
         <entry key="app/src/main/res/layout/fragment_new_request.xml" value="0.246875" />
         <entry key="app/src/main/res/layout/new_property_header_item.xml" value="0.25729166666666664" />
-        <entry key="app/src/main/res/layout/new_property_photo_item.xml" value="0.25625" />
+        <entry key="app/src/main/res/layout/new_property_photo_item.xml" value="0.34177215189873417" />
         <entry key="app/src/main/res/layout/oportunity_drop_down_item.xml" value="0.24583333333333332" />
         <entry key="app/src/main/res/layout/properties_item.xml" value="0.246875" />
         <entry key="app/src/main/res/menu/menu_home.xml" value="0.246875" />

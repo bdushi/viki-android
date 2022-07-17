@@ -2,6 +2,7 @@ package al.viki.ui.property
 
 import al.bruno.adapter.CustomListAdapter
 import al.bruno.adapter.DropDownAdapter
+import al.bruno.adapter.OnClickListener
 import al.bruno.core.State
 import al.viki.BuildConfig
 import al.viki.R
@@ -17,6 +18,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.database.Cursor
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -29,15 +31,28 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
+import androidx.work.Data
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import id.zelory.compressor.Compressor
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.File
+import java.util.*
 
+/**
+ * https://firebase.google.com/docs/storage/android/upload-files#kotlin+ktx
+ */
 
 @AndroidEntryPoint
-class NewPropertyFragment : Fragment(), View.OnClickListener {
+class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<PhotoUi> {
     private val newPropertyUi = NewPropertyUi()
     private val propertyViewModel: PropertyViewModel by viewModels()
     private var _binding: FragmentNewPropertyBinding? = null
@@ -68,9 +83,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
         CustomListAdapter<PhotoUi, NewPropertyPhotoItemBinding>(
             R.layout.new_property_photo_item, { t, vm ->
                 vm.photo = t
-                vm.onClick = View.OnClickListener {
-
-                }
+                vm.onClick = this
             },
             object : DiffUtil.ItemCallback<PhotoUi>() {
                 override fun areItemsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
@@ -78,7 +91,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
                 }
 
                 override fun areContentsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
-                    return oldItem.path == newItem.path
+                    return oldItem.photo == newItem.photo
                 }
             }
         )
@@ -121,6 +134,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
                 }
             }
         }
+
     private val requestLocationPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             when {
@@ -139,6 +153,41 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
                                 loc.result.latitude
                             )
                         }
+                }
+                else -> {
+                    binding?.let { newPropertyView ->
+                        Snackbar
+                            .make(
+                                newPropertyView.newPropertyRootView,
+                                getString(R.string.permission_denied),
+                                Snackbar.LENGTH_LONG
+                            )
+                            .setAction(R.string.settings) {
+                                startActivity(
+                                    Intent(
+                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                        Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+                                    )
+                                )
+                            }.show()
+                    }
+                }
+            }
+        }
+
+    private val requestFilePermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+            when {
+                it.getOrDefault(
+                    Manifest.permission.READ_EXTERNAL_STORAGE, false
+                ) -> {
+                    val intent =
+                        Intent(
+                            Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                        )
+                    intent.type = "image/*"
+                    startForResult.launch(intent)
                 }
                 else -> {
                     binding?.let { newPropertyView ->
@@ -251,8 +300,27 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
 
                 }
                 is State.Success -> {
-                    if (it.t == 201)
+                    it.t?.let{ id ->
+                        val uploadWorkRequest: WorkRequest =
+                            OneTimeWorkRequestBuilder<UploadWorker>()
+                                .setInputData(
+                                    Data
+                                        .Builder()
+                                        .putInt("ID", id)
+                                        .putStringArray(
+                                            "PHOTO_UI",
+                                            propertyViewModel.photo.value.map { photoUi ->
+                                                photoUi.photo
+                                            }.toTypedArray()
+                                        )
+                                        .build()
+                                )
+                                .build()
+                        WorkManager
+                            .getInstance(requireContext())
+                            .enqueue(uploadWorkRequest)
                         findNavController().popBackStack()
+                    }
                 }
                 is State.Unauthorized -> {
 
@@ -261,8 +329,12 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
             }
         }
 
+        /**
+         * android:visibility="@{propertyViewModel.photo.isEmpty() ? View.GONE : View.VISIBLE }"
+         */
         collectFlow(propertyViewModel.photo) {
             photoAdapter.submitList(it)
+            photoAdapter.notifyDataSetChanged()
         }
 
         binding?.lifecycleOwner = this
@@ -274,7 +346,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
         binding?.unitAdapter = unitAdapter
         binding?.operationAdapter = operationAdapter
         binding?.photoAdapter = photoAdapter
-        // android:visibility="@{photoAdapter.isEmpty() ? View.GONE : View.VISIBLE }"
         binding?.onClick = this
         when (PackageManager.PERMISSION_GRANTED) {
             checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION),
@@ -293,7 +364,8 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
                 requestLocationPermissions.launch(
                     arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.READ_EXTERNAL_STORAGE
                     )
                 )
             }
@@ -306,22 +378,51 @@ class NewPropertyFragment : Fragment(), View.OnClickListener {
         binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.new_photo -> {
-                    val intent =
-                        Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-                    intent.type = "image/*"
+                    when (PackageManager.PERMISSION_GRANTED) {
+                        checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.ACCESS_FINE_LOCATION
+                        ) -> {
+                            val intent =
+                                Intent(
+                                    Intent.ACTION_PICK,
+                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                                )
+                            intent.type = "image/*"
 //                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
 //                intent.action = Intent.ACTION_GET_CONTENT
 //                intent.putExtra(
 //                    Intent.EXTRA_MIME_TYPES,
 //                    arrayOf("image/png", "image/jpeg", "image/gif")
 //                )
-                    startForResult.launch(intent)
+                            startForResult.launch(intent)
+                        }
+                        else -> {
+                            requestFilePermissions.launch(
+                                arrayOf(
+                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                )
+                            )
+                        }
+                    }
                     true
                 }
                 else -> false
             }
         }
 
+    }
+
+    override fun onClick(view: View, t: PhotoUi) {
+        when (view.id) {
+            R.id.add_new_property_photo_close -> {
+                propertyViewModel.photoUi(photoUi = t)
+                photoAdapter.notifyDataSetChanged()
+            }
+            R.id.add_new_property_photo -> {
+
+            }
+        }
     }
 
     override fun onClick(view: View?) {

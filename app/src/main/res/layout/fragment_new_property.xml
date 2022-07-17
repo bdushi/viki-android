@@ -33,7 +33,7 @@
             type="al.viki.ui.property.PropertyViewModel" />
         <variable
             name="photoAdapter"
-            type="al.bruno.adapter.CustomListAdapter" />
+            type="androidx.recyclerview.widget.ListAdapter" />
 
         <import type="android.view.View"/>
 

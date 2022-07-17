@@ -1,21 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/tools">
     <data>
         <variable
             name="onClick"
-            type="android.view.View.OnClickListener" />
+            type="al.bruno.adapter.OnClickListener" />
         <variable
             name="photo"
             type="al.viki.model.PhotoUi" />
     </data>
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/add_new_property_photo"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/normal_dimen"
-        android:layout_margin="@dimen/micro_dimen"
-        android:onClick="@{onClick::onClick}"
-        bind:image="@{photo.path}"/>
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/add_new_property_photo_close"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:onClick="@{(v) -> onClick.onClick(v, photo)}"
+            android:elevation="100dp"
+            app:layout_constraintBottom_toTopOf="@+id/add_new_property_photo"
+            app:layout_constraintTop_toTopOf="@+id/add_new_property_photo"
+            app:layout_constraintEnd_toEndOf="@+id/add_new_property_photo"
+            app:layout_constraintStart_toEndOf="@+id/add_new_property_photo"
+            app:srcCompat="@drawable/ic_outlined_close" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/add_new_property_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_dimen"
+            android:onClick="@{(v) -> onClick.onClick(v, photo)}"
+            android:adjustViewBounds="true"
+            android:maxWidth="64dp"
+            app:srcCompat="@drawable/ic_outlined_add_photo"
+            bind:image="@{photo.photo}"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

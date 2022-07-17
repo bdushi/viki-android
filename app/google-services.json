@@ -1,42 +1,33 @@
 {
   "project_info": {
-    "project_number": "800356430673",
-    "firebase_url": "https://navigationlogin-80a79.firebaseio.com",
-    "project_id": "navigationlogin-80a79",
-    "storage_bucket": "navigationlogin-80a79.appspot.com"
+    "project_number": "319983696033",
+    "project_id": "viki-135b4",
+    "storage_bucket": "viki-135b4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:800356430673:android:368f05cc9586565ee9d970",
+        "mobilesdk_app_id": "1:319983696033:android:63929372a5e00db454d8e0",
         "android_client_info": {
           "package_name": "al.viki"
         }
       },
       "oauth_client": [
         {
-          "client_id": "800356430673-q9psn60a8m9nn1gsbekcvpnamqjtuivc.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "al.viki",
-            "certificate_hash": "a2e3f615524279d41607b88cbe20091df1265a4b"
-          }
-        },
-        {
-          "client_id": "800356430673-8uv8k2agqiv550m5aneoj1s2f1k54kpk.apps.googleusercontent.com",
+          "client_id": "319983696033-e6vmulo7iv8229iifari6f854b8s6rob.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAGjQXFV6W9FwBOxTYvGDrAu5oyrAmWTtI"
+          "current_key": "AIzaSyA8CJI0UqKIJLTdqlFkNrj3od-kvZRZWh8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "800356430673-8uv8k2agqiv550m5aneoj1s2f1k54kpk.apps.googleusercontent.com",
+              "client_id": "319983696033-e6vmulo7iv8229iifari6f854b8s6rob.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

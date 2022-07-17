@@ -30,8 +30,9 @@ class PropertyRepository @Inject constructor(
     suspend fun properties(propertyRequest: PropertyRequest): Result<Int> {
         return try {
             val response = propertyRemoteDataSource.properties(propertyRequest)
-            if (response.isSuccessful) {
-                Result.Success(response.code())
+            val body = response.body()
+            if (response.isSuccessful && body != null) {
+                Result.Success(body)
             } else if (response.code() == 401) {
                 Result.Unauthorized
             } else {

@@ -7,5 +7,5 @@ import retrofit2.Response
 
 interface PropertyDataSource {
     suspend fun properties(page: Int, size: Int) : Response<PropertyPageResponse>
-    suspend fun properties(propertyRequest: PropertyRequest) : Response<ResponseBody>
+    suspend fun properties(propertyRequest: PropertyRequest) : Response<Int>
 }

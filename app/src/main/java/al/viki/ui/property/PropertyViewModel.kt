@@ -248,11 +248,18 @@ class PropertyViewModel @Inject constructor(
         cursor.moveToFirst()
         while (!cursor.isAfterLast) {
             photoList.add(PhotoUi(cursor.getString(cursor.getColumnIndex(filePathColumn[0]))))
-            _photo.value = photoList
             cursor.moveToNext()
-//            Compressor.compress(requireContext(), File(picturePath))
         }
         cursor.close()
+//        lifecycleScope.launch(Dispatchers.IO) {
+//            img.forEach {
+//                propertyViewModel.setPhoto(PhotoUi(Compressor.compress(requireContext(), File(it))))
+//            }
+//        }
+    }
+
+    fun photoUi(photoUi: PhotoUi) {
+        photoList.remove(photoUi)
     }
 
     fun save(newPropertyUi: NewPropertyUi) {

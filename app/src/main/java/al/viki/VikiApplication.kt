@@ -6,6 +6,7 @@ import al.viki.authentication.AuthenticationActivity
 import al.viki.core.AuthRepository
 import android.app.Application
 import android.content.Intent
+import com.google.firebase.FirebaseApp
 import dagger.hilt.android.HiltAndroidApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -19,7 +20,7 @@ class VikiApplication : Application() {
     @Inject lateinit var trackingRepository: AuthRepository
     override fun onCreate() {
         super.onCreate()
-//        FirebaseApp.initializeApp(this)
+        FirebaseApp.initializeApp(this)
         // Used to Re-direct user into LoginActivity
         authorizationInterceptor.setSession(object : Session {
             override fun invalidate() {

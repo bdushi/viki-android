@@ -11,5 +11,5 @@ interface PropertyService {
     suspend fun properties(@Query("page") page: Int, @Query("size") size: Int) : Response<PropertyPageResponse>
 
     @POST("api/properties")
-    suspend fun properties(@Body propertyRequest: PropertyRequest) : Response<ResponseBody>
+    suspend fun properties(@Body propertyRequest: PropertyRequest) : Response<Int>
 }

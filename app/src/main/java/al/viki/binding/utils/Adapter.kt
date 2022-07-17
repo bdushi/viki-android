@@ -4,14 +4,13 @@ import al.bruno.adapter.DropDownAdapter
 import al.bruno.adapter.DropDownArrayAdapter
 import al.viki.R
 import android.net.Uri
-import android.util.Log
 import android.widget.AdapterView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
+import com.bumptech.glide.Glide
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.ShapeAppearanceModel
 import com.google.android.material.textfield.MaterialAutoCompleteTextView
-import com.squareup.picasso.Picasso
 import java.io.File
 
 object Adapter {
@@ -23,14 +22,15 @@ object Adapter {
                 .builder()
                 .setAllCornerSizes(ShapeAppearanceModel.PILL)
                 .build()
-        Picasso.get().load(photoUrl).into(photoProfile)
+        Glide.with(photoProfile.context).load(photoUrl).into(photoProfile)
     }
 
     @JvmStatic
     @BindingAdapter(value = ["bind:image"])
-    fun imageView(imageView: AppCompatImageView, photoUrl: String) {
-        Picasso.get()
-            .load(File(photoUrl))
+    fun imageView(imageView: AppCompatImageView, photo: String) {
+        Glide
+            .with(imageView.context)
+            .load(photo)
             .error(R.drawable.ic_outline_image_not_supported)
             .into(imageView)
     }

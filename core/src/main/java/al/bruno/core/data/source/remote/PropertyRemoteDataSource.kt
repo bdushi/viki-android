@@ -13,7 +13,7 @@ class PropertyRemoteDataSource @Inject constructor(private val propertyService: 
         return propertyService.properties(page = page, size = size)
     }
 
-    override suspend fun properties(propertyRequest: PropertyRequest): Response<ResponseBody> {
+    override suspend fun properties(propertyRequest: PropertyRequest): Response<Int> {
         return propertyService.properties(propertyRequest)
     }
 }
