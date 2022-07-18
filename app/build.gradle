@@ -1,13 +1,13 @@
 plugins {
     id 'com.android.application'
-    id 'com.google.gms.google-services' version '4.3.13' apply false
+    id 'com.google.gms.google-services'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-parcelize'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id 'com.google.firebase.crashlytics'
 //    id 'com.google.firebase.firebase-perf'
-//    id 'com.google.firebase.crashlytics'
 }
 
 android {

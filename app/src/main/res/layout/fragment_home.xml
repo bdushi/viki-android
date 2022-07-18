@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/menu_outline_shape"
-        app:srcCompat="@drawable/ic_outlined_menu"
+        app:srcCompat="@drawable/ic_outline_menu"
         app:layout_constraintTop_toTopOf="@id/search"
         app:layout_constraintBottom_toBottomOf="@id/search"
         app:layout_constraintStart_toEndOf="@id/search"
@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/menu_outline_shape"
             android:layout_gravity="end"
-            app:srcCompat="@drawable/ic_outlined_swap_vert"
+            app:srcCompat="@drawable/ic_outline_swap_vert"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

@@ -64,7 +64,7 @@
                 android:id="@+id/top_app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:navigationIcon="@drawable/ic_outlined_close"
+                app:navigationIcon="@drawable/ic_outline_close"
                 app:menu="@menu/menu_new_photo"
                 app:title="@string/new_request_title" />
         </com.google.android.material.appbar.AppBarLayout>
@@ -296,7 +296,7 @@
                     android:layout_marginTop="@dimen/micro_dimen"
                     android:onClick="@{onClick::onClick}"
                     android:tint="@{newProperty.location != null ? @color/vikiColorPrimary : @color/success}"
-                    app:srcCompat="@drawable/ic_outlined_my_location"
+                    app:srcCompat="@drawable/ic_outline_my_location"
                     app:layout_constraintStart_toEndOf="@+id/new_property_address"
                     app:layout_constraintTop_toTopOf="@+id/new_property_address"
                     app:layout_constraintBottom_toBottomOf="@+id/new_property_address"

@@ -5,6 +5,6 @@
     <item
         android:id="@+id/new_photo"
         android:title="@string/new_property"
-        android:icon="@drawable/ic_outlined_add_photo"
+        android:icon="@drawable/ic_outline_add_photo"
         app:showAsAction="always" />
 </menu>

@@ -20,11 +20,12 @@
             android:layout_height="18dp"
             android:onClick="@{(v) -> onClick.onClick(v, photo)}"
             android:elevation="100dp"
+            android:background="@drawable/bg_outline_close_shape"
             app:layout_constraintBottom_toTopOf="@+id/add_new_property_photo"
             app:layout_constraintTop_toTopOf="@+id/add_new_property_photo"
             app:layout_constraintEnd_toEndOf="@+id/add_new_property_photo"
             app:layout_constraintStart_toEndOf="@+id/add_new_property_photo"
-            app:srcCompat="@drawable/ic_outlined_close" />
+            app:srcCompat="@drawable/ic_outline_close" />
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/add_new_property_photo"
             android:layout_width="wrap_content"
@@ -33,7 +34,7 @@
             android:onClick="@{(v) -> onClick.onClick(v, photo)}"
             android:adjustViewBounds="true"
             android:maxWidth="64dp"
-            app:srcCompat="@drawable/ic_outlined_add_photo"
+            app:srcCompat="@drawable/ic_outline_add_photo"
             bind:image="@{photo.photo}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

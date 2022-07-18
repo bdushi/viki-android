@@ -13,7 +13,7 @@
             android:id="@+id/topAppBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_outlined_close"
+            app:navigationIcon="@drawable/ic_outline_close"
             app:title="@string/request_location" />
     </com.google.android.material.appbar.AppBarLayout>
     <androidx.fragment.app.FragmentContainerView

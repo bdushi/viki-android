@@ -14,5 +14,5 @@
         android:padding="@dimen/normal_dimen"
         android:layout_margin="@dimen/micro_dimen"
         android:onClick="@{onClick::onClick}"
-        app:srcCompat="@drawable/ic_outlined_add_photo" />
+        app:srcCompat="@drawable/ic_outline_add_photo" />
 </layout>

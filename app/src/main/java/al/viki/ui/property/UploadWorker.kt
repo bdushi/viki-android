@@ -1,6 +1,7 @@
 package al.viki.ui.property
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.work.CoroutineWorker
@@ -16,17 +17,21 @@ class UploadWorker(private val appContext: Context, workerParams: WorkerParamete
         val photoList = inputData.getStringArray("PHOTO_UI")
         val id = inputData.getInt("ID", -1)
         if(id != -1) {
-            val storageRefChild = Firebase.storage.reference.child(id.toString())
-            photoList?.forEach { photo ->
-                val compressor = Compressor.compress(context = appContext, File(photo), Dispatchers.IO)
+            val storageRefChild = Firebase.storage.reference.child("photos/${id}")
+            photoList?.forEachIndexed { index, photo ->
+                val file: Uri = Uri.fromFile(Compressor.compress(context = appContext, File(photo), Dispatchers.IO))
                 storageRefChild
-                    .putFile(compressor.toUri())
+                    .child("/${id}_${index}")
+                    .putFile(file)
                     .addOnSuccessListener {
                         Log.d("UploadWorker", it.toString())
                     }.addOnFailureListener {
                         Log.d("UploadWorker", it.toString())
                     }.addOnCanceledListener {
                         Log.d("UploadWorker", "Canceled")
+                    }.addOnProgressListener {
+                        val progress = 100 * it.bytesTransferred / it.totalByteCount
+                        Log.d("UploadWorker", progress.toString())
                     }
             } ?: run {
                 return Result.failure()

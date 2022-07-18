@@ -364,8 +364,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                 requestLocationPermissions.launch(
                     arrayOf(
                         Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.READ_EXTERNAL_STORAGE
+                        Manifest.permission.ACCESS_COARSE_LOCATION
                     )
                 )
             }
@@ -381,7 +380,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                     when (PackageManager.PERMISSION_GRANTED) {
                         checkSelfPermission(
                             requireContext(),
-                            Manifest.permission.ACCESS_FINE_LOCATION
+                            Manifest.permission.READ_EXTERNAL_STORAGE
                         ) -> {
                             val intent =
                                 Intent(
@@ -400,7 +399,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                         else -> {
                             requestFilePermissions.launch(
                                 arrayOf(
-                                    Manifest.permission.ACCESS_FINE_LOCATION,
+                                    Manifest.permission.READ_EXTERNAL_STORAGE,
                                 )
                             )
                         }

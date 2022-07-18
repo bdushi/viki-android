@@ -20,7 +20,6 @@ class VikiApplication : Application() {
     @Inject lateinit var trackingRepository: AuthRepository
     override fun onCreate() {
         super.onCreate()
-        FirebaseApp.initializeApp(this)
         // Used to Re-direct user into LoginActivity
         authorizationInterceptor.setSession(object : Session {
             override fun invalidate() {
