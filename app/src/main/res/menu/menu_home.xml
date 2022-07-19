@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <group>
+        <item android:id="@+id/menu_profile"
+            android:icon="@drawable/ic_outline_account_circle"
+            android:title="@string/visit_your_profile" />
+    </group>
+    <group
+        android:id="@+id/group_menu_property">
         <item android:id="@+id/menu_new_property"
             android:icon="@drawable/ic_outline_arrow_right"
             android:title="@string/new_property" />

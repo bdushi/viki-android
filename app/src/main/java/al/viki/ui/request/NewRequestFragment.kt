@@ -1,7 +1,6 @@
-package al.viki.ui.profile
+package al.viki.ui.request
 
 import al.viki.databinding.FragmentNewRequestBinding
-import al.viki.databinding.FragmentProfileBinding
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,8 +10,9 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class ProfileFragment : Fragment() {
-    private var _binding: FragmentProfileBinding? = null
+class NewRequestFragment : Fragment() {
+
+    private var _binding: FragmentNewRequestBinding? = null
     private val binding get() = _binding
 
     override fun onCreateView(
@@ -20,7 +20,7 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        _binding = FragmentNewRequestBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
@@ -36,4 +36,3 @@ class ProfileFragment : Fragment() {
         _binding = null
     }
 }
-

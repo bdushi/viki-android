@@ -8,13 +8,18 @@
         <variable
             name="property"
             type="al.bruno.core.data.source.model.response.PropertyResponse" />
+        <variable
+            name="onClick"
+            type="al.bruno.adapter.OnClickListener" />
+
         <import type="android.view.View"/>
     </data>
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/micro_dimen"
-        app:cardCornerRadius="@dimen/micro_dimen">
+        app:cardCornerRadius="@dimen/micro_dimen"
+        android:onClick="@{(v) -> onClick.onClick(v, property)}">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,14 +41,14 @@
                 style="@style/TextAppearance.AppCompat.Title"
                 tools:text="@string/property_title"/>
             <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/property_price_item((property.price * property.area), property.code)}"
                 android:textColor="@color/vikiColorRed"
                 android:layout_marginTop="@dimen/micro_dimen"
                 tools:text="@string/property_price"/>
             <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{property.address}"
                 android:layout_marginTop="@dimen/micro_dimen"

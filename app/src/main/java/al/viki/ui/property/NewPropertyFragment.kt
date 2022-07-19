@@ -412,6 +412,10 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
 
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     override fun onClick(view: View, t: PhotoUi) {
         when (view.id) {
             R.id.add_new_property_photo_close -> {

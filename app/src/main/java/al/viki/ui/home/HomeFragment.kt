@@ -1,5 +1,6 @@
 package al.viki.ui.home
 
+import al.bruno.adapter.OnClickListener
 import al.bruno.adapter.PagedListAdapter
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.viki.R
@@ -8,18 +9,18 @@ import al.viki.common.collectLatestFlow
 import al.viki.common.diffUtil
 import al.viki.databinding.FragmentHomeBinding
 import al.viki.databinding.PropertiesItemBinding
+import al.viki.model.PropertyUi
+import al.viki.ui.details.DetailsPropertyFragment
+import al.viki.ui.details.DetailsPropertyFragmentArgs
 import android.content.Context
 import android.graphics.drawable.InsetDrawable
-import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.MenuRes
 import androidx.appcompat.view.menu.MenuBuilder
-import androidx.appcompat.view.menu.SubMenuBuilder
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
@@ -36,6 +37,14 @@ class HomeFragment : Fragment() {
         PagedListAdapter<PropertyResponse, PropertiesItemBinding>(
             R.layout.properties_item, { t, vm ->
                 vm.property = t
+                vm.onClick = object : OnClickListener<PropertyResponse> {
+                    override fun onClick(view: View, t: PropertyResponse) {
+                        findNavController()
+                            .navigate(
+                                R.id.action_homeFragment_to_detailsPropertyFragment
+                            )
+                    }
+                }
             },
             diffUtil
         )
@@ -79,9 +88,11 @@ class HomeFragment : Fragment() {
         if (popup.menu is MenuBuilder) {
             val menuBuilder = popup.menu as MenuBuilder
             MenuCompat.setGroupDividerEnabled(menuBuilder, true)
-//            menuBuilder.setGroupVisible(R.id.group_menu_share, true)
             menuBuilder.setOptionalIconsVisible(true)
             for (item in menuBuilder.visibleItems) {
+                if(item.itemId == R.id.menu_profile) {
+                    item.title = "Bruno Dushi"
+                }
                 val iconMarginPx =
                     TypedValue.applyDimension(
                         TypedValue.COMPLEX_UNIT_DIP, 4.toFloat(), resources.displayMetrics)
@@ -99,6 +110,14 @@ class HomeFragment : Fragment() {
                 }
                 R.id.menu_logout -> {
                     notifyAuthenticationChange?.onSignOut()
+                    true
+                }
+                R.id.menu_new_request -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_newRequestFragment)
+                    true
+                }
+                R.id.menu_profile -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
                     true
                 }
                 else -> {

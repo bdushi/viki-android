@@ -12,9 +12,38 @@
         <action
             android:id="@+id/action_homeFragment_to_newPropertyFragment"
             app:destination="@id/newPropertyFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_detailsPropertyFragment"
+            app:destination="@id/detailsPropertyFragment">
+            <argument
+                android:name="property"
+                app:argType="al.viki.model.PropertyUi" />
+        </action>
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_newRequestFragment"
+            app:destination="@id/newRequestFragment" />
     </fragment>
     <fragment
         android:id="@+id/newPropertyFragment"
         android:name="al.viki.ui.property.NewPropertyFragment"
         android:label="NewPropertyFragment" />
+    <fragment
+        android:id="@+id/detailsPropertyFragment"
+        android:name="al.viki.ui.details.DetailsPropertyFragment"
+        android:label="DetailsPropertyFragment" >
+        <argument
+            android:name="property"
+            app:argType="al.viki.model.PropertyUi" />
+    </fragment>
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="al.viki.ui.profile.ProfileFragment"
+        android:label="ProfileFragment" />
+    <fragment
+        android:id="@+id/newRequestFragment"
+        android:name="al.viki.ui.request.NewRequestFragment"
+        android:label="NewRequestFragment" />
 </navigation>

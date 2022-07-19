@@ -23,7 +23,12 @@
     <string name="save">Save</string>
     <string name="logout">LogOut</string>
     <string name="new_request_title">New Request</string>
+    <string name="profile_title">Profile</string>
+    <string name="property_details">Property Details</string>
+    <string name="property_description">Property Description</string>
     <string name="request_location">Request Location</string>
+    <string name="agent">Agent</string>
+    <string name="agent_item">%s %s</string>
 
     <string name="permission_denied">Permission Denied</string>
     <!-- Property Item -->
