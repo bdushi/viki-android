@@ -2,6 +2,7 @@ package al.viki.authentication
 
 import al.bruno.core.Result
 import al.bruno.core.State
+import al.bruno.core.interceptor.AuthInterceptor
 import al.viki.core.AuthRepository
 import al.viki.core.request.model.AuthRequest
 import al.viki.core.response.model.AuthResponse
@@ -15,7 +16,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AuthenticationViewModel @Inject constructor(private val authRepository: AuthRepository) :
+class AuthenticationViewModel @Inject constructor(
+    private val authRepository: AuthRepository,
+    private val authInterceptor: AuthInterceptor) :
     ViewModel() {
     val username = MutableStateFlow<String?>(null)
     val password = MutableStateFlow<String?>(null)

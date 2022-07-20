@@ -26,6 +26,7 @@
     <string name="profile_title">Profile</string>
     <string name="property_details">Property Details</string>
     <string name="property_description">Property Description</string>
+    <string name="property_location_in_map">Property Location in Map</string>
     <string name="request_location">Request Location</string>
     <string name="agent">Agent</string>
     <string name="agent_item">%s %s</string>

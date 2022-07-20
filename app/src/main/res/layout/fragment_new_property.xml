@@ -328,7 +328,7 @@
                     android:text="@string/save"
                     android:layout_marginTop="@dimen/normal_dimen"
                     android:onClick="@{onClick::onClick}"
-                    android:enabled="@{ newProperty.title != null &amp; newProperty.description != null &amp; newProperty.propertyType != null &amp; newProperty.operation != null &amp; newProperty.price != null &amp; newProperty.currency != null &amp; newProperty.area != null &amp; newProperty.unit != null &amp; newProperty.address != null &amp; newProperty.city != null &amp; newProperty.location != null }"
+                    android:enabled="@{ newProperty.title != null &amp; newProperty.description != null &amp; newProperty.propertyType != null &amp; newProperty.operation != null &amp; newProperty.price != null &amp; newProperty.currency != null &amp; newProperty.area != null &amp; newProperty.unit != null &amp; newProperty.address != null &amp; newProperty.city != null &amp; newProperty.location != null  &amp; !propertyViewModel.photo.empty }"
                     style="@style/Widget.Material3.Button.TonalButton"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

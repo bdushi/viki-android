@@ -41,7 +41,7 @@ class HomeFragment : Fragment() {
                     override fun onClick(view: View, t: PropertyResponse) {
                         findNavController()
                             .navigate(
-                                R.id.action_homeFragment_to_detailsPropertyFragment
+                                HomeFragmentDirections.actionHomeFragmentToDetailsPropertyFragment(PropertyUi.toPropertyUi(t))
                             )
                     }
                 }

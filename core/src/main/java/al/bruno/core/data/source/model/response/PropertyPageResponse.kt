@@ -1,9 +1,9 @@
 package al.bruno.core.data.source.model.response
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 
 data class PropertyPageResponse(
-    @SerializedName("content")
+    @field:Json(name = "content")
     val pageResponse: List<PropertyResponse>?,
     val totalSize: Int,
     val totalPages: Int,

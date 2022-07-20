@@ -5,6 +5,7 @@ import al.viki.core.local.AuthLocalDataSource
 import al.viki.core.request.model.AuthRequest
 import al.viki.core.response.model.AuthResponse
 import al.bruno.core.Result
+import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -36,12 +37,8 @@ class AuthRepository @Inject constructor(
         return authRemoteDataSource.verification()
     }
 
-    fun token(): Flow<String?> {
+    suspend fun token(): Flow<Preferences> {
         return authLocalDataSource.token()
-    }
-
-    suspend fun token(token: String) {
-        return authLocalDataSource.token(token = token)
     }
 
     suspend fun clear() {

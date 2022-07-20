@@ -4,6 +4,7 @@ import al.viki.core.AuthDataSource
 import al.viki.core.remote.service.AuthService
 import al.viki.core.request.model.AuthRequest
 import al.viki.core.response.model.AuthResponse
+import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -18,9 +19,10 @@ class AuthRemoteDataSource @Inject constructor(private val authService: AuthServ
         return authService.verification()
     }
 
-    override fun token(): Flow<String?> {
+    override suspend fun token(): Flow<Preferences> {
         TODO("Not yet implemented")
     }
+
 
     override suspend fun token(token: String) {
         TODO("Not yet implemented")

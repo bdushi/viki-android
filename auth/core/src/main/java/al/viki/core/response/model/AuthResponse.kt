@@ -1,14 +1,14 @@
 package al.viki.core.response.model
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
 
 data class AuthResponse(
     val username: String,
     val roles: List<String>,
-    @SerializedName("access_token")
+    @field:Json(name = "access_token")
     val accessToken: String,
-    @SerializedName("token_type")
+    @field:Json(name = "token_type")
     val tokenType: String,
-    @SerializedName("expires_in")
+    @field:Json(name = "expires_in")
     val expiresIn: String,
 )

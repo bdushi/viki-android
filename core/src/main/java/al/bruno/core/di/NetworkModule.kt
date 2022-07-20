@@ -3,9 +3,8 @@ package al.bruno.core.di
 import al.bruno.core.BuildConfig
 import al.bruno.core.data.source.remote.service.*
 import al.bruno.core.interceptor.AuthInterceptor
-import al.bruno.core.interceptor.AuthorizationInterceptor
 import al.bruno.core.interceptor.ErrorHandler
-import com.google.gson.GsonBuilder
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
@@ -14,8 +13,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 @Module
@@ -25,13 +23,11 @@ class NetworkModule {
     @Singleton
     fun okHttpClient(
         authInterceptor: AuthInterceptor,
-        authorizationInterceptor: AuthorizationInterceptor,
         httpLoggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         return OkHttpClient
             .Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(authorizationInterceptor)
             .addInterceptor(authInterceptor)
             .build()
     }
@@ -50,11 +46,11 @@ class NetworkModule {
 
     @Provides
     @Reusable
-    fun converterFactory(): GsonConverterFactory {
-        return GsonConverterFactory.create(
-            GsonBuilder()
-                .setDateFormat("yyyy-MM-dd")
-                .create()
+    fun converterFactory(): MoshiConverterFactory {
+        return MoshiConverterFactory.create(
+            Moshi
+                .Builder()
+                .build()
         )
     }
 
@@ -67,13 +63,13 @@ class NetworkModule {
     fun providerRetrofit(
         baseUrl: String,
         okHttpClient: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory
+        moshiConverterFactory: MoshiConverterFactory
     ): Retrofit {
         return Retrofit
             .Builder()
             .baseUrl(baseUrl)
             .client(okHttpClient)
-            .addConverterFactory(gsonConverterFactory)
+            .addConverterFactory(moshiConverterFactory)
             .build()
     }
 

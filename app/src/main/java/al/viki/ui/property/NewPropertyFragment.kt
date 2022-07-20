@@ -422,9 +422,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                 propertyViewModel.photoUi(photoUi = t)
                 photoAdapter.notifyDataSetChanged()
             }
-            R.id.add_new_property_photo -> {
-
-            }
         }
     }
 

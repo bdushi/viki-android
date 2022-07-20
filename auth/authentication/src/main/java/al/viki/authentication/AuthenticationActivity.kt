@@ -60,4 +60,8 @@ class AuthenticationActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onBackPressed() {
+        // Disable BackPress for AuthenticationActivity
+    }
 }

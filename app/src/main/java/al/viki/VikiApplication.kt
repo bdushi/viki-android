@@ -1,40 +1,43 @@
 package al.viki
 
-import al.bruno.core.interceptor.AuthorizationInterceptor
-import al.bruno.foodies.interceptor.Session
+import al.bruno.core.interceptor.AuthInterceptor
 import al.viki.authentication.AuthenticationActivity
+import al.viki.common.TOKEN
 import al.viki.core.AuthRepository
 import android.app.Application
 import android.content.Intent
-import com.google.firebase.FirebaseApp
+import android.content.Intent.*
+import androidx.datastore.preferences.core.stringPreferencesKey
 import dagger.hilt.android.HiltAndroidApp
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collectLatest
 import javax.inject.Inject
 
 @HiltAndroidApp
 class VikiApplication : Application() {
-
-    @Inject lateinit var authorizationInterceptor: AuthorizationInterceptor
     @Inject lateinit var trackingRepository: AuthRepository
+    @Inject lateinit var authInterceptor: AuthInterceptor
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     override fun onCreate() {
         super.onCreate()
-        // Used to Re-direct user into LoginActivity
-        authorizationInterceptor.setSession(object : Session {
-            override fun invalidate() {
-                runBlocking {
-                    withContext(Dispatchers.IO) {
-                        trackingRepository.clear()
-                    }
+        applicationScope.launch {
+            trackingRepository.token().collectLatest {
+                val token: String? = it[stringPreferencesKey(TOKEN)]
+                if (token != null) {
+                    authInterceptor.token = token
+                } else {
+                    startActivity(
+                        Intent(this@VikiApplication, AuthenticationActivity::class.java)
+                            .setFlags(FLAG_ACTIVITY_NEW_TASK)
+                    )
                 }
-                startActivity(
-                    Intent(
-                        this@VikiApplication,
-                        AuthenticationActivity::class.java)
-                        .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                )
             }
-        })
+        }
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        applicationScope.cancel()
     }
 }
+

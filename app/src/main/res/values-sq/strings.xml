@@ -26,6 +26,7 @@
     <string name="profile_title">Profili</string>
     <string name="property_details">Detajet e Prones</string>
     <string name="property_description">Pershkrimi i Prones</string>
+    <string name="property_location_in_map">Prona ne Harte</string>
     <string name="request_location">Kerko Vendodhjen</string>
     <string name="agent">Agjenti</string>
     <string name="agent_item">%s %s</string>
