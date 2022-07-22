@@ -5,29 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/micro_dimen">
-    <com.google.android.material.textfield.TextInputLayout
+    <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/search"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:hint="@string/search_property"
+        android:inputType="text"
+        android:selectAllOnFocus="true"
         android:layout_marginBottom="@dimen/micro_dimen"
+        android:padding="@dimen/small_dimen"
+        android:background="@null"
         app:endIconMode="clear_text"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/menu"
-        app:layout_constraintBottom_toTopOf="@id/header">
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/search_property"
-            android:inputType="text"
-            android:selectAllOnFocus="true"/>
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintBottom_toTopOf="@id/header"/>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/menu_outline_shape"
+        android:padding="@dimen/small_dimen"
         app:srcCompat="@drawable/ic_outline_menu"
         app:layout_constraintTop_toTopOf="@id/search"
         app:layout_constraintBottom_toBottomOf="@id/search"
@@ -42,34 +40,34 @@
         android:layout_marginBottom="@dimen/micro_dimen"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/property"
+        app:layout_constraintBottom_toTopOf="@id/refresh_property"
         app:layout_constraintTop_toBottomOf="@id/search">
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/properties"
+            android:layout_marginStart="@dimen/small_dimen"
             style="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/map_view_menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/map_view"
-            android:layout_marginEnd="@dimen/normal_dimen"
-            style="@style/Widget.Material3.Button.OutlinedButton"
-            app:layout_constraintEnd_toStartOf="@id/filters_menu"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/filters_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/menu_outline_shape"
-            android:layout_gravity="end"
-            app:srcCompat="@drawable/ic_outline_swap_vert"
+            android:layout_marginEnd="@dimen/small_dimen"
+            android:padding="@dimen/small_dimen"
+            app:srcCompat="@drawable/ic_outline_filter_list"
+            app:layout_constraintEnd_toStartOf="@+id/sort_menu"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/sort_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/small_dimen"
+            app:srcCompat="@drawable/ic_outline_sort"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>

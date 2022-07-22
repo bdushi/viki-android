@@ -1,15 +1,12 @@
 package al.viki.model
 
 import al.viki.BR
-import al.viki.R
-import android.util.Log
-import android.view.View
 import android.widget.AdapterView
 import androidx.databinding.Bindable
 import androidx.databinding.Observable
 import androidx.databinding.PropertyChangeRegistry
 
-class NewPropertyUi : Observable {
+class NewRequestUi : Observable {
     @get:Bindable
     var title: String = ""
         set(value) {
@@ -28,12 +25,6 @@ class NewPropertyUi : Observable {
         set(value) {
             field = value
             propertyChangeRegistry.notifyChange(this, BR.city)
-        }
-    @get:Bindable
-    var operation: OperationUi? = null
-        set(value) {
-            field = value
-            propertyChangeRegistry.notifyChange(this, BR.operation)
         }
     @get:Bindable
     var propertyType: PropertyTypeUi? = null
@@ -89,9 +80,6 @@ class NewPropertyUi : Observable {
     val propertyTypeListener = AdapterView.OnItemClickListener { adapterView, _, position, _ ->
         propertyType = adapterView?.getItemAtPosition(position) as PropertyTypeUi?
         apartment = propertyType?.propertyType == "Apartament" || propertyType?.propertyType == "Apartment"
-    }
-    val operationListener = AdapterView.OnItemClickListener { adapterView, _, position, _ ->
-        operation = adapterView?.getItemAtPosition(position) as OperationUi?
     }
     val currencyListener = AdapterView.OnItemClickListener { adapterView, _, position, _ ->
         currency = adapterView?.getItemAtPosition(position) as CurrencyUi?

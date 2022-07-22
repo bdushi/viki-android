@@ -1,21 +1,328 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/new_property_app_bar_layout"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="newRequestUi"
+            type="al.viki.model.NewRequestUi" />
+
+        <variable
+            name="propertyTypeAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+
+        <variable
+            name="floorPlanAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+
+        <variable
+            name="operationAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+
+        <variable
+            name="currencyAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+
+        <variable
+            name="unitAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+
+        <variable
+            name="cityAdapter"
+            type="al.bruno.adapter.DropDownAdapter" />
+
+        <variable
+            name="onClick"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="requestViewModel"
+            type="al.viki.ui.request.RequestViewModel" />
+
+        <import type="android.view.View" />
+
+        <import type="al.bruno.core.State" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/top_app_bar"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{requestViewModel.request instanceof State.Loading ? View.VISIBLE : View.GONE }"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/new_request_app_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_outline_close"
-            app:title="@string/new_request_title" />
-    </com.google.android.material.appbar.AppBarLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/top_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:navigationIcon="@drawable/ic_outline_close"
+                app:title="@string/new_request_title" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/new_request_scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/new_request_app_bar_layout">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/small_dimen">
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/new_request_title"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/micro_dimen"
+                    android:hint="@string/title"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:text="@={newRequestUi.title}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/new_request_description"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/micro_dimen"
+                    android:hint="@string/description"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/new_request_title">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="textMultiLine"
+                        android:maxLines="2"
+                        android:text="@={newRequestUi.description}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/new_request_type"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/micro_dimen"
+                    android:hint="@string/property_type"
+                    app:layout_constraintEnd_toStartOf="@+id/new_request_floor_plan"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/new_request_description">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/new_request_type_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        bind:adapter="@{propertyTypeAdapter}"
+                        bind:onItemClick="@{newRequestUi.propertyTypeListener::onItemClick}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/new_request_floor_plan"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/micro_dimen"
+                    android:hint="@string/property_floor_plan"
+                    android:visibility="@{newRequestUi.apartment ? View.VISIBLE : View.GONE }"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintBottom_toBottomOf="@+id/new_request_type"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/new_request_type"
+                    app:layout_constraintTop_toTopOf="@+id/new_request_type">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/new_request_floor_plan_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:text="@={newRequestUi.floorPlan}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/new_request_price"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/micro_dimen"
+                    android:hint="@string/property_price"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toStartOf="@+id/new_request_currency"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/new_request_type">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="numberDecimal"
+                        android:maxLines="2"
+                        android:text="@={newRequestUi.price}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/new_request_currency"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/micro_dimen"
+                    android:hint="@string/property_currency"
+                    app:layout_constraintBottom_toBottomOf="@+id/new_request_price"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/new_request_price"
+                    app:layout_constraintTop_toTopOf="@+id/new_request_price">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/new_request_currency_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        bind:adapter="@{currencyAdapter}"
+                        bind:onItemClick="@{newRequestUi.currencyListener::onItemClick}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/new_request_area"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/micro_dimen"
+                    android:hint="@string/property_area"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toStartOf="@+id/new_request_unit"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/new_request_price">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="numberDecimal"
+                        android:maxLines="2"
+                        android:text="@={newRequestUi.area}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/new_request_unit"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/micro_dimen"
+                    android:hint="@string/property_unit"
+                    app:layout_constraintBottom_toBottomOf="@+id/new_request_area"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/new_request_area"
+                    app:layout_constraintTop_toTopOf="@+id/new_request_area">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/new_request_unit_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        bind:adapter="@{unitAdapter}"
+                        bind:onItemClick="@{newRequestUi.unitListener::onItemClick}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/new_request_address"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/micro_dimen"
+                    android:hint="@string/address"
+                    app:endIconMode="clear_text"
+                    app:layout_constraintEnd_toStartOf="@+id/new_request_location"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/new_request_area">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="textMultiLine"
+                        android:maxLines="2"
+                        android:text="@={newRequestUi.address}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/new_request_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/micro_dimen"
+                    android:onClick="@{onClick::onClick}"
+                    android:padding="@dimen/small_dimen"
+                    android:tint="@{newRequestUi.location != null ? @color/vikiColorPrimary : @color/success}"
+                    app:layout_constraintBottom_toBottomOf="@+id/new_request_address"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/new_request_address"
+                    app:layout_constraintTop_toTopOf="@+id/new_request_address"
+                    app:srcCompat="@drawable/ic_outline_my_location" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/new_request_city"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/micro_dimen"
+                    android:hint="@string/city"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/new_request_address">
+
+                    <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                        android:id="@+id/new_request_city_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        bind:adapter="@{cityAdapter}"
+                        bind:onItemClick="@{newRequestUi.cityListener::onItemClick}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/new_request_save"
+                    style="@style/Widget.Material3.Button.TonalButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/normal_dimen"
+                    android:enabled="@{ (!newRequestUi.title.blank || !newRequestUi.title.empty) &amp; (!newRequestUi.description.blank || !newRequestUi.description.empty) &amp; (!newRequestUi.price.blank || !newRequestUi.price.empty) &amp; (!newRequestUi.address.blank || !newRequestUi.address.empty) &amp; (!newRequestUi.area.blank || !newRequestUi.area.empty) &amp; newRequestUi.propertyType != null &amp; newRequestUi.currency != null &amp; newRequestUi.unit != null &amp; newRequestUi.city != null &amp; newRequestUi.location != null }"
+                    android:onClick="@{onClick::onClick}"
+                    android:text="@string/save"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/new_request_city" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

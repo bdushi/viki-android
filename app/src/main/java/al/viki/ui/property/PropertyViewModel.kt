@@ -41,12 +41,6 @@ class PropertyViewModel @Inject constructor(
     val currencies: StateFlow<State<List<CurrencyUi>?>> = _currencies
 
     // Backing property to avoid state updates from other classes
-    private val _floorPlans = MutableStateFlow<State<List<FloorPlanUi>?>>(State.Success(null))
-
-    // The UI collects from this StateFlow to get its state updates
-    val floorPlans: StateFlow<State<List<FloorPlanUi>?>> = _floorPlans
-
-    // Backing property to avoid state updates from other classes
     private val _operations = MutableStateFlow<State<List<OperationUi>?>>(State.Success(null))
 
     // The UI collects from this StateFlow to get its state updates
@@ -84,7 +78,6 @@ class PropertyViewModel @Inject constructor(
     init {
         cities()
         currencies()
-        floorPlans()
         operations()
         propertyTypes()
         units()
@@ -162,30 +155,6 @@ class PropertyViewModel @Inject constructor(
         }
     }
 
-    private fun floorPlans() {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (val response = floorPlanRepository.floorPlans()) {
-                is Result.Unauthorized -> {
-                    _cities.value = State.Unauthorized
-                }
-                is Result.Success -> {
-                    _floorPlans.value = State.Success(
-                        response.data.map {
-                            FloorPlanUi(
-                                it.id,
-                                it.florPlan
-                            )
-                        }
-                    )
-                }
-                is Result.Error -> {
-                    _cities.value = State.Error(response.error)
-                    _progress.value = false
-                }
-            }
-        }
-    }
-
     private fun currencies() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = currencyRepository.currencies()) {
@@ -250,20 +219,17 @@ class PropertyViewModel @Inject constructor(
             photoList.add(PhotoUi(cursor.getString(cursor.getColumnIndex(filePathColumn[0]))))
             cursor.moveToNext()
         }
-        _photo.value = photoList
         cursor.close()
     }
 
     fun photoUi(photoUi: PhotoUi) {
         photoList.remove(photoUi)
-        _photo.value = photoList
-
     }
 
     fun save(newPropertyUi: NewPropertyUi) {
         viewModelScope.launch(Dispatchers.IO) {
             _properties.value = State.Loading
-            when(val response = propertyRepository.properties(
+            when(val response = propertyRepository.property(
                 PropertyRequest(
                     newPropertyUi.title,
                     newPropertyUi.description,

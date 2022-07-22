@@ -17,8 +17,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
-import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
@@ -31,7 +29,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.work.Data
@@ -41,11 +38,6 @@ import androidx.work.WorkRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import id.zelory.compressor.Compressor
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.io.File
-import java.util.*
 
 /**
  * https://firebase.google.com/docs/storage/android/upload-files#kotlin+ktx
@@ -96,7 +88,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
             }
         )
 
-    private val mStartForResult =
+    private val requestLocation =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 it.data?.getParcelableExtra<LocationUi>("LAT_LNG")?.let { locationUi ->
@@ -428,7 +420,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.new_property_location -> {
-                mStartForResult.launch(
+                requestLocation.launch(
                     Intent(
                         requireContext(),
                         RequestLocationActivity::class.java
