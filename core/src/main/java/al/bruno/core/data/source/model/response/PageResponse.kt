@@ -2,7 +2,7 @@ package al.bruno.core.data.source.model.response
 
 import com.squareup.moshi.Json
 
-data class PropertyPageResponse<T>(
+data class PageResponse<T>(
     @field:Json(name = "content")
     val pageResponse: T?,
     val totalSize: Int,

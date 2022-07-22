@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="request"
+            type="al.bruno.core.data.source.model.response.RequestResponse" />
+        <variable
+            name="onClick"
+            type="al.bruno.adapter.OnClickListener" />
+
+        <import type="android.view.View"/>
+    </data>
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/micro_dimen"
+        app:cardCornerRadius="@dimen/micro_dimen"
+        android:onClick="@{(v) -> onClick.onClick(v, request)}">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/micro_dimen">
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{request.title}"
+                android:layout_marginTop="@dimen/micro_dimen"
+                style="@style/TextAppearance.AppCompat.Title"
+                tools:text="@string/property_title"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{@string/property_price_item((request.price * request.area), request.code)}"
+                android:textColor="@color/vikiColorRed"
+                android:layout_marginTop="@dimen/micro_dimen"
+                tools:text="@string/property_price"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{request.address}"
+                android:layout_marginTop="@dimen/micro_dimen"
+                tools:text="@string/property_address"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/micro_dimen"
+                android:orientation="horizontal">
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{request.floorPlan}"
+                    android:layout_marginEnd="@dimen/normal_dimen"
+                    android:visibility="@{request.floorPlan != null ? View.VISIBLE : View.GONE }"
+                    tools:text="@string/property_floor_plan" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{@string/property_area_item(request.area, request.unit)}"
+                    android:layout_marginEnd="@dimen/normal_dimen"
+                    tools:text="@string/property_area"/>
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{@string/property_price_item_per_unit(request.price, request.code, request.unit)}"
+                    android:layout_marginEnd="@dimen/normal_dimen"
+                    tools:text="@string/property_price"/>
+            </LinearLayout>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

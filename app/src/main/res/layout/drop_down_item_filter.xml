@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="selection"
+            type="al.bruno.adapter.Selection" />
+        <import type="android.view.View"/>
+    </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            style="@style/TextAppearance.AppCompat.Button"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_weight="1"
+            android:padding="@dimen/micro_dimen"
+            android:text="@{selection.searchCriteria()}"/>
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="@dimen/small_dimen"
+            android:visibility="@{selection.selection() ? View.VISIBLE : View.GONE }"
+            app:srcCompat="@drawable/ic_outline_check"/>
+    </LinearLayout>
+</layout>
