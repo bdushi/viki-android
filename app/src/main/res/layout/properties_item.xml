@@ -28,7 +28,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/micro_dimen"
+                android:layout_marginBottom="@dimen/micro_dimen"
                 bind:cloud="@{property.id}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

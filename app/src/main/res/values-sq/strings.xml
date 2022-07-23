@@ -11,6 +11,7 @@
     <string name="map_view">Map View</string>
     <string name="description">Pershkrimi</string>
     <string name="city">Qytet</string>
+    <string name="retry">Retry</string>
     <string name="property_type">Tipi i Prones</string>
     <string name="property_floor_plan">Planimetria</string>
     <string name="property_price">Cmimi</string>

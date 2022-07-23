@@ -5,11 +5,11 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 
-class HeaderViewHolder<VM : ViewDataBinding>(itemView: View, private val bindingData: (vm: VM) -> Unit) : RecyclerView.ViewHolder(itemView) {
+class ItemViewHolder<T, VM : ViewDataBinding>(itemView: View, private val bindingData: (t: T, vm: VM) -> Unit) : RecyclerView.ViewHolder(itemView) {
     private val binding: VM? = DataBindingUtil.bind(itemView)
-    fun bind() {
+    fun bind(t:T) {
         binding?.let {
-            bindingData.invoke(it)
+            bindingData.invoke(t, it)
             it.executePendingBindings()
         }
     }

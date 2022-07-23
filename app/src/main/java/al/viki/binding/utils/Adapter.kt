@@ -53,7 +53,7 @@ object Adapter {
     @JvmStatic
     @BindingAdapter(value = ["bind:image"])
     fun download(imageView: AppCompatImageView, photo: String) {
-        val finalHeight = (imageView.resources.displayMetrics.widthPixels * 2) / 1.75
+        val finalHeight = (imageView.resources.displayMetrics.widthPixels * 1.5) / 1.75
         imageView.minimumHeight = finalHeight.toInt()
         imageView.adjustViewBounds = true
         imageView.scaleType = ImageView.ScaleType.FIT_CENTER
@@ -70,7 +70,7 @@ object Adapter {
     @JvmStatic
     @BindingAdapter(value = ["bind:cloud"])
     fun download(imageView: AppCompatImageView, id: Long) {
-        val finalHeight = (imageView.resources.displayMetrics.widthPixels * 2) / 1.75
+        val finalHeight = (imageView.resources.displayMetrics.widthPixels * 1.5) / 1.75
         imageView.minimumHeight = finalHeight.toInt()
         imageView.adjustViewBounds = true
         imageView.scaleType = ImageView.ScaleType.FIT_CENTER

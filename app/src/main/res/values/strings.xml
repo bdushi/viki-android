@@ -11,6 +11,7 @@
     <string name="map_view">Map View</string>
     <string name="description">Description</string>
     <string name="city">City</string>
+    <string name="retry">Retry</string>
     <string name="property_type">Property Type</string>
     <string name="property_floor_plan">Floor Plan</string>
     <string name="property_price">Price</string>

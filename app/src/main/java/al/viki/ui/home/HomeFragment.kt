@@ -1,6 +1,7 @@
 package al.viki.ui.home
 
 import al.bruno.adapter.DropDownAdapter
+import al.bruno.adapter.LoadStateAdapter
 import al.bruno.adapter.OnClickListener
 import al.bruno.adapter.PagedListAdapter
 import al.bruno.core.State
@@ -11,10 +12,7 @@ import al.viki.authentication.NotifyAuthenticationChange
 import al.viki.common.collectLatestFlow
 import al.viki.common.propertiesDiffUtil
 import al.viki.common.requestDiffUtil
-import al.viki.databinding.DropDownItemFilterBinding
-import al.viki.databinding.FragmentHomeBinding
-import al.viki.databinding.PropertiesItemBinding
-import al.viki.databinding.RequestItemBinding
+import al.viki.databinding.*
 import al.viki.model.PropertyTypeUi
 import al.viki.model.PropertyUi
 import android.content.Context
@@ -41,6 +39,18 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private var notifyAuthenticationChange: NotifyAuthenticationChange? = null
     private val homeViewModel: HomeViewModel by viewModels()
+    private val propertiesLoadStateAdapter = LoadStateAdapter<LoadStateFooterViewItemBinding>(R.layout.load_state_footer_view_item) { loadState, vm ->
+        vm.loadState = loadState
+        vm.onClick = View.OnClickListener {
+            propertiesAdapter.retry()
+        }
+    }
+    private val requestsLoadStateAdapter = LoadStateAdapter<LoadStateFooterViewItemBinding>(R.layout.load_state_footer_view_item) { loadState, vm ->
+        vm.loadState = loadState
+        vm.onClick = View.OnClickListener {
+            requestsAdapter.retry()
+        }
+    }
     private val propertiesAdapter by lazy {
         PagedListAdapter<PropertyResponse, PropertiesItemBinding>(
             R.layout.properties_item, { t, vm ->
@@ -113,14 +123,12 @@ class HomeFragment : Fragment() {
             binding?.refreshProperty?.isRefreshing = false
         }
 
-        if(properties) {
-            collectLatestFlow(homeViewModel.propertiesCollectionPagedList()) {
-                propertiesAdapter.submitData(it)
-            }
-        } else {
-            collectLatestFlow(homeViewModel.requestCollectionPagedList()) {
-                requestsAdapter.submitData(it)
-            }
+        collectLatestFlow(homeViewModel.propertiesCollectionPagedList()) {
+            propertiesAdapter.submitData(it)
+        }
+
+        collectLatestFlow(homeViewModel.requestCollectionPagedList()) {
+            requestsAdapter.submitData(it)
         }
 
         collectLatestFlow(homeViewModel.propertyTypes) {
@@ -140,11 +148,18 @@ class HomeFragment : Fragment() {
         if(properties) {
             (view as MaterialTextView).setText(R.string.properties)
             binding?.property?.adapter = propertiesAdapter
+                .withLoadStateFooter(
+                    footer = propertiesLoadStateAdapter
+                )
         } else {
             (view as MaterialTextView).setText(R.string.requests)
             binding?.property?.adapter = requestsAdapter
+                .withLoadStateFooter(
+                    footer = requestsLoadStateAdapter
+                )
         }
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -159,7 +174,7 @@ class HomeFragment : Fragment() {
             menuBuilder.setOptionalIconsVisible(true)
             for (item in menuBuilder.visibleItems) {
                 if(item.itemId == R.id.menu_profile) {
-                    item.title = "Bruno Dushi"
+                    item.title = "John Doo"
                 }
                 val iconMarginPx =
                     TypedValue.applyDimension(

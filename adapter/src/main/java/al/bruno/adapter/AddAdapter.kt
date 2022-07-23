@@ -1,6 +1,6 @@
 package al.bruno.adapter
 
-import al.bruno.adapter.holder.CustomViewHolder
+import al.bruno.adapter.holder.ItemViewHolder
 import al.bruno.adapter.holder.HeaderViewHolder
 import android.util.Log
 import android.view.LayoutInflater
@@ -14,15 +14,14 @@ class AddAdapter<T, VM: ViewDataBinding, VH: ViewDataBinding>(
     private val bindingItem: (t: T, vm: VM) -> Unit,
     private val bindingHeader: (vm: VH) -> Unit,
     diffUtil: DiffUtil.ItemCallback<T>
-) : CustomEditAdapter<T, CustomViewHolder<T, VM>, HeaderViewHolder<VH>>(diffUtil) {
-    override fun onItemViewHolder(itemViewGroup: ViewGroup, viewType: Int): CustomViewHolder<T, VM> {
-        return CustomViewHolder(
+) : CustomEditAdapter<T, ItemViewHolder<T, VM>, HeaderViewHolder<VH>>(diffUtil) {
+    override fun onItemViewHolder(itemViewGroup: ViewGroup, viewType: Int): ItemViewHolder<T, VM> {
+        return ItemViewHolder(
             LayoutInflater.from(itemViewGroup.context).inflate(item, itemViewGroup, false), bindingItem)
     }
 
-    override fun onBindItemViewHolder(itemViewHolder: CustomViewHolder<T, VM>, t: T) {
+    override fun onBindItemViewHolder(itemViewHolder: ItemViewHolder<T, VM>, t: T) {
         itemViewHolder.bind(t)
-        Log.d("TAG__", t.toString())
     }
 
     override fun onHeaderViewHolder(
