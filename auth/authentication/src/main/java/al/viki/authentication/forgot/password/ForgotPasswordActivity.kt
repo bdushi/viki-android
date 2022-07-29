@@ -1,7 +1,8 @@
-package al.viki.authentication
+package al.viki.authentication.forgot.password
 
 import al.bruno.core.State
-import al.viki.authentication.databinding.ActivityAuthenticationBinding
+import al.viki.authentication.R
+import al.viki.authentication.databinding.ActivityForgotPasswordBinding
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -14,27 +15,22 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AuthenticationActivity : AppCompatActivity() {
-    private val authenticationViewModel: AuthenticationViewModel by viewModels()
+class ForgotPasswordActivity : AppCompatActivity() {
+    private val passwordViewModel: PasswordViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
-//        DaggerAuthComponent.builder()
-//            .context(this)
-//            .appDependencies(
-//                EntryPointAccessors.fromApplication(
-//                    this,
-//                    AuthModuleDependencies::class.java
-//                )
-//            )
-//            .build()
-//            .inject(this)
         super.onCreate(savedInstanceState)
-        val binding = ActivityAuthenticationBinding.inflate(layoutInflater)
-        binding.lifecycleOwner = this
-        binding.auth = authenticationViewModel
+
+        val binding = ActivityForgotPasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.lifecycleOwner = this
+        binding.passwordViewModel = passwordViewModel
+        binding.forgotPasswordTopAppBar.setNavigationOnClickListener {
+            finish()
+        }
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                authenticationViewModel.authentication.collectLatest { response ->
+                passwordViewModel.reset.collectLatest { response ->
                     when (response) {
                         is State.Error -> response.error?.let {
                             Snackbar.make(
@@ -50,7 +46,9 @@ class AuthenticationActivity : AppCompatActivity() {
                             ).show()
                         }
                         is State.Success -> {
-                            finish()
+                            if(response.t == true) {
+                                finish()
+                            }
                         }
                         else -> {
 
@@ -59,9 +57,5 @@ class AuthenticationActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    override fun onBackPressed() {
-        // Disable BackPress for AuthenticationActivity
     }
 }

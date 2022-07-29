@@ -1,7 +1,7 @@
 package al.viki
 
 import al.bruno.core.interceptor.AuthInterceptor
-import al.viki.authentication.AuthenticationActivity
+import al.viki.authentication.auth.AuthenticationActivity
 import al.viki.common.TOKEN
 import al.viki.core.AuthRepository
 import android.app.Application

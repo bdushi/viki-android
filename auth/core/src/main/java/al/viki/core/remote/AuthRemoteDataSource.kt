@@ -31,4 +31,13 @@ class AuthRemoteDataSource @Inject constructor(private val authService: AuthServ
     override suspend fun clear() {
         TODO("Not yet implemented")
     }
+
+
+    override suspend fun newPassword(password: String): Response<ResponseBody> {
+        return authService.newPassword(password)
+    }
+
+    override suspend fun changePassword(newPassword: String): Response<ResponseBody> {
+        return authService.newPassword(newPassword)
+    }
 }

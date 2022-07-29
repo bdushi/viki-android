@@ -10,7 +10,7 @@ import dagger.hilt.android.components.ActivityComponent
 
 @Module
 @InstallIn(ActivityComponent::class)
-abstract class DataSourceModule {
+abstract class AuthDataSourceModule {
     @Binds
     abstract fun provideAuthRemoteDataSource(authDataSource: AuthRemoteDataSource): AuthDataSource
 

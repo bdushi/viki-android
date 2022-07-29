@@ -38,4 +38,12 @@ class AuthLocalDataSource @Inject constructor(private val dataStore: DataStore<P
             it.clear()
         }
     }
+
+    override suspend fun newPassword(password: String): Response<ResponseBody> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun changePassword(newPassword: String): Response<ResponseBody> {
+        TODO("Not yet implemented")
+    }
 }

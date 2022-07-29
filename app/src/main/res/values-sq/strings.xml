@@ -32,6 +32,8 @@
     <string name="request_location">Kerko Vendodhjen</string>
     <string name="agent">Agjenti</string>
     <string name="agent_item">%s %s</string>
+    <string name="email">Email</string>
+    <string name="forgot_password">Forgot Password</string>
 
     <string name="permission_denied">Autorizim u mohua</string>
     <!-- Property Item -->

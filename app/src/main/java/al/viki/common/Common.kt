@@ -2,6 +2,7 @@ package al.viki.common
 
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
+import android.util.Patterns
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope

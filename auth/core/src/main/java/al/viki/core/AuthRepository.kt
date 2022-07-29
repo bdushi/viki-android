@@ -33,6 +33,37 @@ class AuthRepository @Inject constructor(
         }
     }
 
+    suspend fun newPassword(password: String): Result<Boolean> {
+        return try {
+            val response = authRemoteDataSource.newPassword(password = password)
+            if (response.isSuccessful) {
+                Result.Success(response.isSuccessful)
+            } else if (response.code() == 401) {
+                Result.Unauthorized
+            } else {
+                Result.Error(response.message())
+            }
+        } catch (ex: Exception) {
+            Result.Error(ex.message)
+        }
+    }
+
+
+    suspend fun changePassword(newPassword: String): Result<Boolean> {
+        return try {
+            val response = authRemoteDataSource.changePassword(newPassword)
+            if (response.isSuccessful) {
+                Result.Success(response.isSuccessful)
+            } else if (response.code() == 401) {
+                Result.Unauthorized
+            } else {
+                Result.Error(response.message())
+            }
+        } catch (ex: Exception) {
+            Result.Error(ex.message)
+        }
+    }
+
     suspend fun verification(): Response<ResponseBody> {
         return authRemoteDataSource.verification()
     }

@@ -4,7 +4,7 @@
     <data>
         <variable
             name="auth"
-            type="al.viki.authentication.AuthenticationViewModel" />
+            type="al.viki.authentication.auth.AuthenticationViewModel" />
         <import
             type="android.view.View"/>
         <import
@@ -21,7 +21,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
@@ -105,6 +105,6 @@
                     android:layout_gravity="center_horizontal"
                     style="@style/Widget.Material3.Button.OutlinedButton"/>
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

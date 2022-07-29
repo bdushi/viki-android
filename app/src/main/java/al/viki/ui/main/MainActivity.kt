@@ -2,18 +2,11 @@ package al.viki.ui.main
 
 import al.bruno.core.interceptor.AuthInterceptor
 import al.viki.R
-import al.viki.authentication.AuthenticationActivity
-import al.viki.authentication.NotifyAuthenticationChange
-import android.content.Intent
+import al.viki.authentication.auth.NotifyAuthenticationChange
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.NavHostFragment
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint

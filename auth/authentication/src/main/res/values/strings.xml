@@ -7,4 +7,10 @@
     <string name="request_new_account">Request new account</string>
     <string name="request_new_password">Request new password</string>
     <string name="unauthorized">Unauthorized</string>
+    <string name="email">Email</string>
+    <string name="new_password">New Password</string>
+    <string name="retype_new_password">Retype New Password</string>
+    <string name="retype_password">Retype Password</string>
+    <string name="forgot_password">Forgot Password</string>
+    <string name="invalid_email">Invalid Email</string>
 </resources>

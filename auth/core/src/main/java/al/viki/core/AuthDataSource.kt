@@ -13,4 +13,6 @@ interface AuthDataSource {
     suspend fun token(): Flow<Preferences>
     suspend fun token(token: String)
     suspend fun clear()
+    suspend fun newPassword(password: String): Response<ResponseBody>
+    suspend fun changePassword(newPassword: String): Response<ResponseBody>
 }

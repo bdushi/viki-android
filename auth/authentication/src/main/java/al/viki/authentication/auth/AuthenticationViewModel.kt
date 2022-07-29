@@ -1,4 +1,4 @@
-package al.viki.authentication
+package al.viki.authentication.auth
 
 import al.bruno.core.Result
 import al.bruno.core.State
