@@ -15,6 +15,7 @@ import al.viki.common.requestDiffUtil
 import al.viki.databinding.*
 import al.viki.model.PropertyTypeUi
 import al.viki.model.PropertyUi
+import al.viki.model.RequestUi
 import android.content.Context
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
@@ -59,7 +60,7 @@ class HomeFragment : Fragment() {
                     override fun onClick(view: View, t: PropertyResponse) {
                         findNavController()
                             .navigate(
-                                HomeFragmentDirections.actionHomeFragmentToDetailsPropertyFragment(PropertyUi.toPropertyUi(t))
+                                HomeFragmentDirections.actionHomeFragmentToPropertyDetailsFragment(PropertyUi.toPropertyUi(t))
                             )
                     }
                 }
@@ -74,7 +75,10 @@ class HomeFragment : Fragment() {
                 vm.request = t
                 vm.onClick = object : OnClickListener<RequestResponse> {
                     override fun onClick(view: View, t: RequestResponse) {
-                        Toast.makeText(requireContext(), "TODO", Toast.LENGTH_SHORT).show()
+                        findNavController()
+                            .navigate(
+                                HomeFragmentDirections.actionHomeFragmentToRequestDetailsFragment(RequestUi.toRequestUi(t))
+                            )
                     }
                 }
             },
@@ -87,7 +91,6 @@ class HomeFragment : Fragment() {
             vm.selection = t
         }
     }
-
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding
     override fun onCreateView(

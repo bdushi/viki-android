@@ -13,8 +13,8 @@
             android:id="@+id/action_homeFragment_to_newPropertyFragment"
             app:destination="@id/newPropertyFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_detailsPropertyFragment"
-            app:destination="@id/detailsPropertyFragment">
+            android:id="@+id/action_homeFragment_to_propertyDetailsFragment"
+            app:destination="@id/propertyDetailsFragment">
             <argument
                 android:name="property"
                 app:argType="al.viki.model.PropertyUi" />
@@ -25,19 +25,18 @@
         <action
             android:id="@+id/action_homeFragment_to_newRequestFragment"
             app:destination="@id/newRequestFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_requestDetailsFragment"
+            app:destination="@id/requestDetailsFragment">
+            <argument
+                android:name="request"
+                app:argType="al.viki.model.RequestUi" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/newPropertyFragment"
         android:name="al.viki.ui.property.NewPropertyFragment"
         android:label="NewPropertyFragment" />
-    <fragment
-        android:id="@+id/detailsPropertyFragment"
-        android:name="al.viki.ui.details.DetailsPropertyFragment"
-        android:label="DetailsPropertyFragment" >
-        <argument
-            android:name="property"
-            app:argType="al.viki.model.PropertyUi" />
-    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="al.viki.ui.profile.ProfileFragment"
@@ -46,4 +45,21 @@
         android:id="@+id/newRequestFragment"
         android:name="al.viki.ui.request.NewRequestFragment"
         android:label="NewRequestFragment" />
+    <fragment
+        android:id="@+id/propertyDetailsFragment"
+        android:name="al.viki.ui.details.PropertyDetailsFragment"
+        android:label="@string/property_details" >
+        <argument
+            android:name="property"
+            app:argType="al.viki.model.PropertyUi" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestDetailsFragment"
+        android:name="al.viki.ui.details.RequestDetailsFragment"
+        android:label="@string/request_details">
+
+        <argument
+            android:name="request"
+            app:argType="al.viki.model.RequestUi" />
+    </fragment>
 </navigation>

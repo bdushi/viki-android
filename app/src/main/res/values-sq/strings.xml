@@ -12,12 +12,12 @@
     <string name="description">Pershkrimi</string>
     <string name="city">Qytet</string>
     <string name="retry">Retry</string>
-    <string name="property_type">Tipi i Prones</string>
-    <string name="property_floor_plan">Planimetria</string>
-    <string name="property_price">Cmimi</string>
-    <string name="property_currency">Monedha</string>
-    <string name="property_area">Siperfaqija</string>
-    <string name="property_unit">Njesija</string>
+    <string name="type">Tipi i Prones</string>
+    <string name="floor_plan">Planimetria</string>
+    <string name="price">Cmimi</string>
+    <string name="currency">Monedha</string>
+    <string name="area">Siperfaqija</string>
+    <string name="unit">Njesija</string>
     <string name="operation">Shitje / Qira</string>
     <string name="address">Adresa</string>
     <string name="apartment">Apartament</string>
@@ -29,7 +29,10 @@
     <string name="property_details">Detajet e Prones</string>
     <string name="property_description">Pershkrimi i Prones</string>
     <string name="property_location_in_map">Prona ne Harte</string>
+    <string name="request_description">Pershkrimi i Kerkeses</string>
+    <string name="request_location_in_map">Kerkesa ne Harte</string>
     <string name="request_location">Kerko Vendodhjen</string>
+    <string name="request_details">Detajet e Kerkeses</string>
     <string name="agent">Agjenti</string>
     <string name="agent_item">%s %s</string>
     <string name="email">Email</string>
@@ -37,11 +40,11 @@
 
     <string name="permission_denied">Autorizim u mohua</string>
     <!-- Property Item -->
-    <string name="property_title">Apartament</string>
-    <string name="property_price_item">%f %s</string>
-    <string name="property_price_item_per_unit">%.2f %s/%s</string>
-    <string name="property_address">Rruga Robert Zhvarc</string>
-    <string name="property_floor_plan_item">4 + 1</string>
-    <string name="property_area_item">%s %s</string>
-    <string name="property_operation_item">Shitje</string>
+    <string name="item_title">Apartament</string>
+    <string name="price_item">%f %s</string>
+    <string name="price_item_per_unit">%.2f %s/%s</string>
+    <string name="item_address">Rruga Robert Zhvarc</string>
+    <string name="item_floor_plan_item">4 + 1</string>
+    <string name="area_item">%s %s</string>
+    <string name="operation_item">Shitje</string>
 </resources>

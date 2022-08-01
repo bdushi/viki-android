@@ -51,9 +51,12 @@
         <entry key="app/src/main/res/layout/drop_down_item.xml" value="0.25333333333333335" />
         <entry key="app/src/main/res/layout/drop_down_item_filter.xml" value="0.2713541666666667" />
         <entry key="app/src/main/res/layout/fragment_details_property.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/fragment_details_request.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.375" />
         <entry key="app/src/main/res/layout/fragment_new_property.xml" value="0.20599250936329588" />
         <entry key="app/src/main/res/layout/fragment_new_request.xml" value="0.11988304093567251" />
+        <entry key="app/src/main/res/layout/fragment_property_details.xml" value="0.2552083333333333" />
+        <entry key="app/src/main/res/layout/fragment_request_details.xml" value="0.2552083333333333" />
         <entry key="app/src/main/res/layout/load_state_footer_view_item.xml" value="0.2557291666666667" />
         <entry key="app/src/main/res/layout/new_property_header_item.xml" value="0.25729166666666664" />
         <entry key="app/src/main/res/layout/new_property_photo_item.xml" value="0.34177215189873417" />

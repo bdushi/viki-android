@@ -30,11 +30,11 @@
                 android:text="@{request.title}"
                 android:layout_marginTop="@dimen/micro_dimen"
                 style="@style/TextAppearance.AppCompat.Title"
-                tools:text="@string/property_title"/>
+                tools:text="@string/item_title"/>
             <com.google.android.material.textview.MaterialTextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{@string/property_price_item((request.price * request.area), request.code)}"
+                android:text="@{@string/price_item((request.price * request.area), request.code)}"
                 android:textColor="@color/vikiColorRed"
                 android:layout_marginTop="@dimen/micro_dimen"
                 tools:text="@string/property_price"/>
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="@{request.address}"
                 android:layout_marginTop="@dimen/micro_dimen"
-                tools:text="@string/property_address"/>
+                tools:text="@string/address"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -59,13 +59,13 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/property_area_item(request.area, request.unit)}"
+                    android:text="@{@string/area_item(request.area, request.unit)}"
                     android:layout_marginEnd="@dimen/normal_dimen"
                     tools:text="@string/property_area"/>
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/property_price_item_per_unit(request.price, request.code, request.unit)}"
+                    android:text="@{@string/price_item_per_unit(request.price, request.code, request.unit)}"
                     android:layout_marginEnd="@dimen/normal_dimen"
                     tools:text="@string/property_price"/>
             </LinearLayout>

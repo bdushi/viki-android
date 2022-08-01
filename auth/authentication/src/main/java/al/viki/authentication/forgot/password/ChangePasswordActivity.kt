@@ -69,7 +69,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                     when(response) {
                         is State.Error -> response.error?.let {
                             Snackbar.make(
-                                findViewById(android.R.id.content),
+                                binding.root,
                                 it, Snackbar.LENGTH_SHORT
                             ).show()
                         }
@@ -85,7 +85,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                         }
                         is State.Unauthorized -> {
                             Snackbar.make(
-                                findViewById(android.R.id.content),
+                                binding.root,
                                 "Token has been expired, Generate new One",
                                 Snackbar.LENGTH_SHORT
                             ).setAction("Forgot Password") {
@@ -118,6 +118,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                                 ).show()
                             }
                         is State.Unauthorized -> {
+//                            handler.postDelayed(runnable, 3000)
                             Snackbar.make(
                                 findViewById(android.R.id.content),
                                 "Token has been expired, Generate new One",
@@ -132,7 +133,6 @@ class ChangePasswordActivity : AppCompatActivity() {
                                 )
                                 finish()
                             }.show()
-                            handler.postDelayed(runnable, 3000)
                         }
                         else -> {
 

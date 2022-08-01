@@ -12,12 +12,12 @@
     <string name="description">Description</string>
     <string name="city">City</string>
     <string name="retry">Retry</string>
-    <string name="property_type">Property Type</string>
-    <string name="property_floor_plan">Floor Plan</string>
-    <string name="property_price">Price</string>
-    <string name="property_currency">Currency</string>
-    <string name="property_area">Area</string>
-    <string name="property_unit">Unit</string>
+    <string name="type">Property Type</string>
+    <string name="floor_plan">Floor Plan</string>
+    <string name="price">Price</string>
+    <string name="currency">Currency</string>
+    <string name="area">Area</string>
+    <string name="unit">Unit</string>
     <string name="operation">Sales / Rent</string>
     <string name="address">Address</string>
     <string name="apartment">Apartment</string>
@@ -29,7 +29,10 @@
     <string name="property_details">Property Details</string>
     <string name="property_description">Property Description</string>
     <string name="property_location_in_map">Property Location in Map</string>
+    <string name="request_description">Request Description</string>
+    <string name="request_location_in_map">Request Location in Map</string>
     <string name="request_location">Request Location</string>
+    <string name="request_details">Request Details</string>
     <string name="agent">Agent</string>
     <string name="agent_item">%s %s</string>
     <string name="email">Email</string>
@@ -37,11 +40,11 @@
 
     <string name="permission_denied">Permission Denied</string>
     <!-- Property Item -->
-    <string name="property_title">Apartment</string>
-    <string name="property_price_item">%.2f %s</string>
-    <string name="property_price_item_per_unit">%.2f %s/%s</string>
-    <string name="property_address">Rruga Robert Zhvarc</string>
-    <string name="property_floor_plan_item">4 + 1</string>
-    <string name="property_area_item">%s %s</string>
-    <string name="property_operation_item">For Sales</string>
+    <string name="item_title">Apartment</string>
+    <string name="price_item">%.2f %s</string>
+    <string name="price_item_per_unit">%.2f %s/%s</string>
+    <string name="item_address">Rruga Robert Zhvarc</string>
+    <string name="item_floor_plan_item">4 + 1</string>
+    <string name="area_item">%s %s</string>
+    <string name="operation_item">For Sales</string>
 </resources>
