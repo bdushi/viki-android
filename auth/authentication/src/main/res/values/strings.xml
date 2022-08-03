@@ -3,6 +3,10 @@
     <string name="viki_real_estate"><b>VIKI</b> REAL ESTATE</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="address">Address</string>
+    <string name="phone">Phone</string>
     <string name="login">LogIn</string>
     <string name="request_new_account">Request new account</string>
     <string name="request_new_password">Request new password</string>
@@ -13,4 +17,5 @@
     <string name="retype_password">Retype Password</string>
     <string name="forgot_password">Forgot Password</string>
     <string name="invalid_email">Invalid Email</string>
+    <string name="register">Register</string>
 </resources>

@@ -4,21 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
-            name="onClick"
-            type="android.view.View.OnClickListener" />
+            name="requestNewAccountViewModel"
+            type="al.viki.ui.account.RequestNewAccountViewModel" />
+
         <variable
-            name="passwordViewModel"
-            type="al.viki.authentication.forgot.password.PasswordViewModel" />
+            name="adapter"
+            type="al.bruno.adapter.DropDownAdapter" />
 
         <import type="al.viki.foundation.binding.util.ValidationKt"/>
         <import type="android.view.View"/>
         <import type="al.bruno.core.State"/>
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/forgot_password_app_bar_layout"
+            android:id="@+id/request_new_account_app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
@@ -29,24 +31,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:navigationIcon="@drawable/ic_outline_close"
-                app:title="@string/forgot_password" />
+                app:title="@string/request_new_account" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{ passwordViewModel.reset instanceof State.Loading ? View.VISIBLE : View.GONE }"
+            android:visibility="@{ requestNewAccountViewModel.request instanceof State.Loading ? View.VISIBLE : View.GONE }"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/forgot_password_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{ passwordViewModel.reset instanceof State.Loading ? View.GONE : View.VISIBLE }"
-            app:layout_constraintTop_toBottomOf="@+id/forgot_password_app_bar_layout"
+            android:visibility="@{ requestNewAccountViewModel.request instanceof State.Loading ? View.GONE : View.VISIBLE }"
+            app:layout_constraintTop_toBottomOf="@+id/request_new_account_app_bar_layout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
@@ -67,7 +68,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/extra_large_dimen"
-                    app:error="@{ValidationKt.isValidEmail(passwordViewModel.email) ? @string/invalid_email : null}">
+                    app:error="@{ValidationKt.isValidEmail(requestNewAccountViewModel.email) ? @string/invalid_email : null}">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -75,8 +76,14 @@
                         android:hint="@string/email"
                         android:inputType="textEmailAddress"
                         android:selectAllOnFocus="true"
-                        android:text="@={passwordViewModel.email}"/>
+                        android:text="@={requestNewAccountViewModel.email}"/>
                 </com.google.android.material.textfield.TextInputLayout>
+                <androidx.appcompat.widget.AppCompatSpinner
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adapter="@{adapter}"
+                    android:onItemSelected="@{requestNewAccountViewModel::onItemSelected}"
+                    android:layout_marginTop="@dimen/small_dimen"/>
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/bt_forgot_password"
                     android:layout_width="match_parent"
@@ -85,9 +92,9 @@
                     android:layout_marginTop="@dimen/xlarge_dimen"
                     android:layout_marginStart="@dimen/xlarge_dimen"
                     android:layout_marginEnd="@dimen/xlarge_dimen"
-                    android:enabled="@{!ValidationKt.isValidEmail(passwordViewModel.email)}"
-                    android:onClick="@{(v) -> passwordViewModel.resetPassword()}"
-                    android:text="@string/forgot_password"/>
+                    android:enabled="@{!ValidationKt.isValidEmail(requestNewAccountViewModel.email)}"
+                    android:onClick="@{(v) -> requestNewAccountViewModel.requestNewAccount()}"
+                    android:text="@string/request_account"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>

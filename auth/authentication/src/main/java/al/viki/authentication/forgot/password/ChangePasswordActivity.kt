@@ -3,6 +3,7 @@ package al.viki.authentication.forgot.password
 import al.bruno.core.State
 import al.viki.authentication.auth.AuthenticationActivity
 import al.viki.authentication.databinding.ActivityChangePasswordBinding
+import al.viki.foundation.common.collectLatestFlow
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity() {
     private val passwordViewModel: PasswordViewModel by viewModels()
+    private val handler = Handler(Looper.getMainLooper())
     private val runnable = {
         startActivity(
             Intent(
@@ -30,21 +32,28 @@ class ChangePasswordActivity : AppCompatActivity() {
         finish()
     }
 
-    private val handler = Handler(Looper.getMainLooper())
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityChangePasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.changePasswordTopAppBar.setNavigationOnClickListener {
+            startActivity(
+                Intent(
+                    this@ChangePasswordActivity,
+                    AuthenticationActivity::class.java
+                )
+            )
             finish()
         }
 
         binding.lifecycleOwner = this
         binding.passwordViewModel = passwordViewModel
+
         intent.data?.getQueryParameter("token")?.let {
             passwordViewModel.validateToken(it)
         } ?: run {
+//            handler.postDelayed(runnable, 3000)
             Snackbar.make(
                 binding.root,
                 "Token is not valid, Generate new One",
@@ -60,84 +69,80 @@ class ChangePasswordActivity : AppCompatActivity() {
                     )
                     finish()
                 }.show()
-            handler.postDelayed(runnable, 3000)
         }
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                passwordViewModel.change.collectLatest { response ->
-                    when(response) {
-                        is State.Error -> response.error?.let {
-                            Snackbar.make(
-                                binding.root,
-                                it, Snackbar.LENGTH_SHORT
-                            ).show()
-                        }
-                        is State.Success -> {
-                            if(response.t == true) {
-                                startActivity(
-                                    packageManager.getLaunchIntentForPackage(
-                                        packageName
-                                    )
-                                )
-                                finish()
-                            }
-                        }
-                        is State.Unauthorized -> {
-                            Snackbar.make(
-                                binding.root,
-                                "Token has been expired, Generate new One",
-                                Snackbar.LENGTH_SHORT
-                            ).setAction("Forgot Password") {
-                                handler.removeCallbacks(runnable)
-                                startActivity(
-                                    Intent(
-                                        this@ChangePasswordActivity,
-                                        ForgotPasswordActivity::class.java
-                                    )
-                                )
-                                finish()
-                            }.show()
-                        }
-                        else -> {
-
-                        }
+        collectLatestFlow(passwordViewModel.change) {
+            when (it) {
+                is State.Error -> it.error?.let { error ->
+                    Snackbar.make(
+                        binding.root,
+                        error,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+                is State.Success -> {
+                    if (it.t == true) {
+                        startActivity(
+                            packageManager.getLaunchIntentForPackage(
+                                packageName
+                            )
+                        )
+                        finish()
                     }
+                }
+                is State.Unauthorized -> {
+//                    handler.postDelayed(runnable, 3000)
+                    Snackbar.make(
+                        binding.root,
+                        "Token has been expired, Generate new One",
+                        Snackbar.LENGTH_SHORT
+                    ).setAction("Forgot Password") {
+                        handler.removeCallbacks(runnable)
+                        startActivity(
+                            Intent(
+                                this@ChangePasswordActivity,
+                                ForgotPasswordActivity::class.java
+                            )
+                        )
+                        finish()
+                    }.show()
+                }
+                else -> {
+
                 }
             }
         }
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.CREATED) {
-                passwordViewModel.validate.collectLatest { response ->
-                    when (response) {
-                        is State.Error ->
-                            response.error?.let {
-                                Snackbar.make(
-                                    findViewById(android.R.id.content),
-                                    it, Snackbar.LENGTH_SHORT
-                                ).show()
-                            }
-                        is State.Unauthorized -> {
-//                            handler.postDelayed(runnable, 3000)
-                            Snackbar.make(
-                                findViewById(android.R.id.content),
-                                "Token has been expired, Generate new One",
-                                Snackbar.LENGTH_SHORT
-                            ).setAction("Forgot Password") {
-                                handler.removeCallbacks(runnable)
-                                startActivity(
-                                    Intent(
-                                        this@ChangePasswordActivity,
-                                        ForgotPasswordActivity::class.java
-                                    )
-                                )
-                                finish()
-                            }.show()
-                        }
-                        else -> {
 
-                        }
+
+        collectLatestFlow(passwordViewModel.validate) {
+            when (it) {
+                is State.Error ->
+                    it.error?.let { error ->
+                        Snackbar.make(
+                            binding.root,
+                            error,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
                     }
+                is State.Unauthorized -> {
+//                    handler.postDelayed(runnable, 3000)
+                    Snackbar.make(
+                        binding.root,
+                        "Token has been expired, Generate new One",
+                        Snackbar.LENGTH_SHORT
+                    ).setAction("Forgot Password") {
+                        handler.removeCallbacks(runnable)
+                        startActivity(
+                            Intent(
+                                this@ChangePasswordActivity,
+                                ForgotPasswordActivity::class.java
+                            )
+                        )
+                        finish()
+                    }.show()
+                }
+                else -> {
+
                 }
             }
         }

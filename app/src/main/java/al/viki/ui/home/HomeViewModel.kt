@@ -4,7 +4,6 @@ import al.bruno.core.Result
 import al.bruno.core.State
 import al.bruno.core.data.source.PropertyRepository
 import al.bruno.core.data.source.PropertyTypeRepository
-import al.bruno.core.data.source.model.PropertyType
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
 import al.viki.common.NETWORK_PAGE_SIZE

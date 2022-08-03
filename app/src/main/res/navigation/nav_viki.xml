@@ -32,6 +32,9 @@
                 android:name="request"
                 app:argType="al.viki.model.RequestUi" />
         </action>
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/newPropertyFragment"
@@ -62,4 +65,16 @@
             android:name="request"
             app:argType="al.viki.model.RequestUi" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="al.viki.ui.settings.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_requestNewAccountFragment"
+            app:destination="@id/requestNewAccountFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestNewAccountFragment"
+        android:name="al.viki.ui.account.RequestNewAccountFragment"
+        android:label="RequestNewAccountFragment" />
 </navigation>

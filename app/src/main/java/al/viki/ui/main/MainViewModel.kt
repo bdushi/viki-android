@@ -1,9 +1,11 @@
 package al.viki.ui.main
 
 import al.viki.core.AuthRepository
+import androidx.datastore.preferences.core.Preferences
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -16,5 +18,9 @@ class MainViewModel @Inject constructor(private val authRepository: AuthReposito
         viewModelScope.launch {
             authRepository.clear()
         }
+    }
+
+    suspend fun token(): Flow<Preferences> {
+        return authRepository.token()
     }
 }

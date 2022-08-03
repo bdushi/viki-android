@@ -4,6 +4,7 @@ import al.bruno.core.State
 import al.viki.authentication.R
 import al.viki.authentication.databinding.ActivityAuthenticationBinding
 import al.viki.authentication.forgot.password.ForgotPasswordActivity
+import al.viki.authentication.register.RegisterActivity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -39,7 +40,7 @@ class AuthenticationActivity : AppCompatActivity() {
             startActivity(Intent(this@AuthenticationActivity, ForgotPasswordActivity::class.java))
         }
         binding.btnCreateAccount.setOnClickListener {
-
+            startActivity(Intent(this@AuthenticationActivity, RegisterActivity::class.java))
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {

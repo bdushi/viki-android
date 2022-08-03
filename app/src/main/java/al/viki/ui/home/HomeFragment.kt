@@ -206,6 +206,10 @@ class HomeFragment : Fragment() {
                     findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
                     true
                 }
+                R.id.menu_settings -> {
+                    findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
+                    true
+                }
                 else -> {
                     true
                 }

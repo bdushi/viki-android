@@ -103,6 +103,7 @@
                     android:layout_marginEnd="@dimen/xlarge_dimen"
                     android:text="@string/request_new_account"
                     android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
                     style="@style/Widget.Material3.Button.OutlinedButton"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>

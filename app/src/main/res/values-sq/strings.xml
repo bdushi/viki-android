@@ -26,6 +26,7 @@
     <string name="logout">LogOut</string>
     <string name="new_request_title">Kerkes e Re</string>
     <string name="profile_title">Profili</string>
+    <string name="change_password_title">Ndrysho Fjalkalimin</string>
     <string name="property_details">Detajet e Prones</string>
     <string name="property_description">Pershkrimi i Prones</string>
     <string name="property_location_in_map">Prona ne Harte</string>
@@ -37,6 +38,8 @@
     <string name="agent_item">%s %s</string>
     <string name="email">Email</string>
     <string name="forgot_password">Forgot Password</string>
+    <string name="request_new_account">Kërkon llogari të re</string>
+    <string name="request_account">Kërko llogarin</string>
 
     <string name="permission_denied">Autorizim u mohua</string>
     <!-- Property Item -->
