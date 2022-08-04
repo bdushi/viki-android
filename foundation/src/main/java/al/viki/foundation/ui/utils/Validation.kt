@@ -1,4 +1,4 @@
-package al.viki.foundation.binding.util
+package al.viki.foundation.ui.utils
 
 import android.util.Patterns
 import java.util.regex.Pattern

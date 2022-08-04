@@ -1,10 +1,10 @@
-package al.viki.binding.util
+package al.viki.foundation.binding.util
 
-import al.bruno.adapter.DropDownAdapter
-import al.viki.R
+import al.viki.foundation.R
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
@@ -85,13 +85,11 @@ object Adapter {
     }
 
     @JvmStatic
-    @BindingAdapter(value = ["bind:adapter", "bind:onItemClick"], requireAll = true)
+    @BindingAdapter(value = ["bind:onItemClick"], requireAll = true)
     fun adapter(
         materialAutoCompleteTextView: MaterialAutoCompleteTextView,
-        dropDownAdapter: DropDownAdapter<*, *>,
         onItemClickListener: AdapterView.OnItemClickListener
     ) {
-        materialAutoCompleteTextView.setAdapter(dropDownAdapter)
         materialAutoCompleteTextView.onItemClickListener = onItemClickListener
     }
 }

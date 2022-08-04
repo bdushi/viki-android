@@ -6,10 +6,10 @@ import al.bruno.adapter.OnClickListener
 import al.bruno.core.State
 import al.viki.BuildConfig
 import al.viki.R
-import al.viki.common.collectFlow
 import al.viki.databinding.DropDownItemBinding
 import al.viki.databinding.FragmentNewPropertyBinding
 import al.viki.databinding.NewPropertyPhotoItemBinding
+import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.*
 import al.viki.ui.location.RequestLocationActivity
 import android.Manifest
@@ -97,7 +97,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
             }
         }
 
-    private val startForResult =
+    private val requestGallery =
         registerForActivityResult(
             object : ActivityResultContract<Intent, Uri?>() {
                 override fun createIntent(context: Context, input: Intent): Intent {
@@ -179,7 +179,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         )
                     intent.type = "image/*"
-                    startForResult.launch(intent)
+                    requestGallery.launch(intent)
                 }
                 else -> {
                     binding?.let { newPropertyView ->
@@ -213,7 +213,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        collectFlow(propertyViewModel.cities) {
+        collectLatestFlow(propertyViewModel.cities) {
             when (it) {
                 is State.Success -> {
                     it.t?.let { cities ->
@@ -226,7 +226,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
             }
         }
 
-        collectFlow(propertyViewModel.propertyTypes) {
+        collectLatestFlow(propertyViewModel.propertyTypes) {
             when (it) {
                 is State.Success -> {
                     it.t?.let { propertyType ->
@@ -239,7 +239,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
             }
         }
 
-        collectFlow(propertyViewModel.currencies) {
+        collectLatestFlow(propertyViewModel.currencies) {
             when (it) {
                 is State.Success -> {
                     it.t?.let { currencies ->
@@ -256,7 +256,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
             }
         }
 
-        collectFlow(propertyViewModel.units) {
+        collectLatestFlow(propertyViewModel.units) {
             when (it) {
                 is State.Success -> {
                     it.t?.let { units ->
@@ -273,7 +273,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
             }
         }
 
-        collectFlow(propertyViewModel.operations) {
+        collectLatestFlow(propertyViewModel.operations) {
             when (it) {
                 is State.Success -> {
                     it.t?.let { operations ->
@@ -286,7 +286,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
             }
         }
 
-        collectFlow(propertyViewModel.properties) {
+        collectLatestFlow(propertyViewModel.properties) {
             when (it) {
                 is State.Error -> {
 
@@ -324,7 +324,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
         /**
          * android:visibility="@{propertyViewModel.photo.isEmpty() ? View.GONE : View.VISIBLE }"
          */
-        collectFlow(propertyViewModel.photo) {
+        collectLatestFlow(propertyViewModel.photo) {
             photoAdapter.submitList(it)
             photoAdapter.notifyDataSetChanged()
         }
@@ -386,7 +386,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
 //                    Intent.EXTRA_MIME_TYPES,
 //                    arrayOf("image/png", "image/jpeg", "image/gif")
 //                )
-                            startForResult.launch(intent)
+                            requestGallery.launch(intent)
                         }
                         else -> {
                             requestFilePermissions.launch(

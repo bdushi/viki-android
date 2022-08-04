@@ -1,4 +1,4 @@
-package al.viki.binding.util
+package al.viki.foundation.binding.util
 
 import androidx.databinding.InverseMethod
 

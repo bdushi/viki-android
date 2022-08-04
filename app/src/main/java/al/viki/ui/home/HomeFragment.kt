@@ -9,10 +9,10 @@ import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
 import al.viki.R
 import al.viki.authentication.auth.NotifyAuthenticationChange
-import al.viki.common.collectLatestFlow
 import al.viki.common.propertiesDiffUtil
 import al.viki.common.requestDiffUtil
 import al.viki.databinding.*
+import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.PropertyTypeUi
 import al.viki.model.PropertyUi
 import al.viki.model.RequestUi

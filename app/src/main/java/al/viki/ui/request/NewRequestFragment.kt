@@ -4,13 +4,11 @@ import al.bruno.adapter.DropDownAdapter
 import al.bruno.core.State
 import al.viki.BuildConfig
 import al.viki.R
-import al.viki.common.collectFlow
 import al.viki.databinding.DropDownItemBinding
 import al.viki.databinding.FragmentNewRequestBinding
+import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.*
 import al.viki.ui.location.RequestLocationActivity
-import al.viki.ui.property.PropertyViewModel
-import al.viki.ui.property.UploadWorker
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
@@ -173,7 +171,7 @@ class NewRequestFragment : Fragment() {
             }
         }
 
-        collectFlow(requestViewModel.cities) {
+        collectLatestFlow(requestViewModel.cities) {
             when (it) {
                 is State.Success -> {
                     it.t?.let { cities ->
@@ -186,7 +184,7 @@ class NewRequestFragment : Fragment() {
             }
         }
 
-        collectFlow(requestViewModel.propertyTypes) {
+        collectLatestFlow(requestViewModel.propertyTypes) {
             when (it) {
                 is State.Success -> {
                     it.t?.let { propertyType ->
@@ -199,7 +197,7 @@ class NewRequestFragment : Fragment() {
             }
         }
 
-        collectFlow(requestViewModel.currencies) {
+        collectLatestFlow(requestViewModel.currencies) {
             when (it) {
                 is State.Success -> {
                     it.t?.let { currencies ->
@@ -216,7 +214,7 @@ class NewRequestFragment : Fragment() {
             }
         }
 
-        collectFlow(requestViewModel.units) {
+        collectLatestFlow(requestViewModel.units) {
             when (it) {
                 is State.Success -> {
                     it.t?.let { units ->
@@ -233,7 +231,7 @@ class NewRequestFragment : Fragment() {
             }
         }
 
-        collectFlow(requestViewModel.request) {
+        collectLatestFlow(requestViewModel.request) {
             when (it) {
                 is State.Error -> {}
                 is State.Success -> {

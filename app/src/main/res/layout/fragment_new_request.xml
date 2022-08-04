@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/tools">
 
@@ -143,7 +144,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
-                        bind:adapter="@{propertyTypeAdapter}"
+                        android:adapter="@{propertyTypeAdapter}"
                         bind:onItemClick="@{newRequestUi.propertyTypeListener::onItemClick}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -208,7 +209,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
-                        bind:adapter="@{currencyAdapter}"
+                        android:adapter="@{currencyAdapter}"
                         bind:onItemClick="@{newRequestUi.currencyListener::onItemClick}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -250,7 +251,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionNext"
-                        bind:adapter="@{unitAdapter}"
+                        android:adapter="@{unitAdapter}"
                         bind:onItemClick="@{newRequestUi.unitListener::onItemClick}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -305,7 +306,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:imeOptions="actionDone"
-                        bind:adapter="@{cityAdapter}"
+                        android:adapter="@{cityAdapter}"
                         bind:onItemClick="@{newRequestUi.cityListener::onItemClick}" />
                 </com.google.android.material.textfield.TextInputLayout>
 

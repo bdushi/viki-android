@@ -3,12 +3,10 @@ package al.viki.ui.account
 import al.bruno.adapter.DropDownAdapter
 import al.bruno.core.State
 import al.viki.R
-import al.viki.common.collectFlow
 import al.viki.databinding.DropDownItemBinding
 import al.viki.databinding.FragmentRequestNewAccountBinding
-import al.viki.databinding.FragmentSettingsBinding
+import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.AuthorityUi
-import al.viki.model.CityUi
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -44,7 +42,7 @@ class RequestNewAccountFragment: Fragment() {
         _binding?.lifecycleOwner = this
         _binding?.requestNewAccountViewModel = requestNewAccountViewModel
         _binding?.adapter = authorityAdapter
-        collectFlow(requestNewAccountViewModel.authorities) {
+        collectLatestFlow(requestNewAccountViewModel.authorities) {
             when (it) {
                 is State.Success -> {
                     it.t?.let { cities ->
@@ -61,7 +59,7 @@ class RequestNewAccountFragment: Fragment() {
             }
         }
 
-        collectFlow(requestNewAccountViewModel.request) {
+        collectLatestFlow(requestNewAccountViewModel.request) {
             when(it) {
                 is State.Error -> {
 

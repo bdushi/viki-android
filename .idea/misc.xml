@@ -75,13 +75,16 @@
         <entry key="app/src/main/res/xml/provider_paths.xml" value="0.25625" />
         <entry key="auth/authentication/src/main/res/drawable/ic_baseline_visibility.xml" value="0.16" />
         <entry key="auth/authentication/src/main/res/drawable/ic_baseline_visibility_off.xml" value="0.16" />
+        <entry key="auth/authentication/src/main/res/drawable/ic_outline_add_photo.xml" value="0.188" />
         <entry key="auth/authentication/src/main/res/drawable/ic_outline_close.xml" value="0.16" />
         <entry key="auth/authentication/src/main/res/layout/activity_authentication.xml" value="0.24791666666666667" />
         <entry key="auth/authentication/src/main/res/layout/activity_change_password.xml" value="0.22" />
         <entry key="auth/authentication/src/main/res/layout/activity_forgot_password.xml" value="0.2557291666666667" />
         <entry key="auth/authentication/src/main/res/layout/activity_register.xml" value="0.25416666666666665" />
+        <entry key="auth/authentication/src/main/res/menu/menu_new_photo.xml" value="0.2578125" />
         <entry key="authentication/src/main/res/layout/activity_authentication.xml" value="0.22056159420289856" />
         <entry key="foundation/src/main/java/al/viki/foundation/component/Header.kt" value="0.5" />
+        <entry key="foundation/src/main/res/drawable/ic_outline_image_not_supported.xml" value="0.1105" />
       </map>
     </option>
   </component>
