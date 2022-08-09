@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-
 inline fun <T> LifecycleOwner.collectFlow(
     flow: Flow<T>,
     crossinline collector: suspend (T) -> Unit

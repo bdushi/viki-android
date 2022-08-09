@@ -4,8 +4,8 @@ import al.bruno.core.Result
 import al.bruno.core.State
 import al.bruno.core.interceptor.AuthInterceptor
 import al.viki.core.AuthRepository
-import al.viki.core.request.model.AuthRequest
-import al.viki.core.response.model.AuthResponse
+import al.viki.core.model.request.AuthRequest
+import al.viki.core.model.response.AuthResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel

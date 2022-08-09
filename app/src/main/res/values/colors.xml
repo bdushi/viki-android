@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="vikiColorPrimary">#8E8E8E</color>
-    <color name="success">#009A06</color>
+    <color name="vikiColorPrimary">#474747</color>
+    <color name="vikiColorPrimaryDark">#202020</color>
+    <color name="vikiColorOnPrimary">#DCDCDC</color>
+
+    <color name="vikiColorPrimaryContainer">#8E8E8E</color>
+    <color name="vikiColorOnPrimaryContainer">#000B49</color>
+
+    <color name="vikiColorSecondary">#001BB1</color>
+    <color name="vikiColorOnSecondary">#1C2451</color>
+
+    <color name="vikiColorSecondaryContainer">#8E8E8E</color>
+    <color name="vikiColorOnSecondaryContainer">#000B49</color>
+
+    <color name="success">#046C00</color>
     <color name="vikiColorRed">#910000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>

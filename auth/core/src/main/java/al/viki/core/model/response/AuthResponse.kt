@@ -1,4 +1,4 @@
-package al.viki.core.response.model
+package al.viki.core.model.response
 
 import com.squareup.moshi.Json
 

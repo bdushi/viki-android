@@ -113,17 +113,8 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                 }
             }
         ) { uri: Uri? ->
-            val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
             uri?.let {
-                requireActivity().contentResolver.query(
-                    it,
-                    filePathColumn,
-                    null,
-                    null,
-                    null
-                )?.let { cursor ->
-                    propertyViewModel.photoUi(cursor, filePathColumn)
-                }
+                propertyViewModel.photoUi(it)
             }
         }
 
@@ -170,9 +161,8 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
     private val requestFilePermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             when {
-                it.getOrDefault(
-                    Manifest.permission.READ_EXTERNAL_STORAGE, false
-                ) -> {
+                it.getOrDefault(Manifest.permission.READ_EXTERNAL_STORAGE, false) ||
+                        it.getOrDefault(Manifest.permission.WRITE_EXTERNAL_STORAGE, false) -> {
                     val intent =
                         Intent(
                             Intent.ACTION_PICK,
@@ -292,7 +282,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
 
                 }
                 is State.Success -> {
-                    it.t?.let{ id ->
+                    it.t?.let { id ->
                         val uploadWorkRequest: WorkRequest =
                             OneTimeWorkRequestBuilder<UploadWorker>()
                                 .setInputData(
@@ -345,10 +335,10 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                 LocationServices
                     .getFusedLocationProviderClient(requireActivity())
                     .lastLocation
-                    .addOnCompleteListener { loc ->
+                    .addOnSuccessListener {
                         newPropertyUi.location = LocationUi(
-                            loc.result.longitude,
-                            loc.result.latitude
+                            it.longitude,
+                            it.latitude
                         )
                     }
             }
@@ -373,6 +363,10 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                         checkSelfPermission(
                             requireContext(),
                             Manifest.permission.READ_EXTERNAL_STORAGE
+                        ),
+                        checkSelfPermission(
+                            requireContext(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
                         ) -> {
                             val intent =
                                 Intent(
@@ -380,12 +374,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                                 )
                             intent.type = "image/*"
-//                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-//                intent.action = Intent.ACTION_GET_CONTENT
-//                intent.putExtra(
-//                    Intent.EXTRA_MIME_TYPES,
-//                    arrayOf("image/png", "image/jpeg", "image/gif")
-//                )
                             requestGallery.launch(intent)
                         }
                         else -> {
@@ -408,6 +396,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
         super.onDestroyView()
         _binding = null
     }
+
     override fun onClick(view: View, t: PhotoUi) {
         when (view.id) {
             R.id.add_new_property_photo_close -> {

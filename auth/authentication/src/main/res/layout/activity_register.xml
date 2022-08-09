@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="registerViewModel"
             type="al.viki.authentication.register.RegisterViewModel" />
@@ -60,7 +60,16 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/large_dimen"
                     android:text="@string/viki_real_estate"
-                    android:textSize="26sp" />
+                    android:textSize="26sp"
+                    android:visibility="@{registerViewModel.photo != null ? View.GONE : View.VISIBLE}"/>
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="@{registerViewModel.photo != null ? View.VISIBLE : View.GONE}"
+                    android:adjustViewBounds="true"
+                    bind:uri="@{registerViewModel.photo}"/>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -70,10 +79,11 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:focusable="auto"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
                         android:hint="@string/email"
                         android:inputType="textEmailAddress"
-                        android:selectAllOnFocus="true"
                         android:text="@{registerViewModel.email}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -88,32 +98,6 @@
                         android:hint="@string/username"
                         android:inputType="text"
                         android:text="@={registerViewModel.username}" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_dimen">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/password"
-                        android:inputType="text"
-                        android:text="@={registerViewModel.username}" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_dimen">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/re_type_password"
-                        android:inputType="text"
-                        android:text="@={registerViewModel.reTypePassword}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -145,13 +129,39 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_dimen"
+                    app:passwordToggleEnabled="true">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/password"
+                        android:inputType="textPassword"
+                        android:text="@={registerViewModel.password}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/small_dimen"
+                    app:passwordToggleEnabled="true">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/re_type_password"
+                        android:inputType="textPassword"
+                        android:text="@={registerViewModel.reTypePassword}" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/small_dimen">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/phone"
-                        android:inputType="text"
+                        android:inputType="phone"
                         android:text="@={registerViewModel.phone}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -169,13 +179,13 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    style="@style/Widget.Material3.Button.OutlinedButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/normal_dimen"
-                    android:onClick="@{ (v) -> registerViewModel.register() }"
-                    android:text="@string/register" />
+                    android:onClick="@{ onClick::onClick }"
+                    android:text="@string/register"
+                    style="@style/Widget.Material3.Button.OutlinedButton"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

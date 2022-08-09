@@ -2,8 +2,8 @@ package al.viki.core.local
 
 import al.viki.core.AuthDataSource
 import al.viki.common.TOKEN
-import al.viki.core.request.model.AuthRequest
-import al.viki.core.response.model.AuthResponse
+import al.viki.core.model.request.AuthRequest
+import al.viki.core.model.response.AuthResponse
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit

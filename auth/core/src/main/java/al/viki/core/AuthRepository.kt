@@ -2,8 +2,8 @@ package al.viki.core
 
 import al.viki.core.remote.AuthRemoteDataSource
 import al.viki.core.local.AuthLocalDataSource
-import al.viki.core.request.model.AuthRequest
-import al.viki.core.response.model.AuthResponse
+import al.viki.core.model.request.AuthRequest
+import al.viki.core.model.response.AuthResponse
 import al.bruno.core.Result
 import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.flow.Flow

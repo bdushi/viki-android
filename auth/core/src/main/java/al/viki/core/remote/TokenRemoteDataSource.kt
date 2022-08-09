@@ -2,7 +2,7 @@ package al.viki.core.remote
 
 import al.viki.core.TokenDataSource
 import al.viki.core.remote.service.TokenService
-import al.viki.core.response.model.AuthResponse
+import al.viki.core.model.response.AuthResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject

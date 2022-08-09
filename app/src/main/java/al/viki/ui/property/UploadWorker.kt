@@ -41,5 +41,4 @@ class UploadWorker(private val appContext: Context, workerParams: WorkerParamete
         }
         return Result.success()
     }
-
 }

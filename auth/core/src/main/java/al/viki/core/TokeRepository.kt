@@ -3,7 +3,7 @@ package al.viki.core
 import al.bruno.core.Result
 import al.viki.core.local.AuthLocalDataSource
 import al.viki.core.remote.TokenRemoteDataSource
-import al.viki.core.response.model.AuthResponse
+import al.viki.core.model.response.AuthResponse
 import javax.inject.Inject
 
 class TokeRepository @Inject constructor(

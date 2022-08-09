@@ -53,17 +53,8 @@ abstract class DetailsFragment<T: ViewDataBinding> : Fragment() {
                 }
             }
         ) { uri: Uri? ->
-            val filePathColumn = arrayOf(MediaStore.Images.Media.DATA)
             uri?.let {
-                requireActivity().contentResolver.query(
-                    it,
-                    filePathColumn,
-                    null,
-                    null,
-                    null
-                )?.let { cursor ->
-                    // propertyViewModel.photoUi(cursor, filePathColumn)
-                }
+                // TODO
             }
         }
 

@@ -1,4 +1,4 @@
-package al.viki.core.request.model
+package al.viki.core.model.request
 
 data class AuthRequest(
     val username: String?,

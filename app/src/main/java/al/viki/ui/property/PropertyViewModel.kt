@@ -8,7 +8,7 @@ import al.bruno.core.data.source.model.request.*
 import al.viki.model.*
 import al.viki.model.CountryUi
 import al.viki.model.NewPropertyUi
-import android.database.Cursor
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,7 +22,6 @@ import javax.inject.Inject
 class PropertyViewModel @Inject constructor(
     private val cityRepository: CityRepository,
     private val currencyRepository: CurrencyRepository,
-    private val floorPlanRepository: FloorPlanRepository,
     private val operationRepository: OperationRepository,
     private val propertyTypeRepository: PropertyTypeRepository,
     private val unitRepository: UnitRepository,
@@ -204,13 +203,8 @@ class PropertyViewModel @Inject constructor(
         }
     }
 
-    fun photoUi(cursor: Cursor, filePathColumn: Array<String>) {
-        cursor.moveToFirst()
-        while (!cursor.isAfterLast) {
-            photoList.add(PhotoUi(cursor.getString(cursor.getColumnIndex(filePathColumn[0]))))
-            cursor.moveToNext()
-        }
-        cursor.close()
+    fun photoUi(uri: Uri) {
+        photoList.add(PhotoUi(uri.toString()))
     }
 
     fun photoUi(photoUi: PhotoUi) {

@@ -30,8 +30,8 @@ object Adapter {
     }
 
     @JvmStatic
-    @BindingAdapter("bind:cover")
-    fun coverProvider(photoProfile: ShapeableImageView, photoUrl: Uri) {
+    @BindingAdapter("bind:profile")
+    fun profile(photoProfile: ShapeableImageView, photoUrl: Uri) {
         photoProfile.shapeAppearanceModel =
             ShapeAppearanceModel
                 .builder()
@@ -40,19 +40,26 @@ object Adapter {
         Glide.with(photoProfile.context).load(photoUrl).into(photoProfile)
     }
 
-//    @JvmStatic
-//    @BindingAdapter(value = ["bind:image"])
-//    fun imageView(imageView: AppCompatImageView, photo: String) {
-//        Glide
-//            .with(imageView.context)
-//            .load(photo)
-//            .error(R.drawable.ic_outline_image_not_supported)
-//            .into(imageView)
-//    }
+    @JvmStatic
+    @BindingAdapter(value = ["bind:uri"])
+    fun bindUriImage(imageView: AppCompatImageView, photo: Uri?) {
+        val finalHeight = (imageView.resources.displayMetrics.widthPixels * 1.5) / 1.75
+        imageView.minimumHeight = finalHeight.toInt()
+        imageView.adjustViewBounds = true
+        imageView.scaleType = ImageView.ScaleType.FIT_CENTER
+        Glide
+            .with(imageView.context)
+            .load(photo)
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .error(ContextCompat.getDrawable(imageView.context, R.drawable.ic_outline_image_not_supported)?.also {
+                it.setTint(ContextCompat.getColor(imageView.context, R.color.vikiColorBackground))
+            })
+            .into(imageView)
+    }
 
     @JvmStatic
     @BindingAdapter(value = ["bind:image"])
-    fun download(imageView: AppCompatImageView, photo: String) {
+    fun bindImage(imageView: AppCompatImageView, photo: String?) {
         val finalHeight = (imageView.resources.displayMetrics.widthPixels * 1.5) / 1.75
         imageView.minimumHeight = finalHeight.toInt()
         imageView.adjustViewBounds = true
@@ -69,7 +76,7 @@ object Adapter {
 
     @JvmStatic
     @BindingAdapter(value = ["bind:cloud"])
-    fun download(imageView: AppCompatImageView, id: Long) {
+    fun bindCloudImage(imageView: AppCompatImageView, id: Long) {
         val finalHeight = (imageView.resources.displayMetrics.widthPixels * 1.5) / 1.75
         imageView.minimumHeight = finalHeight.toInt()
         imageView.adjustViewBounds = true

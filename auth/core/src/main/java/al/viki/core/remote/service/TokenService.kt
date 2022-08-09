@@ -1,6 +1,6 @@
 package al.viki.core.remote.service
 
-import al.viki.core.response.model.AuthResponse
+import al.viki.core.model.response.AuthResponse
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
