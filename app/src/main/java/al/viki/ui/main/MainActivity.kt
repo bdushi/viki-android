@@ -5,12 +5,16 @@ import al.viki.R
 import al.viki.authentication.auth.AuthenticationActivity
 import al.viki.authentication.auth.NotifyAuthenticationChange
 import al.viki.common.TOKEN
+import al.viki.foundation.common.collectFlow
+import al.viki.foundation.common.collectLatestFlow
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -25,26 +29,25 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
-            mainViewModel.token().collectLatest {
-                val token: String? = it[stringPreferencesKey(TOKEN)]
-                if(token != null) {
-                    authInterceptor.token = token
-                } else {
-                    startActivity(
-                        Intent(this@MainActivity, AuthenticationActivity::class.java)
-                            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    )
+            repeatOnLifecycle(Lifecycle.State.CREATED) {
+                mainViewModel.token().collectLatest {
+                    val token: String? = it[stringPreferencesKey(TOKEN)]
+                    if(token != null) {
+                        authInterceptor.token = token
+                        setContentView(R.layout.activity_main)
+                    } else {
+                        startActivity(
+                            Intent(this@MainActivity, AuthenticationActivity::class.java)
+                                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        )
+                        finish()
+                    }
                 }
             }
         }
-        setContentView(R.layout.activity_main)
     }
 
     override fun onSignOut() {
         mainViewModel.clear()
-//        startActivity(
-//            Intent(this@MainActivity, AuthenticationActivity::class.java)
-//                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//        )
     }
 }

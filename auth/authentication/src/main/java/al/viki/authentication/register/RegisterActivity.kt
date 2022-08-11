@@ -4,6 +4,8 @@ import al.bruno.core.State
 import al.viki.authentication.R
 import al.viki.authentication.auth.AuthenticationActivity
 import al.viki.authentication.databinding.ActivityRegisterBinding
+import al.bruno.core.data.source.model.response.ValidationResponse
+import al.bruno.core.data.source.model.response.ValidationStatus
 import al.viki.foundation.common.collectLatestFlow
 import android.Manifest
 import android.app.Activity
@@ -14,6 +16,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
+import android.view.View
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -23,6 +26,7 @@ import androidx.work.Data
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -125,12 +129,13 @@ class RegisterActivity : AppCompatActivity() {
         binding.setOnClick {
             intent.data?.let {
                 registerViewModel.register(
-                    it.getQueryParameter("authority").toString().toLong()
+                    it.getQueryParameter("authority").toString().toLong(),
+                    it.getQueryParameter("token").toString()
                 )
             } ?: run {
                 Snackbar.make(
                     binding.root,
-                    "Token has been expired, Please request New One",
+                    "Invitation has been expired, Please request New One",
                     Snackbar.LENGTH_SHORT
                 ).show()
             }
@@ -138,18 +143,64 @@ class RegisterActivity : AppCompatActivity() {
 
         intent.data?.let {
             registerViewModel.email.value = it.getQueryParameter("email").toString()
+            registerViewModel.validateToken(it.getQueryParameter("token").toString())
         } ?: run {
             Snackbar.make(
                 binding.root,
-                "Token has been expired, Please request New One",
+                "Invitation has been expired, Please request New One",
                 Snackbar.LENGTH_SHORT
             ).show()
         }
 
-        collectLatestFlow(registerViewModel.register) {
-            when(it) {
+        collectLatestFlow(registerViewModel.validate) {
+            when (it) {
+                is State.Error -> {
+                    binding.registerLayout.visibility = View.VISIBLE
+                    binding.registerLayoutProgress.visibility = View.GONE
+                    Snackbar.make(
+                        binding.root,
+                        al.viki.foundation.R.string.error,
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
                 is State.Success -> {
-                    if(it.t != null) {
+                    binding.registerLayout.visibility = View.VISIBLE
+                    binding.registerLayoutProgress.visibility = View.GONE
+                    when (it.t) {
+                        ValidationResponse.EXPIRED,
+                        ValidationResponse.NOT_FOUND ->
+                            MaterialAlertDialogBuilder(this)
+                                .setIcon(al.viki.foundation.R.drawable.ic_round_warning_amber)
+                                .setCancelable(false)
+                                .setTitle("Token has been expired")
+                                .setMessage("Please contact your administrator to send new invitation")
+                                .setPositiveButton("Ok") { d, i ->
+                                    d.dismiss()
+                                    finish()
+                                }
+                                .show()
+                        else -> {
+
+                        }
+                    }
+                }
+                is State.Loading -> {
+                    binding.registerLayout.visibility = View.GONE
+                    binding.registerLayoutProgress.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.registerLayout.visibility = View.VISIBLE
+                    binding.registerLayoutProgress.visibility = View.GONE
+                }
+            }
+        }
+
+        collectLatestFlow(registerViewModel.register) {
+            when (it) {
+                is State.Success -> {
+                    binding.registerLayout.visibility = View.VISIBLE
+                    binding.registerLayoutProgress.visibility = View.GONE
+                    if (it.t != null) {
                         val uploadWorkRequest: WorkRequest =
                             OneTimeWorkRequestBuilder<UploadProfilePictureWorker>()
                                 .setInputData(
@@ -166,19 +217,31 @@ class RegisterActivity : AppCompatActivity() {
                         WorkManager
                             .getInstance(this)
                             .enqueue(uploadWorkRequest)
-                        startActivity(Intent(this@RegisterActivity, AuthenticationActivity::class.java))
+                        startActivity(
+                            packageManager.getLaunchIntentForPackage(
+                                packageName
+                            )
+                        )
                         finish()
                     }
                 }
-                is State.Loading -> {
-
-                }
-                else -> {
+                is State.Error -> {
                     Snackbar.make(
                         binding.root,
                         al.viki.foundation.R.string.error,
                         Snackbar.LENGTH_SHORT
                     ).show()
+
+                    binding.registerLayout.visibility = View.VISIBLE
+                    binding.registerLayoutProgress.visibility = View.GONE
+                }
+                is State.Loading -> {
+                    binding.registerLayout.visibility = View.GONE
+                    binding.registerLayoutProgress.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.registerLayout.visibility = View.VISIBLE
+                    binding.registerLayoutProgress.visibility = View.GONE
                 }
             }
         }

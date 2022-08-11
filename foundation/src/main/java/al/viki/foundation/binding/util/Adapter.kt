@@ -3,9 +3,10 @@ package al.viki.foundation.binding.util
 import al.viki.foundation.R
 import android.graphics.drawable.Drawable
 import android.net.Uri
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.ImageView
+import android.view.KeyEvent
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.widget.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
@@ -98,5 +99,16 @@ object Adapter {
         onItemClickListener: AdapterView.OnItemClickListener
     ) {
         materialAutoCompleteTextView.onItemClickListener = onItemClickListener
+    }
+
+    @JvmStatic
+    @BindingAdapter("bind:onEditorEnterAction")
+    fun onEditorEnterAction(editText: EditText, onClick : View.OnClickListener) {
+        editText.setOnEditorActionListener { textView, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                onClick.onClick(textView)
+            }
+            false
+        }
     }
 }

@@ -60,6 +60,11 @@ class AuthenticationActivity : AppCompatActivity() {
                             ).show()
                         }
                         is State.Success -> {
+                            startActivity(
+                                packageManager.getLaunchIntentForPackage(
+                                    packageName
+                                )
+                            )
                             finish()
                         }
                         else -> {

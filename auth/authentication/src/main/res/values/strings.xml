@@ -22,4 +22,10 @@
     <string name="register">Register</string>
     <string name="permission_denied">Permission Denied</string>
     <string name="settings">Settings</string>
+    <string name="password_is_required">Password is Required</string>
+    <string name="confirm_password_is_required">Confirm Password is Required</string>
+    <string name="password_do_not_match">Passwords do not match</string>
+    <string name="password_requirement">Password must contain: one digit 0–9,one lowercase character, one uppercase character, length at least 6–20 characters</string>
+    <string name="password_requirement_error">Not Valid Password</string>
+    <string name="phone_nr_requirement_error">Not Valid Phone Nr</string>
 </resources>

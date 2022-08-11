@@ -23,7 +23,9 @@
         <entry key="app/src/main/res/drawable/ic_outline_menu.xml" value="0.22" />
         <entry key="app/src/main/res/drawable/ic_outline_more_vert.xml" value="0.216" />
         <entry key="app/src/main/res/drawable/ic_outline_my_location.xml" value="0.2095" />
+        <entry key="app/src/main/res/drawable/ic_outline_navigate_next.xml" value="0.187" />
         <entry key="app/src/main/res/drawable/ic_outline_open_in_full.xml" value="0.2155" />
+        <entry key="app/src/main/res/drawable/ic_outline_search.xml" value="0.2475" />
         <entry key="app/src/main/res/drawable/ic_outline_settings.xml" value="0.261" />
         <entry key="app/src/main/res/drawable/ic_outline_sort.xml" value="0.1995" />
         <entry key="app/src/main/res/drawable/ic_outline_swap_horiz.xml" value="0.1995" />
@@ -80,11 +82,12 @@
         <entry key="auth/authentication/src/main/res/layout/activity_authentication.xml" value="0.24791666666666667" />
         <entry key="auth/authentication/src/main/res/layout/activity_change_password.xml" value="0.22" />
         <entry key="auth/authentication/src/main/res/layout/activity_forgot_password.xml" value="0.2557291666666667" />
-        <entry key="auth/authentication/src/main/res/layout/activity_register.xml" value="0.25416666666666665" />
+        <entry key="auth/authentication/src/main/res/layout/activity_register.xml" value="0.25" />
         <entry key="auth/authentication/src/main/res/menu/menu_new_photo.xml" value="0.2578125" />
         <entry key="authentication/src/main/res/layout/activity_authentication.xml" value="0.22056159420289856" />
         <entry key="foundation/src/main/java/al/viki/foundation/component/Header.kt" value="0.5" />
         <entry key="foundation/src/main/res/drawable/ic_outline_image_not_supported.xml" value="0.1105" />
+        <entry key="foundation/src/main/res/drawable/ic_round_warning_amber.xml" value="0.187" />
       </map>
     </option>
   </component>

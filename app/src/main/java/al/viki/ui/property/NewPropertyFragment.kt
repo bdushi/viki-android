@@ -13,6 +13,7 @@ import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.*
 import al.viki.ui.location.RequestLocationActivity
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -118,6 +119,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
             }
         }
 
+    @SuppressLint("MissingPermission")
     private val requestLocationPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             when {
@@ -130,10 +132,10 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                     LocationServices
                         .getFusedLocationProviderClient(requireActivity())
                         .lastLocation
-                        .addOnCompleteListener { loc ->
+                        .addOnSuccessListener { loc ->
                             newPropertyUi.location = LocationUi(
-                                loc.result.longitude,
-                                loc.result.latitude
+                                loc.longitude,
+                                loc.latitude
                             )
                         }
                 }
@@ -201,6 +203,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
         return binding?.root
     }
 
+    @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         collectLatestFlow(propertyViewModel.cities) {
@@ -337,8 +340,8 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                     .lastLocation
                     .addOnSuccessListener {
                         newPropertyUi.location = LocationUi(
-                            it.longitude,
-                            it.latitude
+                            it.longitude ?: 0.0,
+                            it.latitude ?: 0.0
                         )
                     }
             }

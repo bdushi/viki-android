@@ -7,7 +7,10 @@ fun isValidEmail(mail: CharSequence?): Boolean? {
     return mail?.let { !Patterns.EMAIL_ADDRESS.matcher(it).matches() }
 }
 
-fun isValidPassword(password: CharSequence): Boolean {
-    return !Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{6,}$")
-        .matcher(password).matches()
+fun isValidPhone(mail: CharSequence?): Boolean? {
+    return mail?.let { !Patterns.PHONE.matcher(it).matches() }
+}
+
+fun isValidPassword(password: CharSequence?): Boolean? {
+    return password?.let { !Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{6,}$").matcher(it).matches() }
 }

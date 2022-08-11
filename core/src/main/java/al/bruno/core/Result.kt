@@ -1,5 +1,10 @@
 package al.bruno.core
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+
 /**
  * A generic class that holds a value with its loading status.
  * @param <T>
@@ -16,4 +21,15 @@ sealed class Result<out R> {
             is Unauthorized -> "Unauthorized"
         }
     }
+}
+
+/**
+ *
+ */
+fun <T> Flow<T>.asResult(){
+    map<T,Result<T>> {
+        Result.Success(it)
+    }.onStart {
+        emit(Result.Unauthorized)
+    }.catch { emit(Result.Error("")) }
 }

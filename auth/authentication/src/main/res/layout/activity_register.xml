@@ -12,6 +12,8 @@
             name="onClick"
             type="android.view.View.OnClickListener" />
 
+        <import type="al.viki.foundation.ui.utils.ValidationKt"/>
+
         <import type="al.bruno.core.State" />
 
         <import type="android.view.View" />
@@ -35,16 +37,15 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <ProgressBar
+            android:id="@+id/register_layout_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="@{ registerViewModel.register instanceof State.Loading ? View.VISIBLE : View.GONE }"/>
+            android:layout_gravity="center"/>
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/register_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="@{ registerViewModel.register instanceof State.Loading ? View.GONE : View.VISIBLE }"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
@@ -97,6 +98,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/username"
                         android:inputType="text"
+                        android:imeOptions="actionNext"
                         android:text="@={registerViewModel.username}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -110,6 +112,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/first_name"
                         android:inputType="text"
+                        android:imeOptions="actionNext"
                         android:text="@={registerViewModel.firstName}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -123,6 +126,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/last_name"
                         android:inputType="text"
+                        android:imeOptions="actionNext"
                         android:text="@={registerViewModel.lastName}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -130,12 +134,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/small_dimen"
-                    app:passwordToggleEnabled="true">
+                    app:passwordToggleEnabled="true"
+                    android:imeOptions="actionNext"
+                    app:error="@{registerViewModel.password.empty ? @string/password_is_required : (ValidationKt.isValidPassword(registerViewModel.password) ? @string/password_requirement : null)}">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/password"
                         android:inputType="textPassword"
+                        android:imeOptions="actionNext"
                         android:text="@={registerViewModel.password}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -143,25 +150,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/small_dimen"
-                    app:passwordToggleEnabled="true">
+                    app:passwordToggleEnabled="true"
+                    app:error="@{registerViewModel.reTypePassword.empty ? @string/confirm_password_is_required : (!registerViewModel.password.equalsIgnoreCase(registerViewModel.reTypePassword) ? @string/password_do_not_match : null)}">
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/re_type_password"
                         android:inputType="textPassword"
+                        android:imeOptions="actionNext"
                         android:text="@={registerViewModel.reTypePassword}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/small_dimen">
+                    android:layout_marginTop="@dimen/small_dimen"
+                    app:error="@{ValidationKt.isValidPhone(registerViewModel.phone) ? @string/phone_nr_requirement_error : null}">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/phone"
                         android:inputType="phone"
+                        android:imeOptions="actionNext"
                         android:text="@={registerViewModel.phone}" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -175,7 +186,9 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/address"
                         android:inputType="text"
-                        android:text="@={registerViewModel.address}" />
+                        android:imeOptions="actionDone"
+                        android:text="@={registerViewModel.address}"
+                        bind:onEditorEnterAction="@{ (v) -> (registerViewModel.photo != null &amp; !registerViewModel.email.empty &amp; !registerViewModel.username.empty &amp; !registerViewModel.firstName.empty &amp; !registerViewModel.lastName.empty &amp; !registerViewModel.password.empty &amp; !registerViewModel.reTypePassword.empty &amp; !registerViewModel.phone.empty &amp; !registerViewModel.address.empty &amp; !ValidationKt.isValidPassword(registerViewModel.password) &amp; registerViewModel.password.equalsIgnoreCase(registerViewModel.reTypePassword) &amp; !ValidationKt.isValidPhone(registerViewModel.phone)) ? onClick.onClick(v) : null }"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -183,9 +196,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/normal_dimen"
+                    android:enabled="@{registerViewModel.photo != null &amp; !registerViewModel.email.empty &amp; !registerViewModel.username.empty &amp; !registerViewModel.firstName.empty &amp; !registerViewModel.lastName.empty &amp; !registerViewModel.password.empty &amp; !registerViewModel.reTypePassword.empty &amp; !registerViewModel.phone.empty &amp; !registerViewModel.address.empty &amp; !ValidationKt.isValidPassword(registerViewModel.password) &amp; registerViewModel.password.equalsIgnoreCase(registerViewModel.reTypePassword) &amp; !ValidationKt.isValidPhone(registerViewModel.phone)}"
+                    android:layout_marginStart="@dimen/xlarge_dimen"
+                    android:layout_marginEnd="@dimen/xlarge_dimen"
                     android:onClick="@{ onClick::onClick }"
-                    android:text="@string/register"
-                    style="@style/Widget.Material3.Button.OutlinedButton"/>
+                    android:text="@string/register"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
