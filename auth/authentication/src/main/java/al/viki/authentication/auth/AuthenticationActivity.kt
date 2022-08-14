@@ -5,6 +5,7 @@ import al.viki.authentication.R
 import al.viki.authentication.databinding.ActivityAuthenticationBinding
 import al.viki.authentication.forgot.password.ForgotPasswordActivity
 import al.viki.authentication.register.RegisterActivity
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -60,11 +61,10 @@ class AuthenticationActivity : AppCompatActivity() {
                             ).show()
                         }
                         is State.Success -> {
-                            startActivity(
-                                packageManager.getLaunchIntentForPackage(
-                                    packageName
-                                )
-                            )
+                            val myIntent = Intent()
+                            myIntent.component =
+                                ComponentName("al.viki", "al.viki.ui.main.MainActivity")
+                            startActivity(myIntent)
                             finish()
                         }
                         else -> {

@@ -76,6 +76,7 @@ class HomeViewModel @Inject constructor(
 
     fun propertiesCollectionPagedList(): Flow<PagingData<PropertyResponse>> = Pager(
         config = PagingConfig(
+            initialLoadSize = NETWORK_PAGE_SIZE,
             pageSize = NETWORK_PAGE_SIZE,
             enablePlaceholders = true
         ),
@@ -88,6 +89,7 @@ class HomeViewModel @Inject constructor(
 
     fun requestCollectionPagedList(): Flow<PagingData<RequestResponse>> = Pager(
         config = PagingConfig(
+            initialLoadSize = NETWORK_PAGE_SIZE,
             pageSize = NETWORK_PAGE_SIZE,
             enablePlaceholders = true
         ),

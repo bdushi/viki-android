@@ -24,7 +24,7 @@ class RequestNewAccountViewModel @Inject constructor(
     private val requestAccountRepository: RequestAccountRepository
 ) : ViewModel(), AdapterView.OnItemSelectedListener {
 
-    val email = MutableStateFlow("")
+    val email = MutableStateFlow<String?>(null)
     private var authorityUi: AuthorityUi? = null
 
     // Backing property to avoid state updates from other classes
@@ -66,7 +66,7 @@ class RequestNewAccountViewModel @Inject constructor(
                 when (val response = requestAccountRepository
                     .requestAccount(
                         RequestAccount(
-                            email.value,
+                            email.value.toString(),
                             Authority(
                                 it.id,
                                 it.authority,

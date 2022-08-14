@@ -37,15 +37,16 @@
         </com.google.android.material.appbar.AppBarLayout>
 
         <ProgressBar
-            android:id="@+id/register_layout_progress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:visibility="@{ registerViewModel.validate instanceof State.Loading || registerViewModel.register instanceof State.Loading ? View.VISIBLE : View.GONE }"/>
 
         <androidx.core.widget.NestedScrollView
-            android:id="@+id/register_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{ registerViewModel.validate instanceof State.Loading || registerViewModel.register instanceof State.Loading ? View.GONE : View.VISIBLE }"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout

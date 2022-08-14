@@ -1,5 +1,6 @@
 package al.viki.ui.settings
 
+import al.viki.BuildConfig
 import al.viki.databinding.FragmentSettingsBinding
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -36,7 +37,7 @@ class SettingsFragment: Fragment() {
            findNavController().navigate(SettingsFragmentDirections.actionSettingsFragmentToRequestNewAccountFragment())
         }
         binding?.settingsRequestNewAccount?.visibility = if(args.user?.authorities?.find { it == 10000.toLong() } == 10000.toLong()) View.VISIBLE else View.GONE
-
+        binding?.tvSettingsAppVersion?.text = BuildConfig.VERSION_NAME
     }
 
     override fun onDestroyView() {

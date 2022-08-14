@@ -19,7 +19,7 @@ class PasswordViewModel @Inject constructor(
     private val authRepository: AuthRepository
     ): ViewModel() {
 
-    val email = MutableStateFlow("")
+    val email = MutableStateFlow<String?>(null)
 
     val newPassword = MutableStateFlow("")
     val retypeNewPassword = MutableStateFlow("")
@@ -46,7 +46,7 @@ class PasswordViewModel @Inject constructor(
     fun resetPassword() {
         viewModelScope.launch(Dispatchers.IO) {
             _reset.value = State.Loading
-            when(val response = tokenRepository.resetPassword(email = email.value)) {
+            when(val response = tokenRepository.resetPassword(email = email.value.toString())) {
                 is Result.Error -> _reset.value = State.Error(response.error)
                 is Result.Success -> _reset.value = State.Success(response.data)
                 is Result.Unauthorized -> _reset.value = State.Unauthorized

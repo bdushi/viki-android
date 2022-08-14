@@ -42,6 +42,7 @@
     <string name="request_account">Kërko llogarin</string>
 
     <string name="permission_denied">Autorizim u mohua</string>
+    <string name="app_version">Versioni</string>
     <!-- Property Item -->
     <string name="item_title">Apartament</string>
     <string name="price_item">%f %s</string>
@@ -50,7 +51,8 @@
     <string name="item_floor_plan_item">4 + 1</string>
     <string name="area_item">%s %s</string>
     <string name="operation_item">Shitje</string>
-    <string name="personal_information_first_and_last_name">%s %s</string>
+    <string name="personal_information_first_and_last_name"><b>Emri</b>%s %s</string>
+    <string name="personal_information_username"><b>Perdoruesi</b>\t%s</string>
     <string name="personal_information_label">Te dhenat personale</string>
     <string name="change_password">Ndrysho Fjalkalimin</string>
 </resources>

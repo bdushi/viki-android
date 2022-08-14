@@ -1,9 +1,6 @@
 package al.viki.ui.home
 
-import al.bruno.adapter.DropDownAdapter
-import al.bruno.adapter.LoadStateAdapter
-import al.bruno.adapter.OnClickListener
-import al.bruno.adapter.PagedListAdapter
+import al.bruno.adapter.*
 import al.bruno.core.State
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
@@ -41,18 +38,20 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private var notifyAuthenticationChange: NotifyAuthenticationChange? = null
     private val homeViewModel: HomeViewModel by viewModels()
-    private val propertiesLoadStateAdapter = LoadStateAdapter<LoadStateFooterViewItemBinding>(R.layout.load_state_footer_view_item) { loadState, vm ->
-        vm.loadState = loadState
-        vm.onClick = View.OnClickListener {
-            propertiesAdapter.retry()
+    private val propertiesLoadStateAdapter =
+        LoadStateAdapter<LoadStateFooterViewItemBinding>(R.layout.load_state_footer_view_item) { loadState, vm ->
+            vm.loadState = loadState
+            vm.onClick = View.OnClickListener {
+                propertiesAdapter.retry()
+            }
         }
-    }
-    private val requestsLoadStateAdapter = LoadStateAdapter<LoadStateFooterViewItemBinding>(R.layout.load_state_footer_view_item) { loadState, vm ->
-        vm.loadState = loadState
-        vm.onClick = View.OnClickListener {
-            requestsAdapter.retry()
+    private val requestsLoadStateAdapter =
+        LoadStateAdapter<LoadStateFooterViewItemBinding>(R.layout.load_state_footer_view_item) { loadState, vm ->
+            vm.loadState = loadState
+            vm.onClick = View.OnClickListener {
+                requestsAdapter.retry()
+            }
         }
-    }
     private val propertiesAdapter by lazy {
         PagedListAdapter<PropertyResponse, PropertiesItemBinding>(
             R.layout.properties_item, { t, vm ->
@@ -61,7 +60,9 @@ class HomeFragment : Fragment() {
                     override fun onClick(view: View, t: PropertyResponse) {
                         findNavController()
                             .navigate(
-                                HomeFragmentDirections.actionHomeFragmentToPropertyDetailsFragment(PropertyUi.toPropertyUi(t))
+                                HomeFragmentDirections.actionHomeFragmentToPropertyDetailsFragment(
+                                    PropertyUi.toPropertyUi(t)
+                                )
                             )
                     }
                 }
@@ -78,7 +79,9 @@ class HomeFragment : Fragment() {
                     override fun onClick(view: View, t: RequestResponse) {
                         findNavController()
                             .navigate(
-                                HomeFragmentDirections.actionHomeFragmentToRequestDetailsFragment(RequestUi.toRequestUi(t))
+                                HomeFragmentDirections.actionHomeFragmentToRequestDetailsFragment(
+                                    RequestUi.toRequestUi(t)
+                                )
                             )
                     }
                 }
@@ -92,6 +95,7 @@ class HomeFragment : Fragment() {
             vm.selection = t
         }
     }
+
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding
     override fun onCreateView(
@@ -115,7 +119,7 @@ class HomeFragment : Fragment() {
         }
 
         binding?.refreshProperty?.setOnRefreshListener {
-            if(properties) {
+            if (properties) {
                 collectLatestFlow(homeViewModel.propertiesCollectionPagedList()) {
                     propertiesAdapter.submitData(it)
                 }
@@ -138,7 +142,18 @@ class HomeFragment : Fragment() {
         collectLatestFlow(homeViewModel.propertyTypes) {
             when (it) {
                 is State.Success -> {
-                    it.t?.let { items -> propertyTypeAdapter.setItem(items) }
+                    it.t?.let { items ->
+                        val filters = items.toMutableList()
+                        filters.add(
+                            0,
+                            PropertyTypeUi(
+                                -1,
+                                "All",
+                                false
+                            )
+                        )
+                        propertyTypeAdapter.setItem(filters)
+                    }
                 }
                 is State.Error -> {
 
@@ -148,7 +163,7 @@ class HomeFragment : Fragment() {
             }
         }
         collectLatestFlow(homeViewModel.user) {
-            when(it) {
+            when (it) {
                 is State.Error -> {}
                 is State.Loading -> {}
                 is State.Success -> {
@@ -161,7 +176,7 @@ class HomeFragment : Fragment() {
 
     private fun switchView(view: View) {
         properties = !properties
-        if(properties) {
+        if (properties) {
             (view as MaterialTextView).setText(R.string.properties)
             binding?.property?.adapter = propertiesAdapter
                 .withLoadStateFooter(
@@ -189,15 +204,17 @@ class HomeFragment : Fragment() {
             MenuCompat.setGroupDividerEnabled(menuBuilder, true)
             menuBuilder.setOptionalIconsVisible(true)
             for (item in menuBuilder.visibleItems) {
-                if(item.itemId == R.id.menu_profile) {
-                    item.title = if(userUi != null) "${userUi?.username}" else getString(R.string.app_name)
+                if (item.itemId == R.id.menu_profile) {
+                    item.title =
+                        if (userUi != null) "${userUi?.username}" else getString(R.string.app_name)
                 }
                 val iconMarginPx =
                     TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_DIP, 4.toFloat(), resources.displayMetrics)
+                        TypedValue.COMPLEX_UNIT_DIP, 4.toFloat(), resources.displayMetrics
+                    )
                         .toInt()
                 if (item.icon != null) {
-                    item.icon = InsetDrawable(item.icon, iconMarginPx, 0, iconMarginPx,0)
+                    item.icon = InsetDrawable(item.icon, iconMarginPx, 0, iconMarginPx, 0)
                 }
             }
         }
@@ -240,6 +257,7 @@ class HomeFragment : Fragment() {
         // Show the popup menu.
         popup.show()
     }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
         when (context) {

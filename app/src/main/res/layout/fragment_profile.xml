@@ -15,12 +15,10 @@
             android:id="@+id/new_request_app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/top_app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:gravity="center"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:navigationIcon="@drawable/ic_outline_close"
                 app:title="@string/profile_title" />
@@ -29,18 +27,21 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="@dimen/small_dimen">
-
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:layout_gravity="center"
+                    android:padding="@dimen/micro_dimen"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
+                    app:strokeWidth="@dimen/shape_dimen"
+                    app:strokeColor="@android:color/darker_gray"
                     bind:profile="@{user.username}"/>
                 <TextView
                     android:layout_width="match_parent"
@@ -52,45 +53,91 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{user.username}"
-                        android:padding="@dimen/micro_dimen"
-                        android:layout_margin="@dimen/micro_dimen"
-                        style="@style/TextAppearance.Material3.BodyMedium"/>
-
-                    <TextView
+                        android:orientation="vertical"
+                        android:layout_margin="@dimen/micro_dimen">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Username"
+                            style="@style/TextAppearance.Material3.TitleSmall"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{user.username}"
+                            android:padding="@dimen/micro_dimen"
+                            style="@style/TextAppearance.Material3.BodyMedium"/>
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{user.email}"
-                        android:padding="@dimen/micro_dimen"
-                        android:layout_margin="@dimen/micro_dimen"
-                        style="@style/TextAppearance.Material3.BodyMedium"/>
-
-                    <TextView
+                        android:orientation="vertical"
+                        android:layout_margin="@dimen/micro_dimen">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="E-mail"
+                            style="@style/TextAppearance.Material3.TitleSmall"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{user.email}"
+                            android:padding="@dimen/micro_dimen"
+                            style="@style/TextAppearance.Material3.BodyMedium"/>
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{@string/personal_information_first_and_last_name(user.firstName, user.lastName)}"
-                        android:padding="@dimen/micro_dimen"
-                        android:layout_margin="@dimen/micro_dimen"
-                        style="@style/TextAppearance.Material3.BodyMedium"/>
-
-                    <TextView
+                        android:orientation="vertical"
+                        android:layout_margin="@dimen/micro_dimen">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Name"
+                            style="@style/TextAppearance.Material3.TitleSmall"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{@string/personal_information_first_and_last_name(user.firstName, user.lastName)}"
+                            android:padding="@dimen/micro_dimen"
+                            style="@style/TextAppearance.Material3.BodyMedium"/>
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{user.phone}"
-                        android:padding="@dimen/micro_dimen"
-                        android:layout_margin="@dimen/micro_dimen"
-                        style="@style/TextAppearance.Material3.BodyMedium"/>
-
-                    <TextView
+                        android:orientation="vertical"
+                        android:layout_margin="@dimen/micro_dimen">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Phone"
+                            style="@style/TextAppearance.Material3.TitleSmall"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{user.phone}"
+                            android:padding="@dimen/micro_dimen"
+                            style="@style/TextAppearance.Material3.BodyMedium"/>
+                    </LinearLayout>
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@{user.address}"
-                        android:padding="@dimen/micro_dimen"
-                        android:layout_margin="@dimen/micro_dimen"
-                        style="@style/TextAppearance.Material3.BodyMedium"/>
+                        android:orientation="vertical"
+                        android:layout_margin="@dimen/micro_dimen">
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Address"
+                            style="@style/TextAppearance.Material3.TitleSmall"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@{user.address}"
+                            android:padding="@dimen/micro_dimen"
+                            style="@style/TextAppearance.Material3.BodyMedium"/>
+                    </LinearLayout>
                 </LinearLayout>
                 <TextView
                     android:layout_width="match_parent"

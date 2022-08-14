@@ -5,16 +5,24 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class CustomEditAdapter<T, VM: RecyclerView.ViewHolder, VH: RecyclerView.ViewHolder>(diffUtil: DiffUtil.ItemCallback<T>) : ListAdapter<T, RecyclerView.ViewHolder>(diffUtil) {
+abstract class CustomEditAdapter<T, VM : RecyclerView.ViewHolder, VH : RecyclerView.ViewHolder>(
+    diffUtil: DiffUtil.ItemCallback<T>
+) : ListAdapter<T, RecyclerView.ViewHolder>(diffUtil) {
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        when(getItemViewType(position)) {
+        when (getItemViewType(position)) {
             ItemViewType.ITEM_VIEW_TYPE_HEADER.viewType -> onBindHeaderViewHolder(holder as VH)
-            ItemViewType.ITEM_VIEW_TYPE_HEADER.viewType -> onBindItemViewHolder(holder as VM, getItem(position))
+            ItemViewType.ITEM_VIEW_TYPE_HEADER.viewType -> onBindItemViewHolder(
+                holder as VM,
+                getItem(position)
+            )
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if(viewType == ItemViewType.ITEM_VIEW_TYPE_HEADER.viewType) onHeaderViewHolder(parent, viewType) else onItemViewHolder(parent, viewType)
+        return if (viewType == ItemViewType.ITEM_VIEW_TYPE_HEADER.viewType)
+            onHeaderViewHolder(parent, viewType)
+        else
+            onItemViewHolder(parent, viewType)
     }
 
 
@@ -23,7 +31,7 @@ abstract class CustomEditAdapter<T, VM: RecyclerView.ViewHolder, VH: RecyclerVie
     }
 
     override fun getItemViewType(position: Int): Int {
-        return when(position) {
+        return when (position) {
             itemCount - 1 -> ItemViewType.ITEM_VIEW_TYPE_HEADER.viewType
             else -> ItemViewType.ITEM_VIEW_TYPE_ITEM.viewType
         }

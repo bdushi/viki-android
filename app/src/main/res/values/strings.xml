@@ -42,6 +42,7 @@
     <string name="request_account">Request Account</string>
 
     <string name="permission_denied">Permission Denied</string>
+    <string name="app_version">App Version</string>
     <!-- Property Item -->
     <string name="item_title">Apartment</string>
     <string name="price_item">%.2f %s</string>

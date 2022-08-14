@@ -33,19 +33,10 @@ object Adapter {
     @JvmStatic
     @BindingAdapter("bind:profile")
     fun profile(photoProfile: ShapeableImageView, username: String?) {
-        photoProfile.shapeAppearanceModel =
-            ShapeAppearanceModel
-                .builder()
-                .setAllCornerSizes(ShapeAppearanceModel.PILL)
-                .build()
-        val finalHeight = 128.0
-        photoProfile.minimumHeight = finalHeight.toInt()
-        photoProfile.adjustViewBounds = true
-        photoProfile.scaleType = ImageView.ScaleType.FIT_CENTER
         Glide
             .with(photoProfile.context)
-            .load("https://firebasestorage.googleapis.com/v0/b/viki-135b4.appspot.com/o/photos%2F${username}%2F${username}.jpg?alt=media")
-            .error(ContextCompat.getDrawable(photoProfile.context, R.drawable.ic_sharp_person_add_alt)?.also {
+            .load("https://firebasestorage.googleapis.com/v0/b/viki-135b4.appspot.com/o/photos%2F${username}%2F${username}?alt=media")
+            .error(ContextCompat.getDrawable(photoProfile.context, R.drawable.ic_outline_person)?.also {
                 it.setTint(ContextCompat.getColor(photoProfile.context, R.color.vikiColorBackground))
             })
             .into(photoProfile)

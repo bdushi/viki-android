@@ -16,20 +16,18 @@
         <import type="al.bruno.core.State"/>
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/request_new_account_app_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_height="wrap_content">
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/forgot_password_top_app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:navigationIcon="@drawable/ic_outline_close"
                 app:title="@string/request_new_account" />
         </com.google.android.material.appbar.AppBarLayout>
@@ -38,19 +36,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{ requestNewAccountViewModel.request instanceof State.Loading ? View.VISIBLE : View.GONE }"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:layout_gravity="center"/>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="@{ requestNewAccountViewModel.request instanceof State.Loading ? View.GONE : View.VISIBLE }"
-            app:layout_constraintTop_toBottomOf="@+id/request_new_account_app_bar_layout"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            android:layout_gravity="center"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,5 +90,5 @@
                     android:text="@string/request_account"/>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

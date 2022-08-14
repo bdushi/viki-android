@@ -21,13 +21,13 @@ class PropertiesPagingSource constructor(
         val position = params.key ?: 0
         return when (val response = propertyRepository.properties(
             page = position,
-            size = params.loadSize
+            size = 10
         )) {
             is Result.Error -> LoadResult.Error(Throwable(response.error))
             is Result.Success -> LoadResult.Page(
                 data = response.data.pageResponse ?: arrayListOf(),
-                prevKey = if (position == NETWORK_PAGE_SIZE) null else position - 1, // if (position == 1) null else position - 1,
-                nextKey = if (response.data.empty) null else position + (params.loadSize / NETWORK_PAGE_SIZE) // position + 1
+                prevKey = if (position == 0) null else position - 1,
+                nextKey = if (response.data.empty) null else position + (params.loadSize / NETWORK_PAGE_SIZE)
             )
             else -> LoadResult.Error(Throwable())
         }

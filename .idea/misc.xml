@@ -52,11 +52,12 @@
         <entry key="app/src/main/res/layout/details_property_photo_item.xml" value="0.20245398773006135" />
         <entry key="app/src/main/res/layout/drop_down_item.xml" value="0.25333333333333335" />
         <entry key="app/src/main/res/layout/drop_down_item_filter.xml" value="0.2713541666666667" />
+        <entry key="app/src/main/res/layout/drop_down_item_header.xml" value="0.2578125" />
         <entry key="app/src/main/res/layout/fragment_change_password.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/layout/fragment_details_property.xml" value="0.22" />
         <entry key="app/src/main/res/layout/fragment_details_request.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.375" />
-        <entry key="app/src/main/res/layout/fragment_new_property.xml" value="0.20599250936329588" />
+        <entry key="app/src/main/res/layout/fragment_new_property.xml" value="0.1" />
         <entry key="app/src/main/res/layout/fragment_new_request.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_profile.xml" value="0.2552083333333333" />
         <entry key="app/src/main/res/layout/fragment_property_details.xml" value="0.2552083333333333" />
@@ -87,6 +88,8 @@
         <entry key="authentication/src/main/res/layout/activity_authentication.xml" value="0.22056159420289856" />
         <entry key="foundation/src/main/java/al/viki/foundation/component/Header.kt" value="0.5" />
         <entry key="foundation/src/main/res/drawable/ic_outline_image_not_supported.xml" value="0.1105" />
+        <entry key="foundation/src/main/res/drawable/ic_outline_person.xml" value="0.1945" />
+        <entry key="foundation/src/main/res/drawable/ic_outline_warning_amber.xml" value="0.1945" />
         <entry key="foundation/src/main/res/drawable/ic_round_warning_amber.xml" value="0.187" />
         <entry key="foundation/src/main/res/drawable/ic_sharp_person_add_alt.xml" value="0.16" />
       </map>

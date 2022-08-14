@@ -155,8 +155,6 @@ class RegisterActivity : AppCompatActivity() {
         collectLatestFlow(registerViewModel.validate) {
             when (it) {
                 is State.Error -> {
-                    binding.registerLayout.visibility = View.VISIBLE
-                    binding.registerLayoutProgress.visibility = View.GONE
                     Snackbar.make(
                         binding.root,
                         al.viki.foundation.R.string.error,
@@ -164,13 +162,11 @@ class RegisterActivity : AppCompatActivity() {
                     ).show()
                 }
                 is State.Success -> {
-                    binding.registerLayout.visibility = View.VISIBLE
-                    binding.registerLayoutProgress.visibility = View.GONE
                     when (it.t) {
                         ValidationResponse.EXPIRED,
                         ValidationResponse.NOT_FOUND ->
                             MaterialAlertDialogBuilder(this)
-                                .setIcon(al.viki.foundation.R.drawable.ic_round_warning_amber)
+                                .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
                                 .setCancelable(false)
                                 .setTitle("Token has been expired")
                                 .setMessage("Please contact your administrator to send new invitation")
@@ -184,13 +180,7 @@ class RegisterActivity : AppCompatActivity() {
                         }
                     }
                 }
-                is State.Loading -> {
-                    binding.registerLayout.visibility = View.GONE
-                    binding.registerLayoutProgress.visibility = View.VISIBLE
-                }
                 else -> {
-                    binding.registerLayout.visibility = View.VISIBLE
-                    binding.registerLayoutProgress.visibility = View.GONE
                 }
             }
         }
@@ -198,8 +188,6 @@ class RegisterActivity : AppCompatActivity() {
         collectLatestFlow(registerViewModel.register) {
             when (it) {
                 is State.Success -> {
-                    binding.registerLayout.visibility = View.VISIBLE
-                    binding.registerLayoutProgress.visibility = View.GONE
                     if (it.t != null) {
                         val uploadWorkRequest: WorkRequest =
                             OneTimeWorkRequestBuilder<UploadProfilePictureWorker>()
@@ -231,17 +219,9 @@ class RegisterActivity : AppCompatActivity() {
                         al.viki.foundation.R.string.error,
                         Snackbar.LENGTH_SHORT
                     ).show()
-
-                    binding.registerLayout.visibility = View.VISIBLE
-                    binding.registerLayoutProgress.visibility = View.GONE
-                }
-                is State.Loading -> {
-                    binding.registerLayout.visibility = View.GONE
-                    binding.registerLayoutProgress.visibility = View.VISIBLE
                 }
                 else -> {
-                    binding.registerLayout.visibility = View.VISIBLE
-                    binding.registerLayoutProgress.visibility = View.GONE
+                    
                 }
             }
         }
