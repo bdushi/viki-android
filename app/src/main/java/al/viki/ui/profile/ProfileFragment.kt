@@ -1,16 +1,19 @@
 package al.viki.ui.profile
 
 import al.viki.databinding.FragmentProfileBinding
+import al.viki.ui.details.RequestDetailsFragmentArgs
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment() {
+    private val args: ProfileFragmentArgs by navArgs()
     private var _binding: FragmentProfileBinding? = null
     private val binding get() = _binding
 
@@ -25,6 +28,7 @@ class ProfileFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding?.user = args.user
         binding?.topAppBar?.setNavigationOnClickListener {
             findNavController().popBackStack()
         }

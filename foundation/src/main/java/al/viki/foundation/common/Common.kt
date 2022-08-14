@@ -1,5 +1,6 @@
 package al.viki.foundation.common
 
+import android.content.Context
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
@@ -8,6 +9,8 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.InputStream
 
 inline fun <T> LifecycleOwner.collectFlow(
     flow: Flow<T>,
@@ -33,4 +36,14 @@ inline fun <T> LifecycleOwner.collectLatestFlow(
                 .collectLatest { collector(it) }
         }
     }
+}
+
+fun InputStream.toFile(context: Context): File {
+    val outputFile = File.createTempFile("viki", ".extension",  context.cacheDir)
+    this.use { input ->
+        outputFile.outputStream().use { output ->
+            input.copyTo(output)
+        }
+    }
+    return outputFile
 }

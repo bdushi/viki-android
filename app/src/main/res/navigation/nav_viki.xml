@@ -21,7 +21,13 @@
         </action>
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
-            app:destination="@id/profileFragment" />
+            app:destination="@id/profileFragment">
+            <argument
+                android:name="user"
+                app:argType="al.viki.model.UserUi"
+                app:nullable="true"
+                android:defaultValue="@null" />
+        </action>
         <action
             android:id="@+id/action_homeFragment_to_newRequestFragment"
             app:destination="@id/newRequestFragment" />
@@ -34,7 +40,13 @@
         </action>
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+            app:destination="@id/settingsFragment">
+            <argument
+                android:name="user"
+                app:argType="al.viki.model.UserUi"
+                app:nullable="true"
+                android:defaultValue="@null"/>
+        </action>
     </fragment>
     <fragment
         android:id="@+id/newPropertyFragment"
@@ -43,7 +55,13 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="al.viki.ui.profile.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="ProfileFragment">
+        <argument
+            android:name="user"
+            app:argType="al.viki.model.UserUi"
+            app:nullable="true"
+            android:defaultValue="@null"/>
+    </fragment>
     <fragment
         android:id="@+id/newRequestFragment"
         android:name="al.viki.ui.request.NewRequestFragment"
@@ -60,7 +78,6 @@
         android:id="@+id/requestDetailsFragment"
         android:name="al.viki.ui.details.RequestDetailsFragment"
         android:label="@string/request_details">
-
         <argument
             android:name="request"
             app:argType="al.viki.model.RequestUi" />
@@ -72,6 +89,11 @@
         <action
             android:id="@+id/action_settingsFragment_to_requestNewAccountFragment"
             app:destination="@id/requestNewAccountFragment" />
+        <argument
+            android:name="user"
+            app:argType="al.viki.model.UserUi"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/requestNewAccountFragment"

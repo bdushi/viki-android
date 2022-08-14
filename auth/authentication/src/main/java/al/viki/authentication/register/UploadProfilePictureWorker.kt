@@ -1,5 +1,6 @@
 package al.viki.authentication.register
 
+import al.viki.foundation.common.toFile
 import android.content.Context
 import android.net.Uri
 import android.util.Log
@@ -9,16 +10,17 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.Dispatchers
-import java.io.File
 
-class UploadProfilePictureWorker (private val appContext: Context, workerParams: WorkerParameters): CoroutineWorker(appContext, workerParams) {
+class UploadProfilePictureWorker(private val appContext: Context, workerParams: WorkerParameters) :
+    CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
         val photo = inputData.getString("PHOTO_UI")
         val username = inputData.getString("USERNAME")
         val storageRefChild = Firebase.storage.reference.child("photos/${username}")
-        photo?.let {
+        appContext.contentResolver.openInputStream(Uri.parse(photo))?.let { inputStream ->
             storageRefChild
-                .putFile(Uri.fromFile(Compressor.compress(context = appContext, File(photo), Dispatchers.IO)))
+                .child("/${username}")
+                .putFile(Uri.fromFile(Compressor.compress(context = appContext, inputStream.toFile(appContext), Dispatchers.IO)))
                 .addOnSuccessListener {
                     Log.d("UploadWorker", it.toString())
                 }.addOnFailureListener {

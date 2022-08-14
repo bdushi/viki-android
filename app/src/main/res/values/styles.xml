@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="PrimaryText" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/primaryTextColor</item>
+    </style>
+
+    <style name="Viki.PrimaryText.Title" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:textColor">@color/vikiColorPrimary</item>
+    </style>
+
+    <style name="Viki.PrimaryText.Body" parent="TextAppearance.Material3.BodyMedium">
+        <item name="android:textColor">@color/vikiColorSecondary</item>
+    </style>
+
+</resources>

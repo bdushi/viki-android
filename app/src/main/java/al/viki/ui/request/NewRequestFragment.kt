@@ -10,6 +10,7 @@ import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.*
 import al.viki.ui.location.RequestLocationActivity
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -47,6 +48,7 @@ class NewRequestFragment : Fragment() {
                 }
             }
         }
+    @SuppressLint("MissingPermission")
     private val requestLocationPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             when {
@@ -59,11 +61,13 @@ class NewRequestFragment : Fragment() {
                     LocationServices
                         .getFusedLocationProviderClient(requireActivity())
                         .lastLocation
-                        .addOnCompleteListener { loc ->
-                            newRequestUi.location = LocationUi(
-                                loc.result.longitude,
-                                loc.result.latitude
-                            )
+                        .addOnSuccessListener { location ->
+                            location?.let { loc ->
+                                newRequestUi.location = LocationUi(
+                                    loc.longitude,
+                                    loc.latitude
+                                )
+                            }
                         }
                 }
                 else -> {
@@ -114,6 +118,7 @@ class NewRequestFragment : Fragment() {
         return binding?.root
     }
 
+    @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.topAppBar?.setNavigationOnClickListener {
@@ -126,7 +131,7 @@ class NewRequestFragment : Fragment() {
         binding?.unitAdapter = unitAdapter
         binding?.onClick = View.OnClickListener {
             when (it.id) {
-                R.id.new_property_location -> {
+                R.id.new_request_location -> {
                     requestLocation.launch(
                         Intent(
                             requireContext(),
@@ -154,11 +159,13 @@ class NewRequestFragment : Fragment() {
                 LocationServices
                     .getFusedLocationProviderClient(requireActivity())
                     .lastLocation
-                    .addOnCompleteListener { loc ->
-                        newRequestUi.location = LocationUi(
-                            loc.result.longitude,
-                            loc.result.latitude
-                        )
+                    .addOnSuccessListener { location ->
+                        location?.let {
+                            newRequestUi.location = LocationUi(
+                                it.longitude,
+                                it.latitude
+                            )
+                        }
                     }
             }
             else -> {

@@ -39,15 +39,15 @@
 
         <import type="al.bruno.core.State"/>
     </data>
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/new_property_root_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="@{propertyViewModel.properties instanceof State.Loading ? View.VISIBLE : View.GONE }"
+            android:layout_gravity="center"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,6 +64,7 @@
                 android:id="@+id/top_app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:navigationIcon="@drawable/ic_outline_close"
                 app:menu="@menu/menu_new_photo"
                 app:title="@string/new_request_title" />
@@ -71,7 +72,8 @@
         <androidx.core.widget.NestedScrollView
             android:id="@+id/new_property_scroll_view"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintTop_toBottomOf="@+id/new_property_app_bar_layout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -339,5 +341,5 @@
                     app:layout_constraintTop_toBottomOf="@+id/new_property_city" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

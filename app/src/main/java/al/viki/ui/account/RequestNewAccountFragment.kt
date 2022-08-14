@@ -42,6 +42,9 @@ class RequestNewAccountFragment: Fragment() {
         _binding?.lifecycleOwner = this
         _binding?.requestNewAccountViewModel = requestNewAccountViewModel
         _binding?.adapter = authorityAdapter
+        binding?.forgotPasswordTopAppBar?.setNavigationOnClickListener {
+            findNavController().popBackStack()
+        }
         collectLatestFlow(requestNewAccountViewModel.authorities) {
             when (it) {
                 is State.Success -> {

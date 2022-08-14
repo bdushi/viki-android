@@ -113,4 +113,8 @@ class NetworkModule {
     @Provides
     @Reusable
     fun authorityRequestAccountService(retrofit: Retrofit): RequestAccountService = retrofit.create(RequestAccountService::class.java)
+
+    @Provides
+    @Reusable
+    fun authorityUserService(retrofit: Retrofit): UserService = retrofit.create(UserService::class.java)
 }

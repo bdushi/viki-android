@@ -16,6 +16,7 @@ import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.PropertyTypeUi
 import al.viki.model.PropertyUi
 import al.viki.model.RequestUi
+import al.viki.model.UserUi
 import android.content.Context
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
@@ -23,7 +24,6 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.PopupMenu
@@ -37,6 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private var properties = true
+    private var userUi: UserUi? = null
     private var _binding: FragmentHomeBinding? = null
     private var notifyAuthenticationChange: NotifyAuthenticationChange? = null
     private val homeViewModel: HomeViewModel by viewModels()
@@ -139,9 +140,21 @@ class HomeFragment : Fragment() {
                 is State.Success -> {
                     it.t?.let { items -> propertyTypeAdapter.setItem(items) }
                 }
-                is State.Error -> {}
+                is State.Error -> {
+
+                }
                 is State.Unauthorized -> {}
                 is State.Loading -> {}
+            }
+        }
+        collectLatestFlow(homeViewModel.user) {
+            when(it) {
+                is State.Error -> {}
+                is State.Loading -> {}
+                is State.Success -> {
+                    userUi = it.t
+                }
+                is State.Unauthorized -> {}
             }
         }
     }
@@ -177,7 +190,7 @@ class HomeFragment : Fragment() {
             menuBuilder.setOptionalIconsVisible(true)
             for (item in menuBuilder.visibleItems) {
                 if(item.itemId == R.id.menu_profile) {
-                    item.title = "John Doo"
+                    item.title = if(userUi != null) "${userUi?.username}" else getString(R.string.app_name)
                 }
                 val iconMarginPx =
                     TypedValue.applyDimension(
@@ -203,11 +216,17 @@ class HomeFragment : Fragment() {
                     true
                 }
                 R.id.menu_profile -> {
-                    findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+                    findNavController()
+                        .navigate(
+                            HomeFragmentDirections.actionHomeFragmentToProfileFragment(userUi)
+                        )
                     true
                 }
                 R.id.menu_settings -> {
-                    findNavController().navigate(R.id.action_homeFragment_to_settingsFragment)
+                    findNavController()
+                        .navigate(
+                            HomeFragmentDirections.actionHomeFragmentToSettingsFragment(userUi)
+                        )
                     true
                 }
                 else -> {

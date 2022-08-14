@@ -50,4 +50,7 @@
     <string name="item_floor_plan_item">4 + 1</string>
     <string name="area_item">%s %s</string>
     <string name="operation_item">For Sales</string>
+    <string name="personal_information_first_and_last_name">%s %s</string>
+    <string name="personal_information_label">Personal Information</string>
+    <string name="change_password">Change Password</string>
 </resources>

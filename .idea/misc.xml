@@ -88,6 +88,7 @@
         <entry key="foundation/src/main/java/al/viki/foundation/component/Header.kt" value="0.5" />
         <entry key="foundation/src/main/res/drawable/ic_outline_image_not_supported.xml" value="0.1105" />
         <entry key="foundation/src/main/res/drawable/ic_round_warning_amber.xml" value="0.187" />
+        <entry key="foundation/src/main/res/drawable/ic_sharp_person_add_alt.xml" value="0.16" />
       </map>
     </option>
   </component>

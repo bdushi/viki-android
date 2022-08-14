@@ -115,13 +115,14 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
             }
         ) { uri: Uri? ->
             uri?.let {
+                context?.contentResolver?.openInputStream(uri)
                 propertyViewModel.photoUi(it)
             }
         }
 
     @SuppressLint("MissingPermission")
     private val requestLocationPermissions =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { it ->
             when {
                 it.getOrDefault(
                     Manifest.permission.ACCESS_FINE_LOCATION, false
@@ -132,11 +133,13 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                     LocationServices
                         .getFusedLocationProviderClient(requireActivity())
                         .lastLocation
-                        .addOnSuccessListener { loc ->
-                            newPropertyUi.location = LocationUi(
-                                loc.longitude,
-                                loc.latitude
-                            )
+                        .addOnSuccessListener { location ->
+                            location?.let { loc ->
+                                newPropertyUi.location = LocationUi(
+                                    loc.longitude,
+                                    loc.latitude
+                                )
+                            }
                         }
                 }
                 else -> {
@@ -338,11 +341,13 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                 LocationServices
                     .getFusedLocationProviderClient(requireActivity())
                     .lastLocation
-                    .addOnSuccessListener {
-                        newPropertyUi.location = LocationUi(
-                            it.longitude ?: 0.0,
-                            it.latitude ?: 0.0
-                        )
+                    .addOnSuccessListener { location ->
+                        location?.let {
+                            newPropertyUi.location = LocationUi(
+                                it.longitude,
+                                it.latitude
+                            )
+                        }
                     }
             }
             else -> {

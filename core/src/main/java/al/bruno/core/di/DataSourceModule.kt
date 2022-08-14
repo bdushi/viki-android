@@ -37,6 +37,9 @@ abstract class DataSourceModule {
     @Binds
     abstract fun provideRequestAccountRemoteDataSource(authorityRemoteDataSource: RequestAccountRemoteDataSource): RequestAccountDataSource
 
+    @Binds
+    abstract fun provideUserRemoteDataSource(userRemoteDataSource: UserRemoteDataSource): UserDataSource
+
 
 
 }

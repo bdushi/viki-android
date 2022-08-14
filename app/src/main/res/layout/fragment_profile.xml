@@ -1,18 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/new_request_app_bar_layout"
+    xmlns:bind="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="user"
+            type="al.viki.model.UserUi" />
+    </data>
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/top_app_bar"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/new_request_app_bar_layout"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/ic_outline_close"
-            app:title="@string/profile_title" />
-    </com.google.android.material.appbar.AppBarLayout>
-</LinearLayout>
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/top_app_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:gravity="center"
+                app:layout_scrollFlags="scroll|enterAlways|snap"
+                app:navigationIcon="@drawable/ic_outline_close"
+                app:title="@string/profile_title" />
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/small_dimen">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    bind:profile="@{user.username}"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/personal_information_label"
+                    android:layout_marginBottom="@dimen/micro_dimen"
+                    style="@style/TextAppearance.Material3.TitleMedium"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{user.username}"
+                        android:padding="@dimen/micro_dimen"
+                        android:layout_margin="@dimen/micro_dimen"
+                        style="@style/TextAppearance.Material3.BodyMedium"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{user.email}"
+                        android:padding="@dimen/micro_dimen"
+                        android:layout_margin="@dimen/micro_dimen"
+                        style="@style/TextAppearance.Material3.BodyMedium"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/personal_information_first_and_last_name(user.firstName, user.lastName)}"
+                        android:padding="@dimen/micro_dimen"
+                        android:layout_margin="@dimen/micro_dimen"
+                        style="@style/TextAppearance.Material3.BodyMedium"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{user.phone}"
+                        android:padding="@dimen/micro_dimen"
+                        android:layout_margin="@dimen/micro_dimen"
+                        style="@style/TextAppearance.Material3.BodyMedium"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@{user.address}"
+                        android:padding="@dimen/micro_dimen"
+                        android:layout_margin="@dimen/micro_dimen"
+                        style="@style/TextAppearance.Material3.BodyMedium"/>
+                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_outline_navigate_next"
+                    android:text="@string/change_password"
+                    android:layout_marginTop="@dimen/micro_dimen"
+                    android:layout_marginBottom="@dimen/micro_dimen"
+                    style="@style/TextAppearance.Material3.TitleMedium"/>
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

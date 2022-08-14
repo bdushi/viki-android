@@ -50,4 +50,7 @@
     <string name="item_floor_plan_item">4 + 1</string>
     <string name="area_item">%s %s</string>
     <string name="operation_item">Shitje</string>
+    <string name="personal_information_first_and_last_name">%s %s</string>
+    <string name="personal_information_label">Te dhenat personale</string>
+    <string name="change_password">Ndrysho Fjalkalimin</string>
 </resources>
