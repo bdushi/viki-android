@@ -1,12 +1,10 @@
 package al.viki.ui.main
 
-import al.bruno.core.interceptor.AuthInterceptor
+import al.bruno.core.interceptor.AuthorizationInterceptor
 import al.viki.R
 import al.viki.authentication.auth.AuthenticationActivity
 import al.viki.authentication.auth.NotifyAuthenticationChange
 import al.viki.common.TOKEN
-import al.viki.foundation.common.collectFlow
-import al.viki.foundation.common.collectLatestFlow
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -24,7 +22,7 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
     private val mainViewModel: MainViewModel by viewModels()
     @Inject
-    lateinit var authInterceptor: AuthInterceptor
+    lateinit var authorizationInterceptor: AuthorizationInterceptor
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +31,7 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                 mainViewModel.token().collectLatest {
                     val token: String? = it[stringPreferencesKey(TOKEN)]
                     if(token != null) {
-                        authInterceptor.token = token
+                        authorizationInterceptor.token = token
                         setContentView(R.layout.activity_main)
                     } else {
                         startActivity(

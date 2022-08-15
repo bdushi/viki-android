@@ -1,24 +1,19 @@
 package al.bruno.core.interceptor
 
-import al.bruno.foodies.interceptor.Session
-import okhttp3.*
+import okhttp3.Interceptor
+import okhttp3.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class AuthorizationInterceptor @Inject constructor() : Interceptor {
-    private lateinit var session: Session
+    var token: String? = null
     override fun intercept(chain: Interceptor.Chain): Response {
-        val mainResponse = chain.proceed(chain.request())
-        if (!chain.request().url.encodedPath.contains("security/authenticate") &&
-            !chain.request().url.encodedPath.contains("security/checkTokenStatus") &&
-            mainResponse.code == 401) {
-            session.invalidate()
-        }
-        return mainResponse
-    }
 
-    fun setSession(session: Session) {
-        this.session = session
+        val builder = chain.request().newBuilder()
+        token?.let {
+            builder.addHeader("Authorization", " Bearer $it")
+        }
+        return chain.proceed(builder.build())
     }
 }

@@ -2,8 +2,9 @@ package al.bruno.core.di
 
 import al.bruno.core.BuildConfig
 import al.bruno.core.data.source.remote.service.*
-import al.bruno.core.interceptor.AuthInterceptor
-import al.bruno.core.interceptor.ErrorHandler
+import al.bruno.core.interceptor.AuthorizationInterceptor
+import al.bruno.core.interceptor.RefreshTokenInterceptor
+import al.bruno.core.error.ErrorHandler
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
@@ -22,13 +23,15 @@ class NetworkModule {
     @Provides
     @Singleton
     fun okHttpClient(
-        authInterceptor: AuthInterceptor,
+        authorizationInterceptor: AuthorizationInterceptor,
+        refreshTokenInterceptor: RefreshTokenInterceptor,
         httpLoggingInterceptor: HttpLoggingInterceptor
     ): OkHttpClient {
         return OkHttpClient
             .Builder()
             .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor(authInterceptor)
+            .addInterceptor(refreshTokenInterceptor)
+            .addInterceptor(authorizationInterceptor)
             .build()
     }
 

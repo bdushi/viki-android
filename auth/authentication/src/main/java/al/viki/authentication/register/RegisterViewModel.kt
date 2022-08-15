@@ -63,9 +63,6 @@ class RegisterViewModel @Inject constructor(private val registrationRepository: 
                 is Result.Success -> {
                     _register.value = State.Success(response.data)
                 }
-                is Result.Unauthorized -> {
-                    _register.value = State.Unauthorized
-                }
             }
         }
     }
@@ -79,9 +76,6 @@ class RegisterViewModel @Inject constructor(private val registrationRepository: 
                 }
                 is Result.Success -> {
                     _validate.value = State.Success(response.data)
-                }
-                is Result.Unauthorized -> {
-                    _validate.value = State.Unauthorized
                 }
             }
         }

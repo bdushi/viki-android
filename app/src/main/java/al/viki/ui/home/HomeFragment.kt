@@ -158,7 +158,6 @@ class HomeFragment : Fragment() {
                 is State.Error -> {
 
                 }
-                is State.Unauthorized -> {}
                 is State.Loading -> {}
             }
         }
@@ -169,7 +168,6 @@ class HomeFragment : Fragment() {
                 is State.Success -> {
                     userUi = it.t
                 }
-                is State.Unauthorized -> {}
             }
         }
     }

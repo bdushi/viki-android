@@ -217,7 +217,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                     }
                 }
                 is State.Error -> {}
-                is State.Unauthorized -> {}
                 is State.Loading -> TODO()
             }
         }
@@ -230,7 +229,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                     }
                 }
                 is State.Error -> {}
-                is State.Unauthorized -> {}
                 is State.Loading -> TODO()
             }
         }
@@ -243,9 +241,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                     }
                 }
                 is State.Error -> {
-
-                }
-                is State.Unauthorized -> {
 
                 }
                 is State.Loading -> TODO()
@@ -262,9 +257,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                 is State.Error -> {
 
                 }
-                is State.Unauthorized -> {
-
-                }
                 is State.Loading -> TODO()
             }
         }
@@ -277,7 +269,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                     }
                 }
                 is State.Error -> {}
-                is State.Unauthorized -> {}
                 is State.Loading -> TODO()
             }
         }
@@ -309,9 +300,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                             .enqueue(uploadWorkRequest)
                         findNavController().popBackStack()
                     }
-                }
-                is State.Unauthorized -> {
-
                 }
                 is State.Loading -> {}
             }

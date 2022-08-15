@@ -53,11 +53,6 @@ class RequestNewAccountFragment: Fragment() {
                     }
                 }
                 is State.Error -> {}
-                is State.Unauthorized -> {
-                    binding?.let { root ->
-                        Snackbar.make(root.root, "Unauthorized", Snackbar.LENGTH_SHORT).show()
-                    }
-                }
                 is State.Loading -> {}
             }
         }
@@ -74,9 +69,6 @@ class RequestNewAccountFragment: Fragment() {
                     if(it.t == true) {
                         findNavController().popBackStack()
                     }
-                }
-                is State.Unauthorized -> {
-
                 }
             }
         }

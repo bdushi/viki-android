@@ -53,13 +53,6 @@ class AuthenticationActivity : AppCompatActivity() {
                                 it, Snackbar.LENGTH_SHORT
                             ).show()
                         }
-                        is State.Unauthorized -> {
-                            Snackbar.make(
-                                findViewById(android.R.id.content),
-                                R.string.unauthorized,
-                                Snackbar.LENGTH_SHORT
-                            ).show()
-                        }
                         is State.Success -> {
                             val myIntent = Intent()
                             myIntent.component =

@@ -12,8 +12,6 @@ class CityRepository @Inject constructor(private val cityDataSource: CityRemoteD
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 Result.Success(body)
-            } else if (response.code() == 401) {
-                Result.Unauthorized
             } else {
                 Result.Error(response.message())
             }

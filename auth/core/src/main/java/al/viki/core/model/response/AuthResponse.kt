@@ -9,6 +9,8 @@ data class AuthResponse(
     val accessToken: String,
     @field:Json(name = "token_type")
     val tokenType: String,
+    @field:Json(name = "refresh_token")
+    val refreshToken: String,
     @field:Json(name = "expires_in")
     val expiresIn: String,
 )

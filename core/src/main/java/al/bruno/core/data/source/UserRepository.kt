@@ -12,8 +12,6 @@ class UserRepository @Inject constructor(private val userRemoteDataSource: UserR
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 Result.Success(body)
-            } else if (response.code() == 401) {
-                Result.Unauthorized
             } else {
                 Result.Error(response.message())
             }

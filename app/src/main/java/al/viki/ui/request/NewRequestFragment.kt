@@ -186,7 +186,6 @@ class NewRequestFragment : Fragment() {
                     }
                 }
                 is State.Error -> {}
-                is State.Unauthorized -> {}
                 is State.Loading -> TODO()
             }
         }
@@ -199,7 +198,6 @@ class NewRequestFragment : Fragment() {
                     }
                 }
                 is State.Error -> {}
-                is State.Unauthorized -> {}
                 is State.Loading -> TODO()
             }
         }
@@ -212,9 +210,6 @@ class NewRequestFragment : Fragment() {
                     }
                 }
                 is State.Error -> {
-
-                }
-                is State.Unauthorized -> {
 
                 }
                 is State.Loading -> TODO()
@@ -231,10 +226,9 @@ class NewRequestFragment : Fragment() {
                 is State.Error -> {
 
                 }
-                is State.Unauthorized -> {
+                is State.Loading -> {
 
                 }
-                is State.Loading -> TODO()
             }
         }
 
@@ -246,7 +240,6 @@ class NewRequestFragment : Fragment() {
                         findNavController().popBackStack()
                     }
                 }
-                is State.Unauthorized -> {}
                 is State.Loading -> {}
             }
         }

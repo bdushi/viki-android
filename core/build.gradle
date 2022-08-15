@@ -41,7 +41,7 @@ dependencies {
     api 'com.google.firebase:firebase-storage-ktx'
     api 'id.zelory:compressor:3.0.1'
 //    implementation 'com.google.firebase:firebase-perf-ktx'
-    implementation "com.google.dagger:hilt-android:2.42"
+    implementation "com.google.dagger:hilt-android:2.43.2"
     kapt "com.google.dagger:hilt-compiler:2.42"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

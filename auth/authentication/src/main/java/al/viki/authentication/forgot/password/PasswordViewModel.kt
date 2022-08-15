@@ -49,7 +49,6 @@ class PasswordViewModel @Inject constructor(
             when(val response = tokenRepository.resetPassword(email = email.value.toString())) {
                 is Result.Error -> _reset.value = State.Error(response.error)
                 is Result.Success -> _reset.value = State.Success(response.data)
-                is Result.Unauthorized -> _reset.value = State.Unauthorized
             }
         }
     }
@@ -60,7 +59,6 @@ class PasswordViewModel @Inject constructor(
             when(val response = tokenRepository.validateToken(token = token)) {
                 is Result.Error -> _validate.value = State.Error(response.error)
                 is Result.Success -> _validate.value = State.Success(response.data.accessToken)
-                is Result.Unauthorized -> _validate.value = State.Unauthorized
             }
         }
     }
@@ -71,7 +69,6 @@ class PasswordViewModel @Inject constructor(
             when(val response = authRepository.changePassword(newPassword = newPassword.value)) {
                 is Result.Error -> _change.value = State.Error(response.error)
                 is Result.Success -> _change.value = State.Success(response.data)
-                is Result.Unauthorized -> _change.value = State.Unauthorized
             }
         }
     }
@@ -82,7 +79,6 @@ class PasswordViewModel @Inject constructor(
             when(val response = authRepository.newPassword(password = newPassword.value)) {
                 is Result.Error -> _change.value = State.Error(response.error)
                 is Result.Success -> _change.value = State.Success(response.data)
-                is Result.Unauthorized -> _change.value = State.Unauthorized
             }
         }
     }

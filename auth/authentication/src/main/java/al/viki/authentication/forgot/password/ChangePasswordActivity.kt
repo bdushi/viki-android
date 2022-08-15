@@ -56,7 +56,7 @@ class ChangePasswordActivity : AppCompatActivity() {
 //            handler.postDelayed(runnable, 3000)
             Snackbar.make(
                 binding.root,
-                "Token is not valid, Generate new One",
+                "Token is not valid anymore, Generate new One",
                 Snackbar.LENGTH_SHORT
             )
                 .setAction("Forgot Password") {
@@ -90,24 +90,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                         finish()
                     }
                 }
-                is State.Unauthorized -> {
-//                    handler.postDelayed(runnable, 3000)
-                    Snackbar.make(
-                        binding.root,
-                        "Token has been expired, Generate new One",
-                        Snackbar.LENGTH_SHORT
-                    ).setAction("Forgot Password") {
-                        handler.removeCallbacks(runnable)
-                        startActivity(
-                            Intent(
-                                this@ChangePasswordActivity,
-                                ForgotPasswordActivity::class.java
-                            )
-                        )
-                        finish()
-                    }.show()
-                }
-                else -> {
+                is State.Loading -> {
 
                 }
             }
@@ -124,24 +107,10 @@ class ChangePasswordActivity : AppCompatActivity() {
                             Snackbar.LENGTH_SHORT
                         ).show()
                     }
-                is State.Unauthorized -> {
-//                    handler.postDelayed(runnable, 3000)
-                    Snackbar.make(
-                        binding.root,
-                        "Token has been expired, Generate new One",
-                        Snackbar.LENGTH_SHORT
-                    ).setAction("Forgot Password") {
-                        handler.removeCallbacks(runnable)
-                        startActivity(
-                            Intent(
-                                this@ChangePasswordActivity,
-                                ForgotPasswordActivity::class.java
-                            )
-                        )
-                        finish()
-                    }.show()
+                is State.Loading -> {
+
                 }
-                else -> {
+                is State.Success -> {
 
                 }
             }

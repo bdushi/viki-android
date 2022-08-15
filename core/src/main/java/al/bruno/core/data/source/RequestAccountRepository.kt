@@ -1,11 +1,9 @@
 package al.bruno.core.data.source
 
 import al.bruno.core.Result
-import al.bruno.core.State
-import al.bruno.core.data.source.model.Authority
 import al.bruno.core.data.source.model.request.RequestAccount
 import al.bruno.core.data.source.remote.RequestAccountRemoteDataSource
-import al.bruno.core.interceptor.ErrorHandler
+import al.bruno.core.error.ErrorHandler
 import javax.inject.Inject
 
 class RequestAccountRepository @Inject constructor(
@@ -20,8 +18,6 @@ class RequestAccountRepository @Inject constructor(
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 Result.Success(response.isSuccessful)
-            } else if (response.code() == 401) {
-                Result.Unauthorized
             } else {
                 errorHandler.customError(response)
                 Result.Error(response.message())

@@ -2,7 +2,7 @@ package al.viki.authentication.auth
 
 import al.bruno.core.Result
 import al.bruno.core.State
-import al.bruno.core.interceptor.AuthInterceptor
+import al.bruno.core.interceptor.AuthorizationInterceptor
 import al.viki.core.AuthRepository
 import al.viki.core.model.request.AuthRequest
 import al.viki.core.model.response.AuthResponse
@@ -18,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val authInterceptor: AuthInterceptor) :
+    private val authorizationInterceptor: AuthorizationInterceptor
+) :
     ViewModel() {
     val username = MutableStateFlow<String?>(null)
     val password = MutableStateFlow<String?>(null)
@@ -37,9 +38,6 @@ class AuthenticationViewModel @Inject constructor(
                     password.value
                 )
             )) {
-                is Result.Unauthorized -> {
-                    _authentication.value = State.Unauthorized
-                }
                 is Result.Success -> {
                     _authentication.value = State.Success(response.data)
                 }

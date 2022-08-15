@@ -16,8 +16,6 @@ class TokeRepository @Inject constructor(
             val response = tokenRemoteDataSource.resetPassword(email)
             if (response.isSuccessful) {
                 Result.Success(response.isSuccessful)
-            } else if (response.code() == 401) {
-                Result.Unauthorized
             } else {
                 Result.Error(response.message())
             }
@@ -33,8 +31,6 @@ class TokeRepository @Inject constructor(
             if (response.isSuccessful && body != null) {
                 authLocalDataSource.token(body.accessToken)
                 Result.Success(body)
-            } else if (response.code() == 401) {
-                Result.Unauthorized
             } else {
                 Result.Error(response.message())
             }

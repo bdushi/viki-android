@@ -12,13 +12,11 @@ import kotlinx.coroutines.flow.onStart
 sealed class Result<out R> {
     data class Success<out T>(val data: T) : Result<T>()
     data class Error(val error: String?) : Result<Nothing>()
-    object Unauthorized : Result<Nothing>()
 
     override fun toString(): String {
         return when (this) {
             is Success<*> -> "Success[data=$data]"
             is Error -> "Error[exception=$error]"
-            is Unauthorized -> "Unauthorized"
         }
     }
 }
@@ -26,10 +24,11 @@ sealed class Result<out R> {
 /**
  *
  */
-fun <T> Flow<T>.asResult(){
-    map<T,Result<T>> {
-        Result.Success(it)
-    }.onStart {
-        emit(Result.Unauthorized)
-    }.catch { emit(Result.Error("")) }
-}
+//fun <T> Flow<T>.asResult(){
+//    map<T,Result<T>> {
+//        Result.Success(it)
+//    }.onStart {
+//        emit(Result.Unauthorized)
+//    }.catch {
+//        emit(Result.Error("")) }
+//}

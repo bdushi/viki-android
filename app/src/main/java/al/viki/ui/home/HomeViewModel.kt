@@ -67,9 +67,6 @@ class HomeViewModel @Inject constructor(
                         )
                     )
                 }
-                is Result.Unauthorized -> {
-                    _user.value = State.Unauthorized
-                }
             }
         }
     }
@@ -104,9 +101,6 @@ class HomeViewModel @Inject constructor(
         _propertyTypes.value = State.Loading
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = propertyTypeRepository.propertyTypes()) {
-                is Result.Unauthorized -> {
-                    _propertyTypes.value = State.Unauthorized
-                }
                 is Result.Success -> {
                     _propertyTypes.value = State.Success(
                         response.data.map {

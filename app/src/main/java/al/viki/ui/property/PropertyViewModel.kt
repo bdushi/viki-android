@@ -82,9 +82,6 @@ class PropertyViewModel @Inject constructor(
     private fun units() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = unitRepository.units()) {
-                is Result.Unauthorized -> {
-                    _units.value = State.Unauthorized
-                }
                 is Result.Success -> {
                     _units.value = State.Success(
                         response.data.map {
@@ -105,9 +102,6 @@ class PropertyViewModel @Inject constructor(
     private fun propertyTypes() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = propertyTypeRepository.propertyTypes()) {
-                is Result.Unauthorized -> {
-                    _propertyTypes.value = State.Unauthorized
-                }
                 is Result.Success -> {
                     _propertyTypes.value = State.Success(
                         response.data.map {
@@ -128,9 +122,6 @@ class PropertyViewModel @Inject constructor(
     private fun operations() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = operationRepository.operations()) {
-                is Result.Unauthorized -> {
-                    _operations.value = State.Unauthorized
-                }
                 is Result.Success -> {
                     _operations.value = State.Success(
                         response.data.map {
@@ -151,9 +142,6 @@ class PropertyViewModel @Inject constructor(
     private fun currencies() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = currencyRepository.currencies()) {
-                is Result.Unauthorized -> {
-                    _currencies.value = State.Unauthorized
-                }
                 is Result.Success -> {
                     _currencies.value = State.Success(
                         response.data.map {
@@ -177,9 +165,6 @@ class PropertyViewModel @Inject constructor(
     private fun cities() {
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = cityRepository.cities()) {
-                is Result.Unauthorized -> {
-                    _cities.value = State.Unauthorized
-                }
                 is Result.Success -> {
                     _cities.value = State.Success(
                         response.data.map {
@@ -268,7 +253,6 @@ class PropertyViewModel @Inject constructor(
             )) {
                 is Result.Error -> _properties.value = State.Error(response.error)
                 is Result.Success -> _properties.value = State.Success(response.data)
-                is Result.Unauthorized -> _properties.value = State.Unauthorized
             }
         }
     }

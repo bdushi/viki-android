@@ -23,8 +23,6 @@ class AuthRepository @Inject constructor(
             if (response.isSuccessful && body != null) {
                 authLocalDataSource.token(body.accessToken)
                 Result.Success(body)
-            } else if (response.code() == 401) {
-                Result.Unauthorized
             } else {
                 Result.Error(response.message())
             }
@@ -38,8 +36,6 @@ class AuthRepository @Inject constructor(
             val response = authRemoteDataSource.newPassword(password = password)
             if (response.isSuccessful) {
                 Result.Success(response.isSuccessful)
-            } else if (response.code() == 401) {
-                Result.Unauthorized
             } else {
                 Result.Error(response.message())
             }
@@ -54,8 +50,6 @@ class AuthRepository @Inject constructor(
             val response = authRemoteDataSource.changePassword(newPassword)
             if (response.isSuccessful) {
                 Result.Success(response.isSuccessful)
-            } else if (response.code() == 401) {
-                Result.Unauthorized
             } else {
                 Result.Error(response.message())
             }

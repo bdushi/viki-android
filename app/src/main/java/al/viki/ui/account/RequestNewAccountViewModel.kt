@@ -55,7 +55,6 @@ class RequestNewAccountViewModel @Inject constructor(
                         it.description
                     )
                 })
-                is Result.Unauthorized -> _authorities.value = State.Unauthorized
             }
         }
     }
@@ -79,9 +78,6 @@ class RequestNewAccountViewModel @Inject constructor(
                     }
                     is Result.Success -> {
                         _request.value = State.Success(response.data)
-                    }
-                    Result.Unauthorized -> {
-                        _request.value = State.Unauthorized
                     }
                 }
             }

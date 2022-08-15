@@ -1,7 +1,6 @@
 package al.viki.authentication.forgot.password
 
 import al.bruno.core.State
-import al.viki.authentication.R
 import al.viki.authentication.databinding.ActivityForgotPasswordBinding
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -38,15 +37,8 @@ class ForgotPasswordActivity : AppCompatActivity() {
                                 it, Snackbar.LENGTH_SHORT
                             ).show()
                         }
-                        is State.Unauthorized -> {
-                            Snackbar.make(
-                                findViewById(android.R.id.content),
-                                R.string.unauthorized,
-                                Snackbar.LENGTH_SHORT
-                            ).show()
-                        }
                         is State.Success -> {
-                            if(response.t == true) {
+                            if (response.t == true) {
                                 finish()
                             }
                         }

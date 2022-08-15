@@ -19,8 +19,6 @@ class RegistrationRepository @Inject constructor(
             if (response.isSuccessful && body != null) {
                 authLocalDataSource.token(body.accessToken)
                 Result.Success(body)
-            } else if (response.code() == 401) {
-                Result.Unauthorized
             } else {
                 Result.Error(response.message())
             }
@@ -36,8 +34,6 @@ class RegistrationRepository @Inject constructor(
             val responseBody = response.body()
             if (response.isSuccessful && responseBody != null) {
                 Result.Success(responseBody)
-            } else if (response.code() == 401) {
-                Result.Unauthorized
             } else {
                 Result.Error(response.message())
             }

@@ -12,8 +12,6 @@ class OperationRepository @Inject constructor(private val operationDataSource: O
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 Result.Success(body)
-            } else if (response.code() == 401) {
-                Result.Unauthorized
             } else {
                 Result.Error(response.message())
             }

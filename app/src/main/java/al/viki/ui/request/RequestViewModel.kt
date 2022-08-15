@@ -89,9 +89,6 @@ class RequestViewModel @Inject constructor(
                             )
                         })
                     }
-                    is Result.Unauthorized -> {
-                        _cities.value = State.Unauthorized
-                    }
                 }
                 when (val currency = response[1]) {
                     is Result.Error -> {
@@ -110,9 +107,6 @@ class RequestViewModel @Inject constructor(
                             }
                         )
                     }
-                    is Result.Unauthorized -> {
-                        _currencies.value = State.Unauthorized
-                    }
                 }
                 when (val propertyType = response[2]) {
                     is Result.Error -> {
@@ -128,9 +122,6 @@ class RequestViewModel @Inject constructor(
                             }
                         )
                     }
-                    is Result.Unauthorized -> {
-                        _propertyTypes.value = State.Unauthorized
-                    }
                 }
                 when (val unit = response[3]) {
                     is Result.Error -> {
@@ -145,9 +136,6 @@ class RequestViewModel @Inject constructor(
                                 )
                             }
                         )
-                    }
-                    is Result.Unauthorized -> {
-                        _units.value = State.Unauthorized
                     }
                 }
             }
@@ -208,7 +196,6 @@ class RequestViewModel @Inject constructor(
             )) {
                 is Result.Error -> _request.value = State.Error(response.error)
                 is Result.Success -> _request.value = State.Success(response.data)
-                is Result.Unauthorized -> _request.value = State.Unauthorized
             }
         }
     }

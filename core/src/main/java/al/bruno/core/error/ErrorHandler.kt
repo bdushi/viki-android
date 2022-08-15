@@ -1,4 +1,4 @@
-package al.bruno.core.interceptor
+package al.bruno.core.error
 
 import okhttp3.ResponseBody
 import retrofit2.Converter
