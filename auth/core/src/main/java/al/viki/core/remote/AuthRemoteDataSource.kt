@@ -15,16 +15,11 @@ class AuthRemoteDataSource @Inject constructor(private val authService: AuthServ
         return authService.auth(authRequest = authRequest)
     }
 
-    override suspend fun verification(): Response<ResponseBody> {
-        return authService.verification()
-    }
-
     override suspend fun token(): Flow<Preferences> {
         TODO("Not yet implemented")
     }
 
-
-    override suspend fun token(token: String) {
+    override suspend fun token(accessToken: String, refreshToken: String) {
         TODO("Not yet implemented")
     }
 

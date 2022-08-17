@@ -38,6 +38,8 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:padding="@dimen/micro_dimen"
+                    android:adjustViewBounds="true"
+                    android:scaleType="center"
                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
                     app:strokeWidth="@dimen/shape_dimen"
                     app:strokeColor="@android:color/darker_gray"

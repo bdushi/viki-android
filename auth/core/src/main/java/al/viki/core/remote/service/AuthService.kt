@@ -9,8 +9,6 @@ import retrofit2.http.*
 interface AuthService {
     @POST("login")
     suspend fun auth(@Body authRequest: AuthRequest) : Response<AuthResponse>
-    @GET("authenticated/verification")
-    suspend fun verification() : Response<ResponseBody>
 
     @FormUrlEncoded
     @POST("api/users/newPassword")

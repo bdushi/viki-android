@@ -13,16 +13,20 @@ import javax.inject.Inject
 class PropertyRemoteDataSource @Inject constructor(private val propertyService: PropertyService) : PropertyDataSource {
     override suspend fun properties(
         page: Int,
-        size: Int
+        size: Int,
+        type: String?,
+        searchQuery: CharSequence?
     ): Response<PageResponse<List<PropertyResponse>>> {
-        return propertyService.properties(page = page, size = size)
+        return propertyService.properties(page = page, size = size, type = type, searchQuery = searchQuery)
     }
 
     override suspend fun requests(
         page: Int,
-        size: Int
+        size: Int,
+        type: String?,
+        searchQuery: CharSequence?
     ): Response<PageResponse<List<RequestResponse>>> {
-        return propertyService.requests(page = page, size = size)
+        return propertyService.requests(page = page, size = size, type = type, searchQuery = searchQuery)
     }
 
     override suspend fun property(propertyRequest: PropertyRequest): Response<Int> {

@@ -8,7 +8,9 @@ import al.bruno.core.Result
 import al.viki.common.NETWORK_PAGE_SIZE
 
 class PropertiesPagingSource constructor(
-    private val propertyRepository: PropertyRepository
+    private val propertyRepository: PropertyRepository,
+    private val type: String?,
+    private val searchQuery: CharSequence?
 ) : PagingSource<Int, PropertyResponse>() {
     override fun getRefreshKey(state: PagingState<Int, PropertyResponse>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -21,7 +23,9 @@ class PropertiesPagingSource constructor(
         val position = params.key ?: 0
         return when (val response = propertyRepository.properties(
             page = position,
-            size = 10
+            size = 10,
+            type = type,
+            searchQuery = searchQuery
         )) {
             is Result.Error -> LoadResult.Error(Throwable(response.error))
             is Result.Success -> LoadResult.Page(

@@ -42,7 +42,7 @@ dependencies {
     api 'id.zelory:compressor:3.0.1'
 //    implementation 'com.google.firebase:firebase-perf-ktx'
     implementation "com.google.dagger:hilt-android:2.43.2"
-    kapt "com.google.dagger:hilt-compiler:2.42"
+    kapt "com.google.dagger:hilt-compiler:2.43.2"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

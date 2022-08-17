@@ -17,6 +17,7 @@
         <entry key="app/src/main/res/drawable/ic_logout.xml" value="0.162" />
         <entry key="app/src/main/res/drawable/ic_outline_account_circle.xml" value="0.261" />
         <entry key="app/src/main/res/drawable/ic_outline_add_photo.xml" value="0.191" />
+        <entry key="app/src/main/res/drawable/ic_outline_clear.xml" value="0.263" />
         <entry key="app/src/main/res/drawable/ic_outline_filter_alt.xml" value="0.216" />
         <entry key="app/src/main/res/drawable/ic_outline_filter_list.xml" value="0.1995" />
         <entry key="app/src/main/res/drawable/ic_outline_image_not_supported.xml" value="0.1715" />

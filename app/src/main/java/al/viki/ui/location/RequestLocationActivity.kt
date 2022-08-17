@@ -56,6 +56,7 @@ class RequestLocationActivity : AppCompatActivity() {
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync { googleMap ->
             this.googleMap = googleMap
+            googleMap.mapType = GoogleMap.MAP_TYPE_SATELLITE
             googleMap.uiSettings.isZoomControlsEnabled = true
             googleMap.uiSettings.isMyLocationButtonEnabled = true
             googleMap.uiSettings.setAllGesturesEnabled(true)

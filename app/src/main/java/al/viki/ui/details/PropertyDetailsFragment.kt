@@ -17,6 +17,7 @@ import androidx.databinding.ObservableBoolean
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -53,9 +54,13 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
         mapFragment =
             childFragmentManager.findFragmentById(R.id.details_property_location_in_map) as? SupportMapFragment
         mapFragment?.getMapAsync {
-            val latLng = LatLng(property.latitude, property.latitude)
+            it.mapType = GoogleMap.MAP_TYPE_SATELLITE
+            it.uiSettings.isZoomControlsEnabled = true
+            it.uiSettings.setAllGesturesEnabled(true)
+            it.uiSettings.isCompassEnabled = true
+            val latLng = LatLng(property.latitude, property.longitude)
             val cameraPosition =
-                CameraPosition.Builder().target(latLng).zoom(10f).bearing(20f).build()
+                CameraPosition.Builder().target(latLng).zoom(15f).bearing(20f).build()
             it.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
             it.addMarker(
                 MarkerOptions()

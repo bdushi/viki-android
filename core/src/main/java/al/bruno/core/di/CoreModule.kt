@@ -1,7 +1,8 @@
 package al.bruno.core.di
 
 import al.viki.UserPreferencesSerializer
-import al.viki.common.TOKEN
+import al.viki.common.VIKI_DATA_STORE_PREFERENCES
+import al.viki.common.VIKI_PREFERENCES
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
@@ -27,7 +28,7 @@ class CoreModule {
     @Provides
     fun providesDataStore(@ApplicationContext app: Context): DataStore<Preferences> {
         return PreferenceDataStoreFactory.create {
-            app.preferencesDataStoreFile(TOKEN)
+            app.preferencesDataStoreFile(VIKI_PREFERENCES)
         }
     }
 
@@ -36,7 +37,7 @@ class CoreModule {
     fun userPreferencesStore(@ApplicationContext app: Context): DataStore<User> {
         return DataStoreFactory.create(
             serializer = UserPreferencesSerializer(),
-            produceFile = { app.dataStoreFile("USER_PREFERENCE") },
+            produceFile = { app.dataStoreFile(VIKI_DATA_STORE_PREFERENCES) },
             corruptionHandler = null,
             migrations = listOf(),
             scope = CoroutineScope(Dispatchers.IO + SupervisorJob())

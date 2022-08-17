@@ -21,7 +21,7 @@ class AuthRepository @Inject constructor(
             val response = authRemoteDataSource.auth(authRequest)
             val body = response.body()
             if (response.isSuccessful && body != null) {
-                authLocalDataSource.token(body.accessToken)
+                authLocalDataSource.token(accessToken = body.accessToken, refreshToken = body.refreshToken)
                 Result.Success(body)
             } else {
                 Result.Error(response.message())
@@ -56,10 +56,6 @@ class AuthRepository @Inject constructor(
         } catch (ex: Exception) {
             Result.Error(ex.message)
         }
-    }
-
-    suspend fun verification(): Response<ResponseBody> {
-        return authRemoteDataSource.verification()
     }
 
     suspend fun token(): Flow<Preferences> {

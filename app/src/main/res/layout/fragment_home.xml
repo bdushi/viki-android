@@ -4,11 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/micro_dimen">
+    android:layout_margin="@dimen/micro_dimen"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/search"
+        android:id="@+id/search_input_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:endIconDrawable="@drawable/ic_outline_clear"
         app:hintEnabled="false"
         app:endIconMode="clear_text"
         app:startIconDrawable="@drawable/ic_outline_search"
@@ -16,14 +19,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/filter"
         app:layout_constraintBottom_toTopOf="@id/header">
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
+            android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/search_property"
             android:inputType="text"
             android:selectAllOnFocus="true"
             android:layout_marginBottom="@dimen/micro_dimen"
-            android:background="@null"/>
+            android:background="@null"
+            android:imeOptions="actionSearch"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -32,8 +37,8 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/small_dimen"
         app:srcCompat="@drawable/ic_outline_more_vert"
-        app:layout_constraintTop_toTopOf="@id/search"
-        app:layout_constraintBottom_toBottomOf="@id/search"
+        app:layout_constraintTop_toTopOf="@id/search_input_layout"
+        app:layout_constraintBottom_toBottomOf="@id/search_input_layout"
         app:layout_constraintStart_toEndOf="@id/filter"
         app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -43,9 +48,9 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/small_dimen"
         app:srcCompat="@drawable/ic_outline_swap_horiz"
-        app:layout_constraintTop_toTopOf="@id/search"
-        app:layout_constraintBottom_toBottomOf="@id/search"
-        app:layout_constraintStart_toEndOf="@id/search"
+        app:layout_constraintTop_toTopOf="@id/search_input_layout"
+        app:layout_constraintBottom_toBottomOf="@id/search_input_layout"
+        app:layout_constraintStart_toEndOf="@id/search_input_layout"
         app:layout_constraintEnd_toStartOf="@+id/menu"/>
 
     <LinearLayout
@@ -57,7 +62,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/refresh_property"
-        app:layout_constraintTop_toBottomOf="@id/search">
+        app:layout_constraintTop_toBottomOf="@id/search_input_layout">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/label"

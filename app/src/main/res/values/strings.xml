@@ -24,7 +24,6 @@
     <string name="title">Title</string>
     <string name="save">Save</string>
     <string name="logout">LogOut</string>
-    <string name="new_request_title">New Request</string>
     <string name="profile_title">Profile</string>
     <string name="change_password_title">Change Password</string>
     <string name="property_details">Property Details</string>

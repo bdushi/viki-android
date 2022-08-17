@@ -6,6 +6,7 @@ import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
 import al.viki.R
 import al.viki.authentication.auth.NotifyAuthenticationChange
+import al.viki.common.hideSoftKeyBoard
 import al.viki.common.propertiesDiffUtil
 import al.viki.common.requestDiffUtil
 import al.viki.databinding.*
@@ -18,12 +19,17 @@ import android.content.Context
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import android.widget.AdapterView
 import androidx.annotation.MenuRes
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -31,10 +37,12 @@ import androidx.navigation.fragment.findNavController
 import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
 
+
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
     private var properties = true
     private var userUi: UserUi? = null
+    private var propertyTypeUi: PropertyTypeUi? = null
     private var _binding: FragmentHomeBinding? = null
     private var notifyAuthenticationChange: NotifyAuthenticationChange? = null
     private val homeViewModel: HomeViewModel by viewModels()
@@ -131,6 +139,74 @@ class HomeFragment : Fragment() {
             binding?.refreshProperty?.isRefreshing = false
         }
 
+        binding?.operationFilter?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(adapterView: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                propertyTypeUi = adapterView?.getItemAtPosition(position) as PropertyTypeUi?
+                if (properties) {
+                    collectLatestFlow(homeViewModel.propertiesCollectionPagedList(propertyTypeUi?.propertyType)) {
+                        propertiesAdapter.submitData(it)
+                    }
+                } else {
+                    collectLatestFlow(homeViewModel.requestCollectionPagedList(propertyTypeUi?.propertyType)) {
+                        requestsAdapter.submitData(it)
+                    }
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+                propertyTypeUi = null
+            }
+
+        }
+
+        binding?.search?.setOnEditorActionListener { textView, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                activity?.hideSoftKeyBoard()
+                if (properties) {
+                    collectLatestFlow(homeViewModel.propertiesCollectionPagedList(type = propertyTypeUi?.propertyType, searchQuery = textView.text)) {
+                        propertiesAdapter.submitData(it)
+                    }
+                } else {
+                    collectLatestFlow(homeViewModel.requestCollectionPagedList(type = propertyTypeUi?.propertyType, searchQuery = textView.text)) {
+                        requestsAdapter.submitData(it)
+                    }
+                }
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
+        binding?.search?.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                activity?.hideSoftKeyBoard()
+                if (properties) {
+                    collectLatestFlow(homeViewModel.propertiesCollectionPagedList(type = propertyTypeUi?.propertyType, searchQuery = binding?.search?.text)) {
+                        propertiesAdapter.submitData(it)
+                    }
+                } else {
+                    collectLatestFlow(homeViewModel.requestCollectionPagedList(type = propertyTypeUi?.propertyType, searchQuery = binding?.search?.text)) {
+                        requestsAdapter.submitData(it)
+                    }
+                }
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+        }
+
+        binding?.searchInputLayout?.setEndIconOnClickListener {
+            activity?.hideSoftKeyBoard()
+            if (properties) {
+                collectLatestFlow(homeViewModel.propertiesCollectionPagedList(type = propertyTypeUi?.propertyType)) {
+                    propertiesAdapter.submitData(it)
+                }
+            } else {
+                collectLatestFlow(homeViewModel.requestCollectionPagedList(type = propertyTypeUi?.propertyType)) {
+                    requestsAdapter.submitData(it)
+                }
+            }
+            binding?.search?.setText("")
+            binding?.search?.clearFocus()
+        }
+
         collectLatestFlow(homeViewModel.propertiesCollectionPagedList()) {
             propertiesAdapter.submitData(it)
         }
@@ -148,7 +224,7 @@ class HomeFragment : Fragment() {
                             0,
                             PropertyTypeUi(
                                 -1,
-                                "All",
+                                "ALL",
                                 false
                             )
                         )

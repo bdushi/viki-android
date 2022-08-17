@@ -1,7 +1,8 @@
 package al.viki.core.local
 
+import al.viki.common.ACCESS_TOKEN
+import al.viki.common.REFRESH_TOKEN
 import al.viki.core.AuthDataSource
-import al.viki.common.TOKEN
 import al.viki.core.model.request.AuthRequest
 import al.viki.core.model.response.AuthResponse
 import androidx.datastore.core.DataStore
@@ -19,17 +20,14 @@ class AuthLocalDataSource @Inject constructor(private val dataStore: DataStore<P
         TODO("Not yet implemented")
     }
 
-    override suspend fun verification(): Response<ResponseBody> {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun token(): Flow<Preferences> {
         return dataStore.data
     }
 
-    override suspend fun token(token: String) {
+    override suspend fun token(accessToken: String, refreshToken: String) {
         dataStore.edit {
-            it[stringPreferencesKey(TOKEN)] = token
+            it[stringPreferencesKey(ACCESS_TOKEN)] = accessToken
+            it[stringPreferencesKey(REFRESH_TOKEN)] = refreshToken
         }
     }
 

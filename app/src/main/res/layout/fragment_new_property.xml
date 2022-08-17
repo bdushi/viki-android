@@ -67,7 +67,7 @@
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:navigationIcon="@drawable/ic_outline_close"
                 app:menu="@menu/menu_new_photo"
-                app:title="@string/new_request_title" />
+                app:title="@string/new_property" />
         </com.google.android.material.appbar.AppBarLayout>
         <androidx.core.widget.NestedScrollView
             android:id="@+id/new_property_scroll_view"

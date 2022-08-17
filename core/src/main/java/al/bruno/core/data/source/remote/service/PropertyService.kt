@@ -10,10 +10,10 @@ import retrofit2.http.*
 
 interface PropertyService {
     @GET("api/report/properties")
-    suspend fun properties(@Query("page") page: Int, @Query("size") size: Int) : Response<PageResponse<List<PropertyResponse>>>
+    suspend fun properties(@Query("page") page: Int, @Query("size") size: Int, @Query("type") type: String?, @Query("searchQuery") searchQuery: CharSequence?) : Response<PageResponse<List<PropertyResponse>>>
 
     @GET("api/report/requests")
-    suspend fun requests(@Query("page") page: Int, @Query("size") size: Int) : Response<PageResponse<List<RequestResponse>>>
+    suspend fun requests(@Query("page") page: Int, @Query("size") size: Int, @Query("type") type: String?, @Query("searchQuery") searchQuery: CharSequence?) : Response<PageResponse<List<RequestResponse>>>
 
     @POST("api/properties")
     suspend fun property(@Body propertyRequest: PropertyRequest) : Response<Int>

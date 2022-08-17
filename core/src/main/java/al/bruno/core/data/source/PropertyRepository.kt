@@ -12,9 +12,14 @@ import javax.inject.Inject
 class PropertyRepository @Inject constructor(
     private val propertyRemoteDataSource: PropertyRemoteDataSource) {
 
-    suspend fun properties(page: Int, size: Int): Result<PageResponse<List<PropertyResponse>>> {
+    suspend fun properties(
+        page: Int,
+        size: Int,
+        type: String?,
+        searchQuery: CharSequence?
+    ): Result<PageResponse<List<PropertyResponse>>> {
         return try {
-            val response = propertyRemoteDataSource.properties(page, size)
+            val response = propertyRemoteDataSource.properties(page, size, type, searchQuery)
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 Result.Success(body)
@@ -26,9 +31,14 @@ class PropertyRepository @Inject constructor(
         }
     }
 
-    suspend fun requests(page: Int, size: Int): Result<PageResponse<List<RequestResponse>>> {
+    suspend fun requests(
+        page: Int,
+        size: Int,
+        type: String?,
+        searchQuery: CharSequence?
+    ): Result<PageResponse<List<RequestResponse>>> {
         return try {
-            val response = propertyRemoteDataSource.requests(page, size)
+            val response = propertyRemoteDataSource.requests(page, size, type, searchQuery)
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 Result.Success(body)

@@ -17,7 +17,7 @@ class RegistrationRepository @Inject constructor(
             val response = registrationRemoteDataSource.register(user = user, token = token)
             val body = response.body()
             if (response.isSuccessful && body != null) {
-                authLocalDataSource.token(body.accessToken)
+                authLocalDataSource.token(body.accessToken, body.refreshToken)
                 Result.Success(body)
             } else {
                 Result.Error(response.message())

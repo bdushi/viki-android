@@ -71,7 +71,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun propertiesCollectionPagedList(): Flow<PagingData<PropertyResponse>> = Pager(
+    fun propertiesCollectionPagedList(
+        type: String? = null,
+        searchQuery: CharSequence? = null
+    ): Flow<PagingData<PropertyResponse>> = Pager(
         config = PagingConfig(
             initialLoadSize = NETWORK_PAGE_SIZE,
             pageSize = NETWORK_PAGE_SIZE,
@@ -79,12 +82,17 @@ class HomeViewModel @Inject constructor(
         ),
         pagingSourceFactory = {
             PropertiesPagingSource(
-                propertyRepository = propertyRepository
+                propertyRepository = propertyRepository,
+                type = type,
+                searchQuery = searchQuery
             )
         }
     ).flow
 
-    fun requestCollectionPagedList(): Flow<PagingData<RequestResponse>> = Pager(
+    fun requestCollectionPagedList(
+        type: String? = null,
+        searchQuery: CharSequence? = null
+    ): Flow<PagingData<RequestResponse>> = Pager(
         config = PagingConfig(
             initialLoadSize = NETWORK_PAGE_SIZE,
             pageSize = NETWORK_PAGE_SIZE,
@@ -92,7 +100,9 @@ class HomeViewModel @Inject constructor(
         ),
         pagingSourceFactory = {
             RequestPagingSource(
-                propertyRepository = propertyRepository
+                propertyRepository = propertyRepository,
+                type = type,
+                searchQuery = searchQuery
             )
         }
     ).flow
