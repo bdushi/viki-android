@@ -4,6 +4,7 @@ import al.bruno.core.State
 import al.viki.authentication.auth.AuthenticationActivity
 import al.viki.authentication.databinding.ActivityChangePasswordBinding
 import al.viki.foundation.common.collectLatestFlow
+import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -82,11 +83,7 @@ class ChangePasswordActivity : AppCompatActivity() {
                 }
                 is State.Success -> {
                     if (it.t == true) {
-                        startActivity(
-                            packageManager.getLaunchIntentForPackage(
-                                packageName
-                            )
-                        )
+                        startActivity(Intent().setComponent(ComponentName("al.viki", "al.viki.ui.main.MainActivity")))
                         finish()
                     }
                 }

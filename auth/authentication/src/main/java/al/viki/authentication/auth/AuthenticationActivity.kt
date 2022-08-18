@@ -54,10 +54,7 @@ class AuthenticationActivity : AppCompatActivity() {
                             ).show()
                         }
                         is State.Success -> {
-                            val myIntent = Intent()
-                            myIntent.component =
-                                ComponentName("al.viki", "al.viki.ui.main.MainActivity")
-                            startActivity(myIntent)
+                            startActivity(Intent().setComponent(ComponentName("al.viki", "al.viki.ui.main.MainActivity")))
                             finish()
                         }
                         else -> {

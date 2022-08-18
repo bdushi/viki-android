@@ -22,7 +22,7 @@ class AuthorizationInterceptor @Inject constructor() : Interceptor {
             requestBuilder.addHeader("Authorization", " Bearer $it")
         }
         val mainResponse: Response = chain.proceed(requestBuilder.build())
-        if (mainResponse.code == 401 || mainResponse.code == 403) {
+        if ((mainResponse.code == 401 || mainResponse.code == 403) && !chain.request().url.encodedPath.contains("/login")) {
             session?.invoke()
         }
         return mainResponse

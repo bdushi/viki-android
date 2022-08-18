@@ -51,7 +51,6 @@
     <string name="area_item">%s %s</string>
     <string name="operation_item">Shitje</string>
     <string name="personal_information_first_and_last_name"><b>Emri</b>%s %s</string>
-    <string name="personal_information_username"><b>Perdoruesi</b>\t%s</string>
     <string name="personal_information_label">Te dhenat personale</string>
     <string name="change_password">Ndrysho Fjalkalimin</string>
 </resources>

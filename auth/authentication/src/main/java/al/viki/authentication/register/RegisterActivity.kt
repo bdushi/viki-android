@@ -189,22 +189,22 @@ class RegisterActivity : AppCompatActivity() {
             when (it) {
                 is State.Success -> {
                     if (it.t != null) {
-                        val uploadWorkRequest: WorkRequest =
-                            OneTimeWorkRequestBuilder<UploadProfilePictureWorker>()
-                                .setInputData(
-                                    Data
-                                        .Builder()
-                                        .putString("USERNAME", it.t?.username)
-                                        .putString(
-                                            "PHOTO_UI",
-                                            registerViewModel.photo.value.toString()
-                                        )
-                                        .build()
-                                )
-                                .build()
-                        WorkManager
-                            .getInstance(this)
-                            .enqueue(uploadWorkRequest)
+//                        val uploadWorkRequest: WorkRequest =
+//                            OneTimeWorkRequestBuilder<UploadProfilePictureWorker>()
+//                                .setInputData(
+//                                    Data
+//                                        .Builder()
+//                                        .putString("USERNAME", it.t?.username)
+//                                        .putString(
+//                                            "PHOTO_UI",
+//                                            registerViewModel.photo.value.toString()
+//                                        )
+//                                        .build()
+//                                )
+//                                .build()
+//                        WorkManager
+//                            .getInstance(this)
+//                            .enqueue(uploadWorkRequest)
                         startActivity(
                             packageManager.getLaunchIntentForPackage(
                                 packageName

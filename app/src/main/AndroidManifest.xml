@@ -74,7 +74,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="http"
-                    android:host="192.168.1.3"
+                    android:host="207.154.238.198"
                     android:pathPrefix="/requestAccount"/>
                 <data
                     android:scheme="http"
@@ -102,7 +102,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="http"
-                    android:host="192.168.1.3"
+                    android:host="207.154.238.198"
                     android:pathPrefix="/forgotPassword"/>
                 <data
                     android:scheme="http"

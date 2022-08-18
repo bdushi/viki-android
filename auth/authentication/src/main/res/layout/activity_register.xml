@@ -30,7 +30,6 @@
                 android:id="@+id/top_app_bar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:menu="@menu/menu_new_photo"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:navigationIcon="@drawable/ic_outline_close"
                 app:title="@string/new_account" />
@@ -189,7 +188,7 @@
                         android:inputType="text"
                         android:imeOptions="actionDone"
                         android:text="@={registerViewModel.address}"
-                        bind:onEditorEnterAction="@{ (v) -> (registerViewModel.photo != null &amp; !registerViewModel.email.empty &amp; !registerViewModel.username.empty &amp; !registerViewModel.firstName.empty &amp; !registerViewModel.lastName.empty &amp; !registerViewModel.password.empty &amp; !registerViewModel.reTypePassword.empty &amp; !registerViewModel.phone.empty &amp; !registerViewModel.address.empty &amp; !ValidationKt.isValidPassword(registerViewModel.password) &amp; registerViewModel.password.equalsIgnoreCase(registerViewModel.reTypePassword) &amp; !ValidationKt.isValidPhone(registerViewModel.phone)) ? onClick.onClick(v) : null }"/>
+                        bind:onEditorEnterAction="@{ (v) -> (!registerViewModel.email.empty &amp; !registerViewModel.username.empty &amp; !registerViewModel.firstName.empty &amp; !registerViewModel.lastName.empty &amp; !registerViewModel.password.empty &amp; !registerViewModel.reTypePassword.empty &amp; !registerViewModel.phone.empty &amp; !registerViewModel.address.empty &amp; !ValidationKt.isValidPassword(registerViewModel.password) &amp; registerViewModel.password.equalsIgnoreCase(registerViewModel.reTypePassword) &amp; !ValidationKt.isValidPhone(registerViewModel.phone)) ? onClick.onClick(v) : null }"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -197,7 +196,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/normal_dimen"
-                    android:enabled="@{registerViewModel.photo != null &amp; !registerViewModel.email.empty &amp; !registerViewModel.username.empty &amp; !registerViewModel.firstName.empty &amp; !registerViewModel.lastName.empty &amp; !registerViewModel.password.empty &amp; !registerViewModel.reTypePassword.empty &amp; !registerViewModel.phone.empty &amp; !registerViewModel.address.empty &amp; !ValidationKt.isValidPassword(registerViewModel.password) &amp; registerViewModel.password.equalsIgnoreCase(registerViewModel.reTypePassword) &amp; !ValidationKt.isValidPhone(registerViewModel.phone)}"
+                    android:enabled="@{!registerViewModel.email.empty &amp; !registerViewModel.username.empty &amp; !registerViewModel.firstName.empty &amp; !registerViewModel.lastName.empty &amp; !registerViewModel.password.empty &amp; !registerViewModel.reTypePassword.empty &amp; !registerViewModel.phone.empty &amp; !registerViewModel.address.empty &amp; !ValidationKt.isValidPassword(registerViewModel.password) &amp; registerViewModel.password.equalsIgnoreCase(registerViewModel.reTypePassword) &amp; !ValidationKt.isValidPhone(registerViewModel.phone)}"
                     android:layout_marginStart="@dimen/xlarge_dimen"
                     android:layout_marginEnd="@dimen/xlarge_dimen"
                     android:onClick="@{ onClick::onClick }"
