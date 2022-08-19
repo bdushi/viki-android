@@ -37,7 +37,7 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:padding="@dimen/micro_dimen"
-                    android:scaleType="center"
+                    app:srcCompat="@drawable/ic_outline_person"
                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
                     app:strokeWidth="@dimen/shape_dimen"
                     app:strokeColor="@android:color/darker_gray"/>
