@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/viki_navigation"
+    app:startDestination="@id/homeFragment">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="al.viki.ui.home.HomeFragment"
+        android:label="HomeFragment" >
+        <action
+            android:id="@+id/action_homeFragment_to_newPropertyFragment"
+            app:destination="@id/newPropertyFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_propertyDetailsFragment"
+            app:destination="@id/propertyDetailsFragment">
+            <argument
+                android:name="property"
+                app:argType="al.viki.model.PropertyUi" />
+        </action>
+        <action
+            android:id="@+id/action_homeFragment_to_profileFragment"
+            app:destination="@id/profileFragment">
+            <argument
+                android:name="user"
+                app:argType="al.viki.model.UserUi"
+                app:nullable="true"
+                android:defaultValue="@null" />
+        </action>
+        <action
+            android:id="@+id/action_homeFragment_to_newRequestFragment"
+            app:destination="@id/newRequestFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_requestDetailsFragment"
+            app:destination="@id/requestDetailsFragment">
+            <argument
+                android:name="request"
+                app:argType="al.viki.model.RequestUi" />
+        </action>
+        <action
+            android:id="@+id/action_homeFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment">
+            <argument
+                android:name="user"
+                app:argType="al.viki.model.UserUi"
+                app:nullable="true"
+                android:defaultValue="@null"/>
+        </action>
+    </fragment>
+    <fragment
+        android:id="@+id/newPropertyFragment"
+        android:name="al.viki.ui.property.NewPropertyFragment"
+        android:label="NewPropertyFragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="al.viki.ui.profile.ProfileFragment"
+        android:label="ProfileFragment">
+        <argument
+            android:name="user"
+            app:argType="al.viki.model.UserUi"
+            app:nullable="true"
+            android:defaultValue="@null"/>
+    </fragment>
+    <fragment
+        android:id="@+id/newRequestFragment"
+        android:name="al.viki.ui.request.NewRequestFragment"
+        android:label="NewRequestFragment" />
+    <fragment
+        android:id="@+id/propertyDetailsFragment"
+        android:name="al.viki.ui.details.PropertyDetailsFragment"
+        android:label="@string/property_details" >
+        <argument
+            android:name="property"
+            app:argType="al.viki.model.PropertyUi" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestDetailsFragment"
+        android:name="al.viki.ui.details.RequestDetailsFragment"
+        android:label="@string/request_details">
+        <argument
+            android:name="request"
+            app:argType="al.viki.model.RequestUi" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="al.viki.ui.settings.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            android:id="@+id/action_settingsFragment_to_requestNewAccountFragment"
+            app:destination="@id/requestNewAccountFragment" />
+        <argument
+            android:name="user"
+            app:argType="al.viki.model.UserUi"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestNewAccountFragment"
+        android:name="al.viki.ui.account.RequestNewAccountFragment"
+        android:label="RequestNewAccountFragment" />
+</navigation>

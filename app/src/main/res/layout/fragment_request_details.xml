@@ -21,6 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:navigationIcon="@drawable/ic_outline_close"
+                app:menu="@menu/menu_item_detail"
                 app:title="@string/request_details" />
         </com.google.android.material.appbar.AppBarLayout>
 

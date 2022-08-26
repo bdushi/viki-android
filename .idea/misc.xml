@@ -19,6 +19,8 @@
         <entry key="app/src/main/res/drawable/ic_outline_account_circle.xml" value="0.261" />
         <entry key="app/src/main/res/drawable/ic_outline_add_photo.xml" value="0.191" />
         <entry key="app/src/main/res/drawable/ic_outline_clear.xml" value="0.263" />
+        <entry key="app/src/main/res/drawable/ic_outline_delete.xml" value="0.141" />
+        <entry key="app/src/main/res/drawable/ic_outline_edit.xml" value="0.1585" />
         <entry key="app/src/main/res/drawable/ic_outline_filter_alt.xml" value="0.216" />
         <entry key="app/src/main/res/drawable/ic_outline_filter_list.xml" value="0.1995" />
         <entry key="app/src/main/res/drawable/ic_outline_image_not_supported.xml" value="0.1715" />
@@ -29,6 +31,7 @@
         <entry key="app/src/main/res/drawable/ic_outline_open_in_full.xml" value="0.2155" />
         <entry key="app/src/main/res/drawable/ic_outline_search.xml" value="0.2475" />
         <entry key="app/src/main/res/drawable/ic_outline_settings.xml" value="0.261" />
+        <entry key="app/src/main/res/drawable/ic_outline_share.xml" value="0.1585" />
         <entry key="app/src/main/res/drawable/ic_outline_sort.xml" value="0.1995" />
         <entry key="app/src/main/res/drawable/ic_outline_swap_horiz.xml" value="0.1995" />
         <entry key="app/src/main/res/drawable/ic_outlined_add_photo.xml" value="0.174" />
@@ -74,6 +77,7 @@
         <entry key="app/src/main/res/layout/properties_item.xml" value="0.246875" />
         <entry key="app/src/main/res/layout/request_item.xml" value="0.2713541666666667" />
         <entry key="app/src/main/res/menu/menu_home.xml" value="0.246875" />
+        <entry key="app/src/main/res/menu/menu_item_detail.xml" value="0.25677083333333334" />
         <entry key="app/src/main/res/menu/menu_new_photo.xml" value="0.25729166666666664" />
         <entry key="app/src/main/res/menu/new_property_menu.xml" value="0.25625" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1405" />

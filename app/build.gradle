@@ -26,10 +26,30 @@ android {
             useSupportLibrary true
         }
     }
-
-    buildTypes {
+    signingConfigs {
+        debug {
+            storeFile file('../debug.jks')
+            storePassword project.findProperty("STORE_PASSWORD") ?: "123456"
+            keyAlias project.findProperty("KEY_ALIAS") ?: "viki"
+            keyPassword project.findProperty("KEY_PASSWORD") ?: "123456"
+        }
         release {
-            minifyEnabled false
+            storeFile file('../release.jks')
+            storePassword project.findProperty("STORE_PASSWORD")
+            keyAlias project.findProperty("KEY_ALIAS")
+            keyPassword project.findProperty("KEY_PASSWORD")
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

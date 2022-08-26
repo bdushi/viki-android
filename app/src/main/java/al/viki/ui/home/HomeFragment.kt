@@ -26,6 +26,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.PopupMenu
@@ -34,6 +35,7 @@ import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -66,12 +68,20 @@ class HomeFragment : Fragment() {
                 vm.property = t
                 vm.onClick = object : OnClickListener<PropertyResponse> {
                     override fun onClick(view: View, t: PropertyResponse) {
-                        findNavController()
-                            .navigate(
-                                HomeFragmentDirections.actionHomeFragmentToPropertyDetailsFragment(
-                                    PropertyUi.toPropertyUi(t)
+                        when(view.id) {
+                            R.id.properties -> findNavController()
+                                .navigate(
+                                    HomeFragmentDirections.actionHomeFragmentToPropertyDetailsFragment(
+                                        PropertyUi.toPropertyUi(t)
+                                    )
                                 )
-                            )
+                            R.id.properties_share_item -> {
+                                Toast.makeText(requireContext(), "Share", Toast.LENGTH_SHORT).show()
+                            }
+                            R.id.properties_delete_item -> {
+                                Toast.makeText(requireContext(), "DELETE", Toast.LENGTH_SHORT).show()
+                            }
+                        }
                     }
                 }
             },

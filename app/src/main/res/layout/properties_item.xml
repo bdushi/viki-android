@@ -15,49 +15,92 @@
         <import type="android.view.View"/>
     </data>
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/properties"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/micro_dimen"
         app:cardCornerRadius="@dimen/micro_dimen"
         android:onClick="@{(v) -> onClick.onClick(v, property)}">
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="@dimen/micro_dimen">
             <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/properties_share_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="1dp"
+                android:padding="@dimen/small_dimen"
+                android:onClick="@{(v) -> onClick.onClick(v, property)}"
+                app:srcCompat="@drawable/ic_outline_share"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/properties_delete_item"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/properties_delete_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="1dp"
+                android:padding="@dimen/small_dimen"
+                android:onClick="@{(v) -> onClick.onClick(v, property)}"
+                app:srcCompat="@drawable/ic_outline_delete"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/properties_item_image"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/micro_dimen"
                 bind:cloud="@{property.id}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/properties_item_title"/>
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/properties_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{property.title}"
                 android:layout_marginTop="@dimen/micro_dimen"
                 style="@style/TextAppearance.AppCompat.Title"
-                tools:text="@string/item_title"/>
+                tools:text="@string/item_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/properties_item_image"
+                app:layout_constraintBottom_toTopOf="@+id/properties_item_price"/>
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/properties_item_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{@string/price_item((property.price * property.area), property.code)}"
                 android:textColor="@color/vikiColorRed"
                 android:layout_marginTop="@dimen/micro_dimen"
-                tools:text="@string/property_price"/>
+                tools:text="@string/property_price"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/properties_item_address"
+                app:layout_constraintTop_toBottomOf="@+id/properties_item_title"/>
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/properties_item_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@{property.address}"
                 android:layout_marginTop="@dimen/micro_dimen"
-                tools:text="@string/property_address"/>
+                tools:text="@string/property_address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/properties_item_info"
+                app:layout_constraintTop_toBottomOf="@+id/properties_item_price"/>
             <LinearLayout
+                android:id="@+id/properties_item_info"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/micro_dimen"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/properties_item_address">
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -86,6 +129,6 @@
                     android:textStyle="bold"
                     tools:text="@string/operation_item"/>
             </LinearLayout>
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>

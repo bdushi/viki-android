@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "al.viki.app-mergeDebugResources-65:/values-sw360dp-v13/values-sw360dp-v13.xml",
+            "map": [
+                {
+                    "source": "/Users/bruno/.gradle/caches/transforms-3/909a8fcdbdeb8b63b61d52e5affd099d/transformed/preference-1.2.0/res/values-sw360dp-v13/values-sw360dp-v13.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "71",
+                        "endOffsets": "122"
+                    }
+                }
+            ]
+        }
+    ]
+}

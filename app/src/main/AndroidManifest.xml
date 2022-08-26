@@ -74,19 +74,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="http"
-                    android:host="207.154.238.198"
-                    android:pathPrefix="/requestAccount"/>
-                <data
-                    android:scheme="http"
-                    android:host="192.168.1.4"
-                    android:pathPrefix="/requestAccount"/>
-                <data
-                    android:scheme="http"
-                    android:host="192.168.1.141"
-                    android:pathPrefix="/requestAccount"/>
-                <data
-                    android:scheme="http"
-                    android:host="brunos-mbp.bbrouter"
+                    android:host="{host}"
                     android:pathPrefix="/requestAccount"/>
             </intent-filter>
         </activity>
@@ -102,19 +90,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
                     android:scheme="http"
-                    android:host="207.154.238.198"
-                    android:pathPrefix="/forgotPassword"/>
-                <data
-                    android:scheme="http"
-                    android:host="192.168.1.4"
-                    android:pathPrefix="/forgotPassword"/>
-                <data
-                    android:scheme="http"
-                    android:host="192.168.1.141"
-                    android:pathPrefix="/forgotPassword"/>
-                <data
-                    android:scheme="http"
-                    android:host="brunos-mbp.bbrouter"
+                    android:host="{host}"
                     android:pathPrefix="/forgotPassword"/>
             </intent-filter>
         </activity>

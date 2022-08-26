@@ -1,0 +1,19 @@
+{
+    "logs": [
+        {
+            "outputFile": "al.viki.app-mergeDebugResources-65:/values-v18/values-v18.xml",
+            "map": [
+                {
+                    "source": "/Users/bruno/.gradle/caches/transforms-3/6bc902bd404010b1e47a924ce0b1400f/transformed/appcompat-1.6.0-alpha05/res/values-v18/values-v18.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "48",
+                        "endOffsets": "99"
+                    }
+                }
+            ]
+        }
+    ]
+}

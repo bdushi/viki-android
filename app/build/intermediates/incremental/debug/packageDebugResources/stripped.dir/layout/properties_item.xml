@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+                                                              
+                                                       
+                                                 
+                                                   
+    
+                 
+                           
+                                                                               
+                 
+                          
+                                                      
+
+                                          
+           
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/properties"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/micro_dimen"
+        app:cardCornerRadius="@dimen/micro_dimen"
+        android:tag="layout/properties_item_0"                    xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:bind="http://schemas.android.com/tools" xmlns:tools="http://schemas.android.com/tools">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/micro_dimen">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/properties_share_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="1dp"
+                android:padding="@dimen/small_dimen"
+                android:tag="binding_1"                                 
+                app:srcCompat="@drawable/ic_outline_share"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/properties_delete_item"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/properties_delete_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="1dp"
+                android:padding="@dimen/small_dimen"
+                android:tag="binding_2"                                 
+                app:srcCompat="@drawable/ic_outline_delete"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/properties_item_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/micro_dimen"
+                android:tag="binding_3"    
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/properties_item_title"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/properties_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="binding_4"         
+                android:layout_marginTop="@dimen/micro_dimen"
+                style="@style/TextAppearance.AppCompat.Title"
+                tools:text="@string/item_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/properties_item_image"
+                app:layout_constraintBottom_toTopOf="@+id/properties_item_price"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/properties_item_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="binding_5"                                                              
+                android:textColor="@color/vikiColorRed"
+                android:layout_marginTop="@dimen/micro_dimen"
+                tools:text="@string/property_price"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/properties_item_address"
+                app:layout_constraintTop_toBottomOf="@+id/properties_item_title"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/properties_item_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:tag="binding_6"           
+                android:layout_marginTop="@dimen/micro_dimen"
+                tools:text="@string/property_address"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/properties_item_info"
+                app:layout_constraintTop_toBottomOf="@+id/properties_item_price"/>
+            <LinearLayout
+                android:id="@+id/properties_item_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/micro_dimen"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/properties_item_address">
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="binding_7"             
+                    android:layout_marginEnd="@dimen/normal_dimen"
+                                                                                                  
+                    tools:text="@string/property_floor_plan" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="binding_8"                                          
+                    android:layout_marginEnd="@dimen/normal_dimen"
+                    tools:text="@string/property_area"/>
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="binding_9"                                                                    
+                    android:layout_marginEnd="@dimen/normal_dimen"
+                    tools:text="@string/property_price"/>
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tag="binding_10"            
+                    android:layout_gravity="end"
+                    android:gravity="end"
+                    android:textStyle="bold"
+                    tools:text="@string/operation_item"/>
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+         

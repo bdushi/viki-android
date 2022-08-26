@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item android:id="@+id/menu_profile"
+            android:icon="@drawable/ic_outline_account_circle"
+            android:title="@string/visit_your_profile" />
+    </group>
+    <group
+        android:id="@+id/group_menu_property">
+        <item android:id="@+id/menu_new_property"
+            android:icon="@drawable/ic_outline_arrow_right"
+            android:title="@string/new_property" />
+        <item android:id="@+id/menu_new_request"
+            android:icon="@drawable/ic_outline_arrow_left"
+            android:title="@string/new_request" />
+    </group>
+<!--    <group-->
+<!--        android:id="@+id/group_menu_map_view">-->
+<!--        <item android:id="@+id/menu_map_view"-->
+<!--            android:icon="@drawable/ic_outline_swap_horiz"-->
+<!--            android:title="@string/map_view" />-->
+<!--    </group>-->
+<!--    <group-->
+<!--        android:id="@+id/group_menu_share">-->
+<!--        <item android:id="@+id/menu_share"-->
+<!--            android:icon="@drawable/ic_outline_share"-->
+<!--            android:title="@string/share" />-->
+<!--    </group>-->
+    <group
+        android:id="@+id/group_menu_settings">
+        <item android:id="@+id/menu_settings"
+            android:icon="@drawable/ic_outline_settings"
+            android:title="@string/settings" />
+    </group>
+    <group
+        android:id="@+id/group_menu_logout">
+        <item android:id="@+id/menu_logout"
+            android:icon="@drawable/ic_outline_logout"
+            android:title="@string/logout" />
+    </group>
+</menu>
