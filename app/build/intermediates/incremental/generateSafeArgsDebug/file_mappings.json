@@ -1,1 +1,0 @@
-[{"navFile":"src/main/res/navigation/nav_viki.xml","javaFiles":["al.viki.ui.home.HomeFragmentDirections","al.viki.ui.profile.ProfileFragmentArgs","al.viki.ui.details.PropertyDetailsFragmentArgs","al.viki.ui.details.RequestDetailsFragmentArgs","al.viki.ui.settings.SettingsFragmentDirections","al.viki.ui.settings.SettingsFragmentArgs"]}]
