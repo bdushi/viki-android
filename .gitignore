@@ -13,3 +13,5 @@ release.properties
 debug.properties
 debug.jks
 release.jks
+/app/debug/
+/app/release/
