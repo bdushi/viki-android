@@ -2,6 +2,7 @@ package al.viki.common
 
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
+import al.viki.model.PhotoUi
 import android.app.Activity
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
@@ -30,6 +31,17 @@ val requestDiffUtil: DiffUtil.ItemCallback<RequestResponse> =
             return oldItem == newItem
         }
     }
+val photoDiffUtil: DiffUtil.ItemCallback<PhotoUi> = object : DiffUtil.ItemCallback<PhotoUi>() {
+    override fun areItemsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
+        return oldItem.photo == newItem.photo
+    }
+
+    override fun areContentsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
+        return oldItem == newItem
+    }
+}
+
+
 
 fun Activity.hideSoftKeyBoard() {
     val inputManager: InputMethodManager? =

@@ -15,6 +15,7 @@ import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.material.snackbar.Snackbar
@@ -53,6 +54,9 @@ class RequestLocationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityRequestLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.topAppBar.setNavigationOnClickListener {
+            finish()
+        }
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync { googleMap ->
             this.googleMap = googleMap

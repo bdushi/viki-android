@@ -2,23 +2,19 @@ package al.viki.authentication.auth
 
 import al.bruno.core.Result
 import al.bruno.core.State
-import al.bruno.core.interceptor.AuthorizationInterceptor
 import al.viki.core.AuthRepository
 import al.viki.core.model.request.AuthRequest
 import al.viki.core.model.response.AuthResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
 class AuthenticationViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
-    private val authorizationInterceptor: AuthorizationInterceptor
+    private val authRepository: AuthRepository
 ) :
     ViewModel() {
     val username = MutableStateFlow<String?>(null)

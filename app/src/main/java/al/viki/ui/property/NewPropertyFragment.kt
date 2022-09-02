@@ -6,11 +6,14 @@ import al.bruno.adapter.OnClickListener
 import al.bruno.core.State
 import al.viki.BuildConfig
 import al.viki.R
+import al.viki.common.photoDiffUtil
 import al.viki.databinding.DropDownItemBinding
 import al.viki.databinding.FragmentNewPropertyBinding
 import al.viki.databinding.NewPropertyPhotoItemBinding
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.*
+import al.viki.foundation.root.RootFragment
+import al.viki.ui.home.HomeViewModel
 import al.viki.ui.location.RequestLocationActivity
 import android.Manifest
 import android.annotation.SuppressLint
@@ -19,6 +22,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
@@ -28,26 +32,21 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DiffUtil
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * https://firebase.google.com/docs/storage/android/upload-files#kotlin+ktx
  */
 
-@AndroidEntryPoint
-class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<PhotoUi> {
+class NewPropertyFragment : RootFragment(), View.OnClickListener, OnClickListener<PhotoUi> {
     private val newPropertyUi = NewPropertyUi()
-    private val propertyViewModel: PropertyViewModel by viewModels()
+    private val propertyViewModel: PropertyViewModel by lazy {
+        ViewModelProvider(this, viewModelProvider)[PropertyViewModel::class.java]
+    }
     private var _binding: FragmentNewPropertyBinding? = null
     private val binding get() = _binding
 
@@ -78,22 +77,20 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
                 vm.photo = t
                 vm.onClick = this
             },
-            object : DiffUtil.ItemCallback<PhotoUi>() {
-                override fun areItemsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
-                    return oldItem == newItem
-                }
-
-                override fun areContentsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
-                    return oldItem.photo == newItem.photo
-                }
-            }
+            photoDiffUtil
         )
 
     private val requestLocation =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
-                it.data?.getParcelableExtra<LocationUi>("LAT_LNG")?.let { locationUi ->
-                    newPropertyUi.location = locationUi
+                if (Build.VERSION.SDK_INT >= 33) {
+                    it.data?.getParcelableExtra("LAT_LNG", LocationUi::class.java)?.let { locationUi ->
+                        newPropertyUi.location = locationUi
+                    }
+                } else {
+                    it.data?.getParcelableExtra<LocationUi>("LAT_LNG")?.let { locationUi ->
+                        newPropertyUi.location = locationUi
+                    }
                 }
             }
         }
@@ -275,29 +272,9 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
 
         collectLatestFlow(propertyViewModel.properties) {
             when (it) {
-                is State.Error -> {
-
-                }
+                is State.Error -> {}
                 is State.Success -> {
-                    it.t?.let { id ->
-                        val uploadWorkRequest: WorkRequest =
-                            OneTimeWorkRequestBuilder<UploadWorker>()
-                                .setInputData(
-                                    Data
-                                        .Builder()
-                                        .putInt("ID", id)
-                                        .putStringArray(
-                                            "PHOTO_UI",
-                                            propertyViewModel.photo.value.map { photoUi ->
-                                                photoUi.photo
-                                            }.toTypedArray()
-                                        )
-                                        .build()
-                                )
-                                .build()
-                        WorkManager
-                            .getInstance(requireContext())
-                            .enqueue(uploadWorkRequest)
+                    it.t?.let {
                         findNavController().popBackStack()
                     }
                 }
@@ -310,7 +287,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
          */
         collectLatestFlow(propertyViewModel.photo) {
             photoAdapter.submitList(it)
-            photoAdapter.notifyDataSetChanged()
         }
 
         binding?.lifecycleOwner = this
@@ -397,7 +373,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ph
         when (view.id) {
             R.id.add_new_property_photo_close -> {
                 propertyViewModel.photoUi(photoUi = t)
-                photoAdapter.notifyDataSetChanged()
             }
         }
     }

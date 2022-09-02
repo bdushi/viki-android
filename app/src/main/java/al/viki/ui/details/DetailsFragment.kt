@@ -5,6 +5,7 @@ import al.viki.BuildConfig
 import al.viki.R
 import al.viki.databinding.DetailsPropertyPhotoItemBinding
 import al.viki.model.PhotoUi
+import al.viki.foundation.root.RootFragment
 import android.Manifest
 import android.app.Activity
 import android.content.Context
@@ -15,11 +16,14 @@ import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.ViewDataBinding
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.google.android.material.snackbar.Snackbar
 
-abstract class DetailsFragment<T: ViewDataBinding> : Fragment() {
+/**
+ * https://developer.android.com/training/sharing/send#java
+ */
+
+abstract class DetailsFragment<T: ViewDataBinding> : RootFragment() {
     protected var _binding: T? = null
     protected val binding get() = _binding
     protected val photoAdapter =

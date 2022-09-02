@@ -7,6 +7,8 @@ import al.bruno.core.data.source.model.request.RequestRequest
 import al.bruno.core.data.source.model.response.PageResponse
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
+import okhttp3.ResponseBody
+import retrofit2.Response
 import javax.inject.Inject
 
 class PropertyRepository @Inject constructor(
@@ -70,6 +72,32 @@ class PropertyRepository @Inject constructor(
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 Result.Success(body)
+            } else {
+                Result.Error(response.message())
+            }
+        } catch (ex: Exception) {
+            Result.Error(ex.message)
+        }
+    }
+
+
+    suspend fun deleteProperty(id: Long) : Result<Boolean> {
+        return try {
+            val response = propertyRemoteDataSource.deleteProperty(id)
+            if (response.isSuccessful) {
+                Result.Success(response.isSuccessful)
+            } else {
+                Result.Error(response.message())
+            }
+        } catch (ex: Exception) {
+            Result.Error(ex.message)
+        }
+    }
+    suspend fun deleteRequest(id: Long) : Result<Boolean> {
+        return try {
+            val response = propertyRemoteDataSource.deleteRequest(id)
+            if (response.isSuccessful) {
+                Result.Success(response.isSuccessful)
             } else {
                 Result.Error(response.message())
             }

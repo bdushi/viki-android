@@ -2,7 +2,6 @@ package al.bruno.adapter
 
 import al.bruno.adapter.holder.ItemViewHolder
 import al.bruno.adapter.holder.HeaderViewHolder
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.ViewDataBinding

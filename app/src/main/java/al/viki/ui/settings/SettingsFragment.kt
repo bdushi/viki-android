@@ -9,9 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class SettingsFragment: Fragment() {
 
     private val args: SettingsFragmentArgs by navArgs()

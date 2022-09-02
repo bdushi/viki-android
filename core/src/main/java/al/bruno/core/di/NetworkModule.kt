@@ -8,8 +8,6 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -17,7 +15,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import javax.inject.Singleton
 
 @Module
-@InstallIn(SingletonComponent::class)
 class NetworkModule {
     @Provides
     @Singleton
@@ -112,9 +109,14 @@ class NetworkModule {
 
     @Provides
     @Reusable
-    fun authorityRequestAccountService(retrofit: Retrofit): RequestAccountService = retrofit.create(RequestAccountService::class.java)
+    fun requestAccountService(retrofit: Retrofit): RequestAccountService = retrofit.create(RequestAccountService::class.java)
 
     @Provides
     @Reusable
-    fun authorityUserService(retrofit: Retrofit): UserService = retrofit.create(UserService::class.java)
+    fun userService(retrofit: Retrofit): UserService = retrofit.create(UserService::class.java)
+
+
+    @Provides
+    @Reusable
+    fun imageService(retrofit: Retrofit): ImageService = retrofit.create(ImageService::class.java)
 }

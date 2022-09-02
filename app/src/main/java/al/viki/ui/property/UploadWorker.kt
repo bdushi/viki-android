@@ -1,39 +1,61 @@
 package al.viki.ui.property
 
+import al.bruno.core.data.source.ImageRepository
 import al.viki.foundation.common.toFile
 import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.Dispatchers
+import okhttp3.*
+import okhttp3.RequestBody.Companion.asRequestBody
 
-class UploadWorker(private val appContext: Context, workerParams: WorkerParameters) :
-    CoroutineWorker(appContext, workerParams) {
+/**
+ * https://proandroiddev.com/custom-notification-with-work-manager-for-android-41f10090a75e
+ *
+ * https://proandroiddev.com/customize-workmanager-with-appstartup-hilt-97c16d103052
+ */
+
+class UploadWorker constructor(
+    workerParams: WorkerParameters,
+    appContext: Context,
+    private val imageRepository: ImageRepository
+) : CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
+        Log.d(UploadWorker::class.java.name, "UploadWorker")
         val photoList = inputData.getStringArray("PHOTO_UI")
         val id = inputData.getInt("ID", -1)
         if (id != -1) {
-            val storageRefChild = Firebase.storage.reference.child("photos/${id}")
             photoList?.forEachIndexed { index, photo ->
-                appContext.contentResolver.openInputStream(Uri.parse(photo))?.let { inputStream ->
-                    storageRefChild
-                        .child("/${id}_${index}")
-                        .putFile(Uri.fromFile(Compressor.compress(context = appContext, inputStream.toFile(appContext), Dispatchers.IO)))
-                        .addOnSuccessListener {
-                            Log.d("UploadWorker", it.toString())
-                        }.addOnFailureListener {
-                            Log.d("UploadWorker", it.toString())
-                        }.addOnCanceledListener {
-                            Log.d("UploadWorker", "Canceled")
-                        }.addOnProgressListener {
-                            val progress = 100 * it.bytesTransferred / it.totalByteCount
-                            Log.d("UploadWorker", progress.toString())
+                // val progress = 100 * it.bytesTransferred / it.totalByteCount
+                applicationContext.contentResolver.openInputStream(Uri.parse(photo))
+                    ?.let { inputStream ->
+                        val file = Compressor.compress(
+                            context = applicationContext,
+                            inputStream.toFile(applicationContext),
+                            Dispatchers.IO
+                        )
+                        when (
+                            imageRepository
+                                .uploadImage(
+                                    MultipartBody
+                                        .Part
+                                        .createFormData(
+                                            "file",
+                                            file.name,
+                                            file.asRequestBody()
+                                        ),
+                                    "/${id}_${index}"
+                                )
+                        ) {
+                            is al.bruno.core.Result.Error -> Result.failure()
+                            is al.bruno.core.Result.Success -> Result.success()
                         }
-                } ?: run {
+                    } ?: run {
                     return Result.failure()
                 }
             } ?: run {

@@ -1,4 +1,4 @@
-package al.bruno.core.di
+package al.bruno.core.factory
 
 import androidx.lifecycle.ViewModel
 import dagger.MapKey

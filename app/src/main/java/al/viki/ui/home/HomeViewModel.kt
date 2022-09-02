@@ -15,7 +15,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,7 +22,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
 class HomeViewModel @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val propertyTypeRepository: PropertyTypeRepository,
@@ -40,6 +38,11 @@ class HomeViewModel @Inject constructor(
     private val _user = MutableStateFlow<State<UserUi>>(State.Success(null))
     // The UI collects from this StateFlow to get its state updates
     val user: StateFlow<State<UserUi>> = _user
+
+    // Backing property to avoid state updates from other classes
+    private val _delete = MutableStateFlow<State<Boolean>>(State.Success(null))
+    // The UI collects from this StateFlow to get its state updates
+    val delete: StateFlow<State<Boolean>> = _delete
 
     init {
         propertyTypes()
@@ -121,9 +124,28 @@ class HomeViewModel @Inject constructor(
                         }
                     )
                 }
-                is Result.Error -> {
-                    _propertyTypes.value = State.Error(response.error)
-                }
+                is Result.Error -> _propertyTypes.value = State.Error(response.error)
+            }
+        }
+    }
+
+
+    fun deleteProperty(id: Long) {
+        _delete.value = State.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            when(val response = propertyRepository.deleteProperty(id)) {
+                is Result.Error -> _delete.value = State.Error(response.error)
+                is Result.Success -> _delete.value = State.Success(response.data)
+            }
+        }
+    }
+
+    fun deleteRequest(id: Long) {
+        _delete.value = State.Loading
+        viewModelScope.launch(Dispatchers.IO) {
+            when(val response = propertyRepository.deleteRequest(id)) {
+                is Result.Error -> _delete.value = State.Error(response.error)
+                is Result.Success -> _delete.value = State.Success(response.data)
             }
         }
     }

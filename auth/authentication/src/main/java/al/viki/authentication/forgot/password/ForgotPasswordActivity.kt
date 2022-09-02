@@ -2,20 +2,21 @@ package al.viki.authentication.forgot.password
 
 import al.bruno.core.State
 import al.viki.authentication.databinding.ActivityForgotPasswordBinding
+import al.viki.foundation.root.RootActivity
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-@AndroidEntryPoint
-class ForgotPasswordActivity : AppCompatActivity() {
-    private val passwordViewModel: PasswordViewModel by viewModels()
+class ForgotPasswordActivity : RootActivity() {
+    private val passwordViewModel: PasswordViewModel by lazy {
+        ViewModelProvider(this, viewModelProvider)[PasswordViewModel::class.java]
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

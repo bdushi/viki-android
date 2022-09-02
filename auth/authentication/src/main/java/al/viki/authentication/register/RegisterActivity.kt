@@ -2,11 +2,11 @@ package al.viki.authentication.register
 
 import al.bruno.core.State
 import al.viki.authentication.R
-import al.viki.authentication.auth.AuthenticationActivity
 import al.viki.authentication.databinding.ActivityRegisterBinding
 import al.bruno.core.data.source.model.response.ValidationResponse
-import al.bruno.core.data.source.model.response.ValidationStatus
+import al.viki.authentication.auth.AuthenticationViewModel
 import al.viki.foundation.common.collectLatestFlow
+import al.viki.foundation.root.RootActivity
 import android.Manifest
 import android.app.Activity
 import android.content.Context
@@ -16,23 +16,18 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
-import android.view.View
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import androidx.work.WorkRequest
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class RegisterActivity : AppCompatActivity() {
-    private val registerViewModel: RegisterViewModel by viewModels()
+class RegisterActivity : RootActivity() {
+    private val registerViewModel: RegisterViewModel by lazy {
+        ViewModelProvider(this, viewModelProvider)[RegisterViewModel::class.java]
+    }
     private val requestGallery =
         registerForActivityResult(
             object : ActivityResultContract<Intent, Uri?>() {

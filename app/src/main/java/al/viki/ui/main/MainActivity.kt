@@ -6,22 +6,23 @@ import al.viki.R
 import al.viki.authentication.auth.AuthenticationActivity
 import al.viki.authentication.auth.NotifyAuthenticationChange
 import al.viki.common.ACCESS_TOKEN
+import al.viki.foundation.root.RootActivity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@AndroidEntryPoint
-class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
-    private val mainViewModel: MainViewModel by viewModels()
+class MainActivity : RootActivity(), NotifyAuthenticationChange {
+    private val mainViewModel: MainViewModel by lazy {
+        ViewModelProvider(this, viewModelProvider)[MainViewModel::class.java]
+    }
     @Inject
     lateinit var authorizationInterceptor: AuthorizationInterceptor
     @Inject

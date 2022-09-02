@@ -53,4 +53,9 @@
     <string name="personal_information_first_and_last_name"><b>Emri</b>%s %s</string>
     <string name="personal_information_label">Te dhenat personale</string>
     <string name="change_password">Ndrysho Fjalkalimin</string>
+    <string name="delete_messages">Jeni të sigurt që dëshironi ta fshini: %s</string>
+    <string name="delete_property_title">Delete Property</string>
+    <string name="delete_request_title">Delete Request</string>
+    <string name="ok_title">OK</string>
+    <string name="cancel_title">Anulo</string>
 </resources>

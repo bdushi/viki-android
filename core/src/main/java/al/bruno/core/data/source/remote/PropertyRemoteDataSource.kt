@@ -7,6 +7,7 @@ import al.bruno.core.data.source.model.response.PageResponse
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
 import al.bruno.core.data.source.remote.service.PropertyService
+import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -35,5 +36,13 @@ class PropertyRemoteDataSource @Inject constructor(private val propertyService: 
 
     override suspend fun request(requestRequest: RequestRequest): Response<Int> {
         return propertyService.request(requestRequest)
+    }
+
+    override suspend fun deleteProperty(id: Long): Response<ResponseBody> {
+        return propertyService.deleteProperty(id)
+    }
+
+    override suspend fun deleteRequest(id: Long): Response<ResponseBody> {
+        return propertyService.deleteRequest(id)
     }
 }

@@ -1,12 +1,15 @@
 package al.viki.ui.details
 
+import al.bruno.core.State
 import al.viki.R
 import al.viki.databinding.FragmentPropertyDetailsBinding
+import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.PhotoUi
+import al.viki.ui.account.RequestNewAccountViewModel
+import al.viki.ui.home.HomeViewModel
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.LayoutInflater
@@ -14,6 +17,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableBoolean
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -22,17 +27,19 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * https://cloud.google.com/storage/docs/json_api/v1/objects/list
  */
 
-@AndroidEntryPoint
 class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>() {
+    private val homeViewModel: HomeViewModel by lazy {
+        ViewModelProvider(this, viewModelProvider)[HomeViewModel::class.java]
+    }
     private val args: PropertyDetailsFragmentArgs by navArgs()
     private var mapFragment: SupportMapFragment? = null
     private val isPhotoNotEmpty = ObservableBoolean(false)
@@ -47,10 +54,10 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val property = args.property
         binding?.topAppBar?.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
-        val property = args.property
         mapFragment =
             childFragmentManager.findFragmentById(R.id.details_property_location_in_map) as? SupportMapFragment
         mapFragment?.getMapAsync {
@@ -95,6 +102,49 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
         binding?.isNotEmpty = isPhotoNotEmpty
         binding?.adapter = photoAdapter
         binding?.property = property
+        binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.edit -> {
+                    true
+                }
+                R.id.share -> {
+                    true
+                }
+                R.id.delete -> {
+
+
+                    MaterialAlertDialogBuilder(requireContext())
+                        .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
+                        .setTitle(R.string.delete_property_title)
+                        .setMessage(getString(R.string.delete_messages, property.title))
+                        .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
+                            homeViewModel.deleteProperty(property.id)
+                            dialogInterface.dismiss()
+                        }.setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
+                            dialogInterface.dismiss()
+                        }
+                        .setCancelable(false)
+                        .show()
+                    true
+                }
+                else -> false
+            }
+        }
+        collectLatestFlow(homeViewModel.delete) {
+            when (it) {
+                is State.Error -> {
+
+                }
+                is State.Loading -> {
+
+                }
+                is State.Success -> {
+                    if (it.t == true) {
+                        findNavController().popBackStack()
+                    }
+                }
+            }
+        }
         Firebase
             .storage
             .reference

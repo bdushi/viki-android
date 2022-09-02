@@ -53,4 +53,9 @@
     <string name="personal_information_first_and_last_name">%s %s</string>
     <string name="personal_information_label">Personal Information</string>
     <string name="change_password">Change Password</string>
+    <string name="delete_messages">Are you sure you want to delete: %s</string>
+    <string name="delete_property_title">Delete Property</string>
+    <string name="delete_request_title">Delete Request</string>
+    <string name="ok_title">OK</string>
+    <string name="cancel_title">Cancel</string>
 </resources>

@@ -6,14 +6,12 @@ import al.viki.core.AuthRepository
 import al.viki.core.TokeRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
 class PasswordViewModel @Inject constructor(
     private val tokenRepository: TokeRepository,
     private val authRepository: AuthRepository

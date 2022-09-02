@@ -4,28 +4,28 @@ import al.bruno.core.Result
 import al.bruno.core.State
 import al.bruno.core.data.source.*
 import al.bruno.core.data.source.model.*
-import al.bruno.core.data.source.model.request.*
+import al.bruno.core.data.source.model.Operation
+import al.bruno.core.data.source.model.Unit
+import al.bruno.core.data.source.model.request.PropertyRequest
 import al.viki.model.*
-import al.viki.model.CountryUi
-import al.viki.model.NewPropertyUi
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import dagger.hilt.android.lifecycle.HiltViewModel
+import androidx.work.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
 class PropertyViewModel @Inject constructor(
     private val cityRepository: CityRepository,
     private val currencyRepository: CurrencyRepository,
     private val operationRepository: OperationRepository,
     private val propertyTypeRepository: PropertyTypeRepository,
     private val unitRepository: UnitRepository,
-    private val propertyRepository: PropertyRepository
+    private val propertyRepository: PropertyRepository,
+    private val workManager: WorkManager
 ) : ViewModel() {
     // Backing property to avoid state updates from other classes
     private val _cities = MutableStateFlow<State<List<CityUi>?>>(State.Success(null))
@@ -199,7 +199,7 @@ class PropertyViewModel @Inject constructor(
     fun save(newPropertyUi: NewPropertyUi) {
         viewModelScope.launch(Dispatchers.IO) {
             _properties.value = State.Loading
-            when(val response = propertyRepository.property(
+            when (val response = propertyRepository.property(
                 PropertyRequest(
                     newPropertyUi.title,
                     newPropertyUi.description,
@@ -251,8 +251,28 @@ class PropertyViewModel @Inject constructor(
                     )
                 )
             )) {
-                is Result.Error -> _properties.value = State.Error(response.error)
-                is Result.Success -> _properties.value = State.Success(response.data)
+                is Result.Error ->
+                    _properties.value = State.Error(response.error)
+                is Result.Success -> {
+                    workManager
+                        .enqueue(
+                            OneTimeWorkRequestBuilder<UploadWorker>()
+                                .setInputData(
+                                    Data
+                                        .Builder()
+                                        .putInt("ID", response.data)
+                                        .putStringArray(
+                                            "PHOTO_UI",
+                                            photo.value.map { photoUi ->
+                                                photoUi.photo
+                                            }.toTypedArray()
+                                        )
+                                        .build()
+                                )
+                                .build()
+                        )
+                    _properties.value = State.Success(response.data)
+                }
             }
         }
     }
