@@ -1,10 +1,11 @@
 package al.viki.ui.property
 
 import al.bruno.core.data.source.ImageRepository
+import al.viki.BuildConfig
 import al.viki.foundation.common.toFile
 import android.content.Context
 import android.net.Uri
-import android.util.Log
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
@@ -18,25 +19,27 @@ import okhttp3.RequestBody.Companion.asRequestBody
  * https://proandroiddev.com/custom-notification-with-work-manager-for-android-41f10090a75e
  *
  * https://proandroiddev.com/customize-workmanager-with-appstartup-hilt-97c16d103052
+ *
+ * https://developer.android.com/topic/libraries/architecture/workmanager/advanced/custom-configuration#implement-configuration-provider
+ *
+ * https://developer.android.com/training/dependency-injection/hilt-jetpack
  */
-
-class UploadWorker constructor(
-    workerParams: WorkerParameters,
-    appContext: Context,
+@HiltWorker
+class UploadWorker @AssistedInject constructor(
+    @Assisted private val appContext: Context,
+    @Assisted workerParams: WorkerParameters,
     private val imageRepository: ImageRepository
 ) : CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
-        Log.d(UploadWorker::class.java.name, "UploadWorker")
         val photoList = inputData.getStringArray("PHOTO_UI")
         val id = inputData.getInt("ID", -1)
         if (id != -1) {
             photoList?.forEachIndexed { index, photo ->
                 // val progress = 100 * it.bytesTransferred / it.totalByteCount
-                applicationContext.contentResolver.openInputStream(Uri.parse(photo))
-                    ?.let { inputStream ->
+                appContext.contentResolver.openInputStream(Uri.parse(photo))?.let { inputStream ->
                         val file = Compressor.compress(
-                            context = applicationContext,
-                            inputStream.toFile(applicationContext),
+                            context = appContext,
+                            inputStream.toFile(appContext),
                             Dispatchers.IO
                         )
                         when (
@@ -49,7 +52,7 @@ class UploadWorker constructor(
                                             file.name,
                                             file.asRequestBody()
                                         ),
-                                    "/${id}_${index}"
+                                    "${BuildConfig.FILE_HOST_NAME}/resources/${id}/${index}"
                                 )
                         ) {
                             is al.bruno.core.Result.Error -> Result.failure()

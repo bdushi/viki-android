@@ -2,22 +2,9 @@ package al.viki.foundation.root
 
 import android.net.ConnectivityManager
 import android.net.Network
-import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
-import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import javax.inject.Inject
 
-abstract class RootActivity : AppCompatActivity(), HasAndroidInjector {
-
-    @Inject
-    lateinit var fragmentInjector: DispatchingAndroidInjector<Any>
-
-    @Inject
-    lateinit var viewModelProvider: ViewModelProvider.Factory
+abstract class RootActivity : AppCompatActivity() {
 
     private var isNetworkAvailable = true
     private val networkCallback = object : ConnectivityManager.NetworkCallback() {
@@ -35,11 +22,6 @@ abstract class RootActivity : AppCompatActivity(), HasAndroidInjector {
             super.onUnavailable()
             isNetworkAvailable = false
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
-        super.onCreate(savedInstanceState)
     }
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        AndroidInjection.inject(this)
@@ -60,8 +42,4 @@ abstract class RootActivity : AppCompatActivity(), HasAndroidInjector {
 //            1000
 //        )
 //    }
-
-    override fun androidInjector(): AndroidInjector<Any> {
-        return fragmentInjector
-    }
 }

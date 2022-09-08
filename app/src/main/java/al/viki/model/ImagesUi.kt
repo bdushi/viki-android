@@ -1,7 +1,5 @@
 package al.viki.model
 
-import android.net.Uri
-
-data class PhotoUi(
+data class ImagesUi(
     val photo: String
 )

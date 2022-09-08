@@ -6,10 +6,13 @@ import al.viki.core.remote.service.TokenService
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
+@InstallIn(SingletonComponent::class)
 class AuthModule {
     @Provides
     @Singleton

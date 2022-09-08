@@ -8,11 +8,11 @@
             type="al.bruno.adapter.OnClickListener" />
         <variable
             name="photo"
-            type="al.viki.model.PhotoUi" />
+            type="al.viki.model.ImagesUi" />
     </data>
     <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:onClick="@{(v) -> onClick.onClick(v, photo)}"
-        bind:image="@{photo.photo}"/>
+        bind:cloud="@{photo.photo}"/>
 </layout>

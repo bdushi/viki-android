@@ -3,26 +3,23 @@ package al.viki.authentication.auth
 import al.bruno.core.State
 import al.viki.authentication.databinding.ActivityAuthenticationBinding
 import al.viki.authentication.forgot.password.ForgotPasswordActivity
-import al.viki.authentication.forgot.password.PasswordViewModel
 import al.viki.authentication.register.RegisterActivity
-import al.viki.foundation.root.RootActivity
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-class AuthenticationActivity : RootActivity() {
-    private val authenticationViewModel: AuthenticationViewModel by lazy {
-        ViewModelProvider(this, viewModelProvider)[AuthenticationViewModel::class.java]
-    }
+@AndroidEntryPoint
+class AuthenticationActivity : AppCompatActivity() {
+    private val authenticationViewModel: AuthenticationViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
 //        DaggerAuthComponent.builder()
 //            .context(this)

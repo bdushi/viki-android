@@ -4,15 +4,13 @@ import al.bruno.core.State
 import al.viki.R
 import al.viki.databinding.FragmentRequestDetailsBinding
 import al.viki.foundation.common.collectLatestFlow
-import al.viki.foundation.root.RootFragment
 import al.viki.ui.home.HomeViewModel
-import al.viki.ui.request.RequestViewModel
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -22,11 +20,11 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
-class RequestDetailsFragment : RootFragment() {
-    private val homeViewModel: HomeViewModel by lazy {
-        ViewModelProvider(this, viewModelProvider)[HomeViewModel::class.java]
-    }
+@AndroidEntryPoint
+class RequestDetailsFragment : Fragment() {
+    private val homeViewModel: HomeViewModel by viewModels()
     private val args: RequestDetailsFragmentArgs by navArgs()
     private var mapFragment: SupportMapFragment? = null
 
@@ -50,9 +48,6 @@ class RequestDetailsFragment : RootFragment() {
         }
         binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.edit -> {
-                    true
-                }
                 R.id.share -> {
                     true
                 }

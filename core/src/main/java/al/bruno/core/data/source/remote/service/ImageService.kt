@@ -5,9 +5,14 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
-
 interface ImageService {
-    @POST("resources/{name}")
+    @POST
     @Multipart
-    suspend fun uploadImage(@Url url:String = "http://192.168.1.141:8081/", @Part file: MultipartBody.Part, @Path("name") name: String): Response<ResponseBody>
+    suspend fun uploadImage(@Url url:String, @Part file: MultipartBody.Part): Response<ResponseBody>
+
+    @GET
+    suspend fun images(@Url url:String): Response<Set<String>>
+
+    @GET
+    suspend fun delete(@Url url:String): Response<ResponseBody>
 }

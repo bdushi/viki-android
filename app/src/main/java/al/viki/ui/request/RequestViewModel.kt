@@ -9,15 +9,16 @@ import al.bruno.core.data.source.model.request.RequestRequest
 import al.viki.model.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
+@HiltViewModel
 class RequestViewModel @Inject constructor(
     private val cityRepository: CityRepository,
     private val currencyRepository: CurrencyRepository,
-    private val floorPlanRepository: FloorPlanRepository,
     private val propertyTypeRepository: PropertyTypeRepository,
     private val unitRepository: UnitRepository,
     private val propertyRepository: PropertyRepository

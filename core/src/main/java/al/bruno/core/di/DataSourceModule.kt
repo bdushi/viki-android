@@ -4,8 +4,11 @@ import al.bruno.core.data.source.*
 import al.bruno.core.data.source.remote.*
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ActivityComponent
 
 @Module
+@InstallIn(ActivityComponent::class)
 abstract class DataSourceModule {
     @Binds
     abstract fun providePropertyRemoteDataSource(propertyRemoteDataSource: PropertyRemoteDataSource): PropertyDataSource
@@ -39,7 +42,4 @@ abstract class DataSourceModule {
 
     @Binds
     abstract fun provideImageRemoteDataSource(imageRemoteDataSource: ImageRemoteDataSource): ImageDataSource
-
-
-
 }

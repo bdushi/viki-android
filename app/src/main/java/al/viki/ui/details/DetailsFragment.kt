@@ -4,8 +4,7 @@ import al.bruno.adapter.CustomListAdapter
 import al.viki.BuildConfig
 import al.viki.R
 import al.viki.databinding.DetailsPropertyPhotoItemBinding
-import al.viki.model.PhotoUi
-import al.viki.foundation.root.RootFragment
+import al.viki.model.ImagesUi
 import android.Manifest
 import android.app.Activity
 import android.content.Context
@@ -16,6 +15,7 @@ import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.databinding.ViewDataBinding
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.google.android.material.snackbar.Snackbar
 
@@ -23,20 +23,20 @@ import com.google.android.material.snackbar.Snackbar
  * https://developer.android.com/training/sharing/send#java
  */
 
-abstract class DetailsFragment<T: ViewDataBinding> : RootFragment() {
+abstract class DetailsFragment<T: ViewDataBinding> : Fragment() {
     protected var _binding: T? = null
     protected val binding get() = _binding
     protected val photoAdapter =
-        CustomListAdapter<PhotoUi, DetailsPropertyPhotoItemBinding>(
+        CustomListAdapter<ImagesUi, DetailsPropertyPhotoItemBinding>(
             R.layout.details_property_photo_item, { t, vm ->
                 vm.photo = t
             },
-            object : DiffUtil.ItemCallback<PhotoUi>() {
-                override fun areItemsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
+            object : DiffUtil.ItemCallback<ImagesUi>() {
+                override fun areItemsTheSame(oldItem: ImagesUi, newItem: ImagesUi): Boolean {
                     return oldItem == newItem
                 }
 
-                override fun areContentsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
+                override fun areContentsTheSame(oldItem: ImagesUi, newItem: ImagesUi): Boolean {
                     return oldItem.photo == newItem.photo
                 }
             }

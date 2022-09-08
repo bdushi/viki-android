@@ -15,8 +15,6 @@ import al.viki.model.PropertyTypeUi
 import al.viki.model.PropertyUi
 import al.viki.model.RequestUi
 import al.viki.model.UserUi
-import al.viki.foundation.root.RootFragment
-import al.viki.ui.main.MainViewModel
 import android.content.Context
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
@@ -32,21 +30,21 @@ import androidx.annotation.MenuRes
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.MenuCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textview.MaterialTextView
+import dagger.hilt.android.AndroidEntryPoint
 
-class HomeFragment : RootFragment() {
+@AndroidEntryPoint
+class HomeFragment : Fragment() {
     private var properties = true
     private var userUi: UserUi? = null
     private var propertyTypeUi: PropertyTypeUi? = null
     private var _binding: FragmentHomeBinding? = null
     private var notifyAuthenticationChange: NotifyAuthenticationChange? = null
-    private val homeViewModel: HomeViewModel by lazy {
-        ViewModelProvider(this, viewModelProvider)[HomeViewModel::class.java]
-    }
+    private val homeViewModel: HomeViewModel by viewModels()
     private val propertiesLoadStateAdapter =
         LoadStateAdapter<LoadStateFooterViewItemBinding>(R.layout.load_state_footer_view_item) { loadState, vm ->
             vm.loadState = loadState
@@ -85,7 +83,8 @@ class HomeFragment : RootFragment() {
                                     .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
                                         homeViewModel.deleteProperty(t.id)
                                         dialogInterface.dismiss()
-                                    }.setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
+                                    }
+                                    .setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
                                         dialogInterface.dismiss()
                                     }
                                     .setCancelable(false)
@@ -113,7 +112,8 @@ class HomeFragment : RootFragment() {
                                     )
                                 )
                             R.id.request_share_item -> {
-                                Toast.makeText(requireContext(), R.string.share, Toast.LENGTH_SHORT).show()
+                                Toast.makeText(requireContext(), R.string.share, Toast.LENGTH_SHORT)
+                                    .show()
                             }
                             R.id.request_delete_item -> {
                                 MaterialAlertDialogBuilder(requireContext())
@@ -123,7 +123,8 @@ class HomeFragment : RootFragment() {
                                     .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
                                         homeViewModel.deleteRequest(t.id)
                                         dialogInterface.dismiss()
-                                    }.setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
+                                    }
+                                    .setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
                                         dialogInterface.dismiss()
                                     }
                                     .setCancelable(false)

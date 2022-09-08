@@ -7,12 +7,14 @@ import al.viki.core.model.request.AuthRequest
 import al.viki.core.model.response.AuthResponse
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class AuthenticationViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) :

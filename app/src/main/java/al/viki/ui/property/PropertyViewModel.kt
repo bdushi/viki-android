@@ -12,12 +12,14 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class PropertyViewModel @Inject constructor(
     private val cityRepository: CityRepository,
     private val currencyRepository: CurrencyRepository,
@@ -63,10 +65,10 @@ class PropertyViewModel @Inject constructor(
     // The UI collects from this StateFlow to get its state updates
     val properties: StateFlow<State<Int>> = _properties
 
-    private val photoList: MutableList<PhotoUi> = mutableListOf()
+    private val photoList: MutableList<ImagesUi> = mutableListOf()
 
-    private val _photo = MutableStateFlow<List<PhotoUi>>(photoList)
-    val photo: StateFlow<List<PhotoUi>> = _photo
+    private val _photo = MutableStateFlow<List<ImagesUi>>(photoList)
+    val photo: StateFlow<List<ImagesUi>> = _photo
 
 //    var citiesUi: List<CityUi> by mutableStateOf(listOf())
 //        private set
@@ -189,11 +191,11 @@ class PropertyViewModel @Inject constructor(
     }
 
     fun photoUi(uri: Uri) {
-        photoList.add(PhotoUi(uri.toString()))
+        photoList.add(ImagesUi(uri.toString()))
     }
 
-    fun photoUi(photoUi: PhotoUi) {
-        photoList.remove(photoUi)
+    fun photoUi(imagesUi: ImagesUi) {
+        photoList.remove(imagesUi)
     }
 
     fun save(newPropertyUi: NewPropertyUi) {

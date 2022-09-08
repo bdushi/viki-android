@@ -2,7 +2,6 @@ package al.viki.ui.location
 
 import al.viki.BuildConfig
 import al.viki.R
-import al.viki.databinding.ActivityMainBinding
 import al.viki.databinding.ActivityRequestLocationBinding
 import al.viki.model.LocationUi
 import android.Manifest
@@ -14,8 +13,6 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.material.snackbar.Snackbar

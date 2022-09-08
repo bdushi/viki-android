@@ -10,8 +10,16 @@ import javax.inject.Inject
 class ImageRemoteDataSource @Inject constructor(private val imageService: ImageService) : ImageDataSource {
     override suspend fun uploadImage(
         file: MultipartBody.Part,
-        name: String
+        url: String
     ): Response<ResponseBody> {
-        return imageService.uploadImage(file = file, name = name)
+        return imageService.uploadImage(url = url, file = file)
+    }
+
+    override suspend fun images(url: String): Response<Set<String>> {
+        return imageService.images(url = url)
+    }
+
+    override suspend fun delete(url: String): Response<ResponseBody> {
+        return imageService.delete(url)
     }
 }

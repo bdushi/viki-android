@@ -4,8 +4,6 @@ import al.bruno.core.State
 import al.viki.R
 import al.viki.databinding.FragmentPropertyDetailsBinding
 import al.viki.foundation.common.collectLatestFlow
-import al.viki.model.PhotoUi
-import al.viki.ui.account.RequestNewAccountViewModel
 import al.viki.ui.home.HomeViewModel
 import android.Manifest
 import android.content.Intent
@@ -18,7 +16,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableBoolean
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -29,17 +26,15 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * https://cloud.google.com/storage/docs/json_api/v1/objects/list
  */
 
+@AndroidEntryPoint
 class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>() {
-    private val homeViewModel: HomeViewModel by lazy {
-        ViewModelProvider(this, viewModelProvider)[HomeViewModel::class.java]
-    }
+    private val homeViewModel: HomeViewModel by viewModels()
     private val args: PropertyDetailsFragmentArgs by navArgs()
     private var mapFragment: SupportMapFragment? = null
     private val isPhotoNotEmpty = ObservableBoolean(false)
@@ -76,6 +71,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                     )
             )
         }
+        homeViewModel.images(property.id)
         binding?.onClick = View.OnClickListener {
             when (PackageManager.PERMISSION_GRANTED) {
                 ContextCompat.checkSelfPermission(
@@ -104,15 +100,10 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
         binding?.property = property
         binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.edit -> {
-                    true
-                }
                 R.id.share -> {
                     true
                 }
                 R.id.delete -> {
-
-
                     MaterialAlertDialogBuilder(requireContext())
                         .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
                         .setTitle(R.string.delete_property_title)
@@ -145,32 +136,32 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                 }
             }
         }
-        Firebase
-            .storage
-            .reference
-            .child("photos/${property.id}")
-            .listAll()
-            .addOnSuccessListener {
-                val photoUiList = it.items.map { storageReference ->
-                    PhotoUi("https://firebasestorage.googleapis.com/v0/b/viki-135b4.appspot.com/o/photos%2F${args.property.id}%2F${storageReference.name}?alt=media")
+        collectLatestFlow(homeViewModel.images) {
+            when (it) {
+                is State.Error -> {
+
                 }
-                if (photoUiList.isNotEmpty()) {
-                    isPhotoNotEmpty.set(false)
-                    photoAdapter.submitList(photoUiList)
-                    binding?.let { detailsProperty ->
-                        TabLayoutMediator(
-                            detailsProperty.detailsPropertyItemDotIndicator,
-                            detailsProperty.detailsPropertyItem
-                        ) { tab, position ->
-                            //Some implementation
-                        }.attach()
+                is State.Loading -> {
+
+                }
+                is State.Success -> {
+                    if (it.t?.isNotEmpty() == true) {
+                        isPhotoNotEmpty.set(false)
+                        photoAdapter.submitList(it.t)
+                        binding?.let { detailsProperty ->
+                            TabLayoutMediator(
+                                detailsProperty.detailsPropertyItemDotIndicator,
+                                detailsProperty.detailsPropertyItem
+                            ) { _, _ ->
+                                //Some implementation
+                            }.attach()
+                        }
+                    } else {
+                        isPhotoNotEmpty.set(true)
                     }
-                } else {
-                    isPhotoNotEmpty.set(true)
                 }
-            }.addOnFailureListener {
-                isPhotoNotEmpty.set(true)
             }
+        }
     }
 
     override fun onDestroyView() {

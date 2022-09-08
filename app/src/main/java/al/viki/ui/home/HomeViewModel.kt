@@ -2,12 +2,15 @@ package al.viki.ui.home
 
 import al.bruno.core.Result
 import al.bruno.core.State
+import al.bruno.core.data.source.ImageRepository
 import al.bruno.core.data.source.PropertyRepository
 import al.bruno.core.data.source.PropertyTypeRepository
 import al.bruno.core.data.source.UserRepository
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
+import al.viki.BuildConfig
 import al.viki.common.NETWORK_PAGE_SIZE
+import al.viki.model.ImagesUi
 import al.viki.model.PropertyTypeUi
 import al.viki.model.UserUi
 import androidx.lifecycle.ViewModel
@@ -15,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,10 +26,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class HomeViewModel @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val propertyTypeRepository: PropertyTypeRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val imageRepository: ImageRepository
     ): ViewModel() {
 
     // Backing property to avoid state updates from other classes
@@ -43,6 +49,11 @@ class HomeViewModel @Inject constructor(
     private val _delete = MutableStateFlow<State<Boolean>>(State.Success(null))
     // The UI collects from this StateFlow to get its state updates
     val delete: StateFlow<State<Boolean>> = _delete
+
+    // Backing property to avoid state updates from other classes
+    private val _images = MutableStateFlow<State<List<ImagesUi>>>(State.Success(null))
+    // The UI collects from this StateFlow to get its state updates
+    val images: StateFlow<State<List<ImagesUi>>> = _images
 
     init {
         propertyTypes()
@@ -135,7 +146,16 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             when(val response = propertyRepository.deleteProperty(id)) {
                 is Result.Error -> _delete.value = State.Error(response.error)
-                is Result.Success -> _delete.value = State.Success(response.data)
+                is Result.Success -> {
+                    when(val delete = imageRepository.delete("${BuildConfig.FILE_HOST_NAME}/resources/delete/${id}")) {
+                        is Result.Error -> {
+                            _delete.value = State.Error(delete.error)
+                        }
+                        is Result.Success -> {
+                            _delete.value = State.Success(delete.data == 200)
+                        }
+                    }
+                }
             }
         }
     }
@@ -146,6 +166,19 @@ class HomeViewModel @Inject constructor(
             when(val response = propertyRepository.deleteRequest(id)) {
                 is Result.Error -> _delete.value = State.Error(response.error)
                 is Result.Success -> _delete.value = State.Success(response.data)
+            }
+        }
+    }
+
+    fun images(id: Long) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when(val response = imageRepository.images("${BuildConfig.FILE_HOST_NAME}/resources/${id}")) {
+                is Result.Error -> _images.value = State.Error(response.error)
+                is Result.Success -> _images.value = State.Success(
+                    response.data.mapIndexed { index, s ->
+                        ImagesUi("${BuildConfig.FILE_HOST_NAME}/resources/$id/$index")
+                    }
+                )
             }
         }
     }

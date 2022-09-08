@@ -9,7 +9,7 @@
             type="al.bruno.adapter.OnClickListener" />
         <variable
             name="photo"
-            type="al.viki.model.PhotoUi" />
+            type="al.viki.model.ImagesUi" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"

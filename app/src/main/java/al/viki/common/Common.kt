@@ -2,11 +2,10 @@ package al.viki.common
 
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
-import al.viki.model.PhotoUi
+import al.viki.model.ImagesUi
 import android.app.Activity
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import androidx.recyclerview.widget.DiffUtil
 
 
@@ -31,12 +30,12 @@ val requestDiffUtil: DiffUtil.ItemCallback<RequestResponse> =
             return oldItem == newItem
         }
     }
-val photoDiffUtil: DiffUtil.ItemCallback<PhotoUi> = object : DiffUtil.ItemCallback<PhotoUi>() {
-    override fun areItemsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
+val photoDiffUtil: DiffUtil.ItemCallback<ImagesUi> = object : DiffUtil.ItemCallback<ImagesUi>() {
+    override fun areItemsTheSame(oldItem: ImagesUi, newItem: ImagesUi): Boolean {
         return oldItem.photo == newItem.photo
     }
 
-    override fun areContentsTheSame(oldItem: PhotoUi, newItem: PhotoUi): Boolean {
+    override fun areContentsTheSame(oldItem: ImagesUi, newItem: ImagesUi): Boolean {
         return oldItem == newItem
     }
 }

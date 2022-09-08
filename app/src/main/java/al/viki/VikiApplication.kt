@@ -1,13 +1,9 @@
 package al.viki
 
-import al.viki.di.DaggerAppComponent
-import al.viki.factory.VikiWorkerFactory
 import android.app.Application
-import android.util.Log
+import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import androidx.work.WorkManager
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
+import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 /**
@@ -18,26 +14,22 @@ import javax.inject.Inject
  * @Hilt_WorkManger https://developer.android.com/training/dependency-injection/hilt-jetpack
  */
 
-class VikiApplication : Application(), Configuration.Provider, HasAndroidInjector {
+@HiltAndroidApp
+class VikiApplication : Application(), Configuration.Provider {
 
     @Inject
-    lateinit var activityInjector: DispatchingAndroidInjector<Any>
-
-    @Inject
-    lateinit var configuration: Configuration
+    lateinit var vikiWorkerFactory: HiltWorkerFactory
 
     override fun onCreate() {
         super.onCreate()
-        DaggerAppComponent
-            .factory()
-            .application(this)
-            .inject(this)
 
     }
 
-    override fun androidInjector() = activityInjector
-
-    override fun getWorkManagerConfiguration() = configuration
+    override fun getWorkManagerConfiguration() = Configuration
+        .Builder()
+        .setMinimumLoggingLevel(android.util.Log.DEBUG)
+        .setWorkerFactory(vikiWorkerFactory)
+        .build()
 
 }
 

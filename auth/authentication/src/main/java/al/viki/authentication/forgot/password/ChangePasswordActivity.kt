@@ -4,20 +4,19 @@ import al.bruno.core.State
 import al.viki.authentication.auth.AuthenticationActivity
 import al.viki.authentication.databinding.ActivityChangePasswordBinding
 import al.viki.foundation.common.collectLatestFlow
-import al.viki.foundation.root.RootActivity
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import androidx.activity.viewModels
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
-class ChangePasswordActivity : RootActivity() {
-    private val passwordViewModel: PasswordViewModel by lazy {
-        ViewModelProvider(this, viewModelProvider)[PasswordViewModel::class.java]
-    }
+@AndroidEntryPoint
+class ChangePasswordActivity : AppCompatActivity() {
+    private val passwordViewModel: PasswordViewModel by viewModels()
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = {
         startActivity(

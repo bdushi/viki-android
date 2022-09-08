@@ -11,12 +11,14 @@ import android.view.View
 import android.widget.AdapterView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@HiltViewModel
 class RequestNewAccountViewModel @Inject constructor(
     private val authorityRepository: AuthorityRepository,
     private val requestAccountRepository: RequestAccountRepository

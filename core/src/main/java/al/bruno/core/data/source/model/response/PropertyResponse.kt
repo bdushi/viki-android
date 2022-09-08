@@ -1,5 +1,7 @@
 package al.bruno.core.data.source.model.response
 
+import al.bruno.core.BuildConfig
+
 data class PropertyResponse(
     val id: Long,
     val title: String,
@@ -24,5 +26,6 @@ data class PropertyResponse(
     val floorPlan: String?,
     val unit: String,
     val longitude: Double,
-    val latitude: Double
-    )
+    val latitude: Double) {
+    fun url() = "${BuildConfig.FILE_HOST_NAME}/resources/$id/0"
+}

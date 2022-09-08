@@ -8,8 +8,6 @@ import al.viki.databinding.DropDownItemBinding
 import al.viki.databinding.FragmentNewRequestBinding
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.*
-import al.viki.foundation.root.RootFragment
-import al.viki.ui.home.HomeViewModel
 import al.viki.ui.location.RequestLocationActivity
 import android.Manifest
 import android.annotation.SuppressLint
@@ -24,17 +22,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
-class NewRequestFragment : RootFragment() {
+@AndroidEntryPoint
+class NewRequestFragment : Fragment() {
     private val newRequestUi = NewRequestUi()
-    private val requestViewModel: RequestViewModel by lazy {
-        ViewModelProvider(this, viewModelProvider)[RequestViewModel::class.java]
-    }
+    private val requestViewModel: RequestViewModel by viewModels()
     private var _binding: FragmentNewRequestBinding? = null
     private val binding get() = _binding
 
@@ -46,6 +44,7 @@ class NewRequestFragment : RootFragment() {
                 }
             }
         }
+
     @SuppressLint("MissingPermission")
     private val requestLocationPermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {

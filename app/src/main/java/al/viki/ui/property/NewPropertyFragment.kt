@@ -12,8 +12,6 @@ import al.viki.databinding.FragmentNewPropertyBinding
 import al.viki.databinding.NewPropertyPhotoItemBinding
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.*
-import al.viki.foundation.root.RootFragment
-import al.viki.ui.home.HomeViewModel
 import al.viki.ui.location.RequestLocationActivity
 import android.Manifest
 import android.annotation.SuppressLint
@@ -32,21 +30,21 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * https://firebase.google.com/docs/storage/android/upload-files#kotlin+ktx
  */
 
-class NewPropertyFragment : RootFragment(), View.OnClickListener, OnClickListener<PhotoUi> {
+@AndroidEntryPoint
+class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<ImagesUi> {
     private val newPropertyUi = NewPropertyUi()
-    private val propertyViewModel: PropertyViewModel by lazy {
-        ViewModelProvider(this, viewModelProvider)[PropertyViewModel::class.java]
-    }
+    private val propertyViewModel: PropertyViewModel by viewModels()
     private var _binding: FragmentNewPropertyBinding? = null
     private val binding get() = _binding
 
@@ -72,7 +70,7 @@ class NewPropertyFragment : RootFragment(), View.OnClickListener, OnClickListene
         }
 
     private val photoAdapter =
-        CustomListAdapter<PhotoUi, NewPropertyPhotoItemBinding>(
+        CustomListAdapter<ImagesUi, NewPropertyPhotoItemBinding>(
             R.layout.new_property_photo_item, { t, vm ->
                 vm.photo = t
                 vm.onClick = this
@@ -369,10 +367,10 @@ class NewPropertyFragment : RootFragment(), View.OnClickListener, OnClickListene
         _binding = null
     }
 
-    override fun onClick(view: View, t: PhotoUi) {
+    override fun onClick(view: View, t: ImagesUi) {
         when (view.id) {
             R.id.add_new_property_photo_close -> {
-                propertyViewModel.photoUi(photoUi = t)
+                propertyViewModel.photoUi(imagesUi = t)
             }
         }
     }
