@@ -170,6 +170,7 @@ class RequestViewModel @Inject constructor(
                     ),
                     Address(
                         newRequestUi.address,
+                        "TODO-This going to be defined in the future",
                         City(
                             newRequestUi.city?.id,
                             newRequestUi.city?.city,

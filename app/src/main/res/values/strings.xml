@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Viki</string>
+    <string name="default_channel_id" translatable="false">Viki</string>
+    <string name="default_channel_description" translatable="false">Viki General Notification</string>
     <string name="search_property">Search Property</string>
     <string name="new_property">New Property</string>
     <string name="new_request">New Request</string>

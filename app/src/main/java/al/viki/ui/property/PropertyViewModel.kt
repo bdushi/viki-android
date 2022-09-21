@@ -231,6 +231,7 @@ class PropertyViewModel @Inject constructor(
                     ),
                     Address(
                         newPropertyUi.address,
+                        "TODO-This going to be defined in the future",
                         City(
                             newPropertyUi.city?.id,
                             newPropertyUi.city?.city,
