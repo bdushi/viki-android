@@ -72,7 +72,10 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
                         val navController = navHostFragment.navController
                         intent.extras?.let { bundle ->
-                            Log.d(MainActivity::class.java.name, bundle.getString("entry").toString())
+                            Log.d(
+                                MainActivity::class.java.name,
+                                bundle.getString("entry").toString()
+                            )
                             if (bundle.getString("entry") == Entry.PROPERTIES.name) {
                                 navController.navigate(
                                     R.id.propertyDetailsFragment,

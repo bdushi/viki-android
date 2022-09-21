@@ -6,6 +6,7 @@ import al.bruno.adapter.OnClickListener
 import al.bruno.core.State
 import al.viki.BuildConfig
 import al.viki.R
+import al.viki.common.TOPIC
 import al.viki.common.photoDiffUtil
 import al.viki.databinding.DropDownItemBinding
 import al.viki.databinding.FragmentNewPropertyBinding
@@ -13,7 +14,9 @@ import al.viki.databinding.NewPropertyPhotoItemBinding
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.*
 import al.viki.ui.location.RequestLocationActivity
+import al.viki.ui.main.MainActivity
 import android.Manifest
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -22,20 +25,27 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.AndroidEntryPoint
+import java.security.AccessController.checkPermission
 
 /**
  * https://firebase.google.com/docs/storage/android/upload-files#kotlin+ktx
@@ -82,9 +92,10 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 if (Build.VERSION.SDK_INT >= 33) {
-                    it.data?.getParcelableExtra("LAT_LNG", LocationUi::class.java)?.let { locationUi ->
-                        newPropertyUi.location = locationUi
-                    }
+                    it.data?.getParcelableExtra("LAT_LNG", LocationUi::class.java)
+                        ?.let { locationUi ->
+                            newPropertyUi.location = locationUi
+                        }
                 } else {
                     it.data?.getParcelableExtra<LocationUi>("LAT_LNG")?.let { locationUi ->
                         newPropertyUi.location = locationUi
@@ -159,10 +170,36 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
         }
 
     private val requestFilePermissions =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-            when {
-                it.getOrDefault(Manifest.permission.READ_EXTERNAL_STORAGE, false) ||
-                        it.getOrDefault(Manifest.permission.WRITE_EXTERNAL_STORAGE, false) -> {
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            if (it) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                    if (Environment.isExternalStorageManager()) {
+                        val intent =
+                            Intent(
+                                Intent.ACTION_PICK,
+                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                            )
+                        intent.type = "image/*"
+                        requestGallery.launch(intent)
+                    } else {
+                        // show Android 11+ PermissionDialog
+                        MaterialAlertDialogBuilder(requireContext())
+                            .setTitle(R.string.allow_access)
+                            .setMessage(R.string.allow_access_detail)
+                            .setPositiveButton(R.string.settings) { dialog, _ ->
+                                val intent = Intent().apply {
+                                    action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+                                    data = Uri.fromParts("package", requireContext().packageName, null)
+                                }
+                                dialog.dismiss()
+                                android11PlusSettingResultLauncher.launch(intent)
+                            }
+                            .setNegativeButton(R.string.not_now) { dialog, _ ->
+                                dialog.dismiss()
+                            }.show()
+                    }
+                } else {
+                    // Permission Granted for android marshmallow+
                     val intent =
                         Intent(
                             Intent.ACTION_PICK,
@@ -171,24 +208,44 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
                     intent.type = "image/*"
                     requestGallery.launch(intent)
                 }
-                else -> {
-                    binding?.let { newPropertyView ->
-                        Snackbar
-                            .make(
-                                newPropertyView.newPropertyRootView,
-                                getString(R.string.permission_denied),
-                                Snackbar.LENGTH_LONG
-                            )
-                            .setAction(R.string.settings) {
-                                startActivity(
-                                    Intent(
-                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                        Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-                                    )
+            } else {
+                binding?.let { newPropertyView ->
+                    Snackbar
+                        .make(
+                            newPropertyView.newPropertyRootView,
+                            getString(R.string.permission_denied),
+                            Snackbar.LENGTH_LONG
+                        )
+                        .setAction(R.string.settings) {
+                            startActivity(
+                                Intent(
+                                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                    Uri.parse("package:" + BuildConfig.APPLICATION_ID)
                                 )
-                            }.show()
-                    }
+                            )
+                        }.show()
                 }
+            }
+        }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    private val android11PlusSettingResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (Environment.isExternalStorageManager()) {
+                val intent =
+                    Intent(
+                        Intent.ACTION_PICK,
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    )
+                intent.type = "image/*"
+                requestGallery.launch(intent)
+            } else {
+                startActivity(
+                    Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+                    )
+                )
             }
         }
 
@@ -201,6 +258,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
         return binding?.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -329,15 +387,37 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
         binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.new_photo -> {
-                    when (PackageManager.PERMISSION_GRANTED) {
-                        checkSelfPermission(
+                    if (checkSelfPermission(
                             requireContext(),
-                            Manifest.permission.READ_EXTERNAL_STORAGE
-                        ),
-                        checkSelfPermission(
-                            requireContext(),
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ) -> {
+                            READ_EXTERNAL_STORAGE
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                            if (Environment.isExternalStorageManager()) {
+                                val intent =
+                                    Intent(
+                                        Intent.ACTION_PICK,
+                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                                    )
+                                intent.type = "image/*"
+                                requestGallery.launch(intent)
+                            } else {
+                                MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle(R.string.allow_access)
+                                    .setMessage(R.string.allow_access_detail)
+                                    .setPositiveButton(R.string.settings) { dialog, _ ->
+                                        val intent = Intent().apply {
+                                            action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+                                            data = Uri.fromParts("package", requireContext().packageName, null)
+                                        }
+                                        dialog.dismiss()
+                                        android11PlusSettingResultLauncher.launch(intent)
+                                    }
+                                    .setNegativeButton(R.string.not_now) { dialog, _ ->
+                                        dialog.dismiss()
+                                    }.show()
+                            }
+                        } else {
                             val intent =
                                 Intent(
                                     Intent.ACTION_PICK,
@@ -346,13 +426,8 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
                             intent.type = "image/*"
                             requestGallery.launch(intent)
                         }
-                        else -> {
-                            requestFilePermissions.launch(
-                                arrayOf(
-                                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                                )
-                            )
-                        }
+                    } else {
+                        requestFilePermissions.launch(READ_EXTERNAL_STORAGE)
                     }
                     true
                 }
