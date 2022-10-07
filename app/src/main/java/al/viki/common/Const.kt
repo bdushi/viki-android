@@ -9,3 +9,4 @@ const val ONE_MEGABYTE: Long = 1024
 const val IMAGE_MANIPULATION_WORK_NAME = "IMAGE_MANIPULATION_WORK_NAME"
 
 const val TOPIC = "viki"
+val ACCEPTED_MIMETYPES = arrayOf("image/jpeg", "image/png")

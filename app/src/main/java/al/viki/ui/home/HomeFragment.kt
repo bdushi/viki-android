@@ -4,6 +4,7 @@ import al.bruno.adapter.*
 import al.bruno.core.State
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
+import al.viki.BuildConfig
 import al.viki.R
 import al.viki.authentication.auth.NotifyAuthenticationChange
 import al.viki.common.hideSoftKeyBoard
@@ -16,6 +17,7 @@ import al.viki.model.PropertyUi
 import al.viki.model.RequestUi
 import al.viki.model.UserUi
 import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.util.TypedValue
@@ -73,7 +75,12 @@ class HomeFragment : Fragment() {
                                     )
                                 )
                             R.id.properties_share_item -> {
-                                Toast.makeText(requireContext(), "Share", Toast.LENGTH_SHORT).show()
+                                val sendIntent: Intent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, "http://${BuildConfig.HOST_NAME}property?id=${t.id}")
+                                    type = "text/plain"
+                                }
+                                startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
                             }
                             R.id.properties_delete_item -> {
                                 MaterialAlertDialogBuilder(requireContext())
@@ -112,8 +119,12 @@ class HomeFragment : Fragment() {
                                     )
                                 )
                             R.id.request_share_item -> {
-                                Toast.makeText(requireContext(), R.string.share, Toast.LENGTH_SHORT)
-                                    .show()
+                                val sendIntent: Intent = Intent().apply {
+                                    action = Intent.ACTION_SEND
+                                    putExtra(Intent.EXTRA_TEXT, "http://${BuildConfig.HOST_NAME}request?id=${t.id}")
+                                    type = "text/plain"
+                                }
+                                startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
                             }
                             R.id.request_delete_item -> {
                                 MaterialAlertDialogBuilder(requireContext())

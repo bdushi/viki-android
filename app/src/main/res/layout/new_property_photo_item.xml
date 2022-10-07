@@ -9,7 +9,7 @@
             type="al.bruno.adapter.OnClickListener" />
         <variable
             name="photo"
-            type="al.viki.model.ImagesUi" />
+            type="al.viki.model.GalleryUi" />
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
@@ -35,7 +35,7 @@
             android:adjustViewBounds="true"
             android:maxWidth="64dp"
             app:srcCompat="@drawable/ic_outline_add_photo"
-            bind:image="@{photo.photo}"
+            bind:image="@{photo.uri}"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

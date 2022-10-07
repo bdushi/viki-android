@@ -51,6 +51,38 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
     @Inject
     lateinit var refreshTokenInterceptor: RefreshTokenInterceptor
 
+    private val notification = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+        if (isGranted) {
+            Firebase
+                .messaging
+                .subscribeToTopic(TOPIC)
+                .addOnCompleteListener { task ->
+                    if (!task.isSuccessful)
+                        Log.d(MainActivity::class.java.name, "Success")
+                }.addOnFailureListener { ex ->
+                    Log.d(
+                        MainActivity::class.java.name,
+                        "Failure: ${ex.message.toString()}"
+                    )
+                }
+        } else {
+            Snackbar
+                .make(
+                    findViewById(android.R.id.content),
+                    getString(R.string.permission_denied),
+                    Snackbar.LENGTH_LONG
+                )
+                .setAction(R.string.settings) {
+                    startActivity(
+                        Intent(
+                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+                        )
+                    )
+                }.show()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         authorizationInterceptor.setOnSessionListen {
@@ -112,8 +144,8 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                             } else if (shouldShowRequestPermissionRationale(POST_NOTIFICATIONS)) {
                                 // https://developer.android.com/training/permissions/requesting
                                 MaterialAlertDialogBuilder(this@MainActivity)
-                                    .setTitle("")
-                                    .setMessage("")
+                                    .setTitle(R.string.allow_access)
+                                    .setMessage(R.string.allow_access_detail_location)
                                     .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
                                         dialogInterface.dismiss()
                                         Firebase
@@ -132,37 +164,7 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                                     .setNegativeButton(R.string.cancel_title) { dialogInterface, _ -> dialogInterface.dismiss() }
                                     .show()
                             } else {
-                                registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-                                    if (isGranted) {
-                                        Firebase
-                                            .messaging
-                                            .subscribeToTopic(TOPIC)
-                                            .addOnCompleteListener { task ->
-                                                if (!task.isSuccessful)
-                                                    Log.d(MainActivity::class.java.name, "Success")
-                                            }.addOnFailureListener { ex ->
-                                                Log.d(
-                                                    MainActivity::class.java.name,
-                                                    "Failure: ${ex.message.toString()}"
-                                                )
-                                            }
-                                    } else {
-                                        Snackbar
-                                            .make(
-                                                findViewById(android.R.id.content),
-                                                getString(R.string.permission_denied),
-                                                Snackbar.LENGTH_LONG
-                                            )
-                                            .setAction(R.string.settings) {
-                                                startActivity(
-                                                    Intent(
-                                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                                        Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-                                                    )
-                                                )
-                                            }.show()
-                                    }
-                                }.launch(POST_NOTIFICATIONS)
+                                notification.launch(POST_NOTIFICATIONS)
                             }
                         } else {
                             Firebase

@@ -6,7 +6,7 @@ import al.bruno.adapter.OnClickListener
 import al.bruno.core.State
 import al.viki.BuildConfig
 import al.viki.R
-import al.viki.common.TOPIC
+import al.viki.common.ACCEPTED_MIMETYPES
 import al.viki.common.photoDiffUtil
 import al.viki.databinding.DropDownItemBinding
 import al.viki.databinding.FragmentNewPropertyBinding
@@ -14,9 +14,7 @@ import al.viki.databinding.NewPropertyPhotoItemBinding
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.*
 import al.viki.ui.location.RequestLocationActivity
-import al.viki.ui.main.MainActivity
 import android.Manifest
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -25,34 +23,26 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
-import android.provider.MediaStore
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat.checkSelfPermission
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.AndroidEntryPoint
-import java.security.AccessController.checkPermission
 
 /**
  * https://firebase.google.com/docs/storage/android/upload-files#kotlin+ktx
  */
 
 @AndroidEntryPoint
-class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<ImagesUi> {
+class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<GalleryUi> {
     private val newPropertyUi = NewPropertyUi()
     private val propertyViewModel: PropertyViewModel by viewModels()
     private var _binding: FragmentNewPropertyBinding? = null
@@ -79,14 +69,12 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
             vm.selection = t
         }
 
-    private val photoAdapter =
-        CustomListAdapter<ImagesUi, NewPropertyPhotoItemBinding>(
-            R.layout.new_property_photo_item, { t, vm ->
-                vm.photo = t
-                vm.onClick = this
-            },
-            photoDiffUtil
-        )
+    private val photoAdapter = CustomListAdapter<GalleryUi, NewPropertyPhotoItemBinding>(
+        R.layout.new_property_photo_item, { t, vm ->
+            vm.photo = t
+            vm.onClick = this
+        }, photoDiffUtil
+    )
 
     private val requestLocation =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
@@ -104,27 +92,6 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
             }
         }
 
-    private val requestGallery =
-        registerForActivityResult(
-            object : ActivityResultContract<Intent, Uri?>() {
-                override fun createIntent(context: Context, input: Intent): Intent {
-                    return input
-                }
-
-                override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
-                    return if (resultCode == Activity.RESULT_OK) {
-                        intent?.data
-                    } else {
-                        null
-                    }
-                }
-            }
-        ) { uri: Uri? ->
-            uri?.let {
-                context?.contentResolver?.openInputStream(uri)
-                propertyViewModel.photoUi(it)
-            }
-        }
 
     @SuppressLint("MissingPermission")
     private val requestLocationPermissions =
@@ -133,90 +100,23 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
                 it.getOrDefault(
                     Manifest.permission.ACCESS_FINE_LOCATION, false
                 ) || it.getOrDefault(
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    false
+                    Manifest.permission.ACCESS_COARSE_LOCATION, false
                 ) -> {
-                    LocationServices
-                        .getFusedLocationProviderClient(requireActivity())
-                        .lastLocation
-                        .addOnSuccessListener { location ->
-                            location?.let { loc ->
-                                newPropertyUi.location = LocationUi(
-                                    loc.longitude,
-                                    loc.latitude
-                                )
-                            }
+                    LocationServices.getFusedLocationProviderClient(requireActivity()).lastLocation.addOnSuccessListener { location ->
+                        location?.let { loc ->
+                            newPropertyUi.location = LocationUi(
+                                loc.longitude, loc.latitude
+                            )
                         }
+                    }
                 }
                 else -> {
                     binding?.let { newPropertyView ->
-                        Snackbar
-                            .make(
-                                newPropertyView.newPropertyRootView,
-                                getString(R.string.permission_denied),
-                                Snackbar.LENGTH_LONG
-                            )
-                            .setAction(R.string.settings) {
-                                startActivity(
-                                    Intent(
-                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                                        Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-                                    )
-                                )
-                            }.show()
-                    }
-                }
-            }
-        }
-
-    private val requestFilePermissions =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    if (Environment.isExternalStorageManager()) {
-                        val intent =
-                            Intent(
-                                Intent.ACTION_PICK,
-                                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                            )
-                        intent.type = "image/*"
-                        requestGallery.launch(intent)
-                    } else {
-                        // show Android 11+ PermissionDialog
-                        MaterialAlertDialogBuilder(requireContext())
-                            .setTitle(R.string.allow_access)
-                            .setMessage(R.string.allow_access_detail)
-                            .setPositiveButton(R.string.settings) { dialog, _ ->
-                                val intent = Intent().apply {
-                                    action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
-                                    data = Uri.fromParts("package", requireContext().packageName, null)
-                                }
-                                dialog.dismiss()
-                                android11PlusSettingResultLauncher.launch(intent)
-                            }
-                            .setNegativeButton(R.string.not_now) { dialog, _ ->
-                                dialog.dismiss()
-                            }.show()
-                    }
-                } else {
-                    // Permission Granted for android marshmallow+
-                    val intent =
-                        Intent(
-                            Intent.ACTION_PICK,
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                        )
-                    intent.type = "image/*"
-                    requestGallery.launch(intent)
-                }
-            } else {
-                binding?.let { newPropertyView ->
-                    Snackbar
-                        .make(
+                        Snackbar.make(
                             newPropertyView.newPropertyRootView,
                             getString(R.string.permission_denied),
                             Snackbar.LENGTH_LONG
-                        )
-                        .setAction(R.string.settings) {
+                        ).setAction(R.string.settings) {
                             startActivity(
                                 Intent(
                                     Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
@@ -224,41 +124,42 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
                                 )
                             )
                         }.show()
+                    }
                 }
             }
         }
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    private val android11PlusSettingResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (Environment.isExternalStorageManager()) {
-                val intent =
-                    Intent(
-                        Intent.ACTION_PICK,
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                    )
-                intent.type = "image/*"
-                requestGallery.launch(intent)
-            } else {
-                startActivity(
-                    Intent(
-                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                        Uri.parse("package:" + BuildConfig.APPLICATION_ID)
-                    )
-                )
+
+    private val selectPicture =
+        registerForActivityResult(object : ActivityResultContract<Array<String>, Uri?>() {
+            override fun createIntent(context: Context, input: Array<String>): Intent {
+                return Intent(Intent.ACTION_GET_CONTENT).addCategory(Intent.CATEGORY_OPENABLE)
+                    .setType("*/*").putExtra(Intent.EXTRA_MIME_TYPES, input)
+
+            }
+
+            override fun getSynchronousResult(
+                context: Context, input: Array<String>
+            ): SynchronousResult<Uri?>? {
+                return null
+            }
+
+            override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+                return if (intent == null || resultCode != Activity.RESULT_OK) null else intent.data
+            }
+        }) { uri ->
+            uri?.let {
+                propertyViewModel.addImage(GalleryUi(uri))
             }
         }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentNewPropertyBinding.inflate(inflater, container, false)
         return binding?.root
     }
 
-    @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("MissingPermission")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -270,7 +171,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
                     }
                 }
                 is State.Error -> {}
-                is State.Loading -> TODO()
+                is State.Loading -> {}
             }
         }
 
@@ -282,7 +183,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
                     }
                 }
                 is State.Error -> {}
-                is State.Loading -> TODO()
+                is State.Loading -> {}
             }
         }
 
@@ -296,7 +197,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
                 is State.Error -> {
 
                 }
-                is State.Loading -> TODO()
+                is State.Loading -> {}
             }
         }
 
@@ -310,7 +211,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
                 is State.Error -> {
 
                 }
-                is State.Loading -> TODO()
+                is State.Loading -> {}
             }
         }
 
@@ -322,7 +223,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
                     }
                 }
                 is State.Error -> {}
-                is State.Loading -> TODO()
+                is State.Loading -> {}
             }
         }
 
@@ -343,6 +244,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
          */
         collectLatestFlow(propertyViewModel.photo) {
             photoAdapter.submitList(it)
+            photoAdapter.notifyDataSetChanged()
         }
 
         binding?.lifecycleOwner = this
@@ -356,19 +258,18 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
         binding?.photoAdapter = photoAdapter
         binding?.onClick = this
         when (PackageManager.PERMISSION_GRANTED) {
-            checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION),
-            checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) -> {
-                LocationServices
-                    .getFusedLocationProviderClient(requireActivity())
-                    .lastLocation
-                    .addOnSuccessListener { location ->
-                        location?.let {
-                            newPropertyUi.location = LocationUi(
-                                it.longitude,
-                                it.latitude
-                            )
-                        }
+            checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+            ), checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION
+            ) -> {
+                LocationServices.getFusedLocationProviderClient(requireActivity()).lastLocation.addOnSuccessListener { location ->
+                    location?.let {
+                        newPropertyUi.location = LocationUi(
+                            it.longitude, it.latitude
+                        )
                     }
+                }
             }
             else -> {
                 requestLocationPermissions.launch(
@@ -387,48 +288,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
         binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.new_photo -> {
-                    if (checkSelfPermission(
-                            requireContext(),
-                            READ_EXTERNAL_STORAGE
-                        ) == PackageManager.PERMISSION_GRANTED
-                    ) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                            if (Environment.isExternalStorageManager()) {
-                                val intent =
-                                    Intent(
-                                        Intent.ACTION_PICK,
-                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                                    )
-                                intent.type = "image/*"
-                                requestGallery.launch(intent)
-                            } else {
-                                MaterialAlertDialogBuilder(requireContext())
-                                    .setTitle(R.string.allow_access)
-                                    .setMessage(R.string.allow_access_detail)
-                                    .setPositiveButton(R.string.settings) { dialog, _ ->
-                                        val intent = Intent().apply {
-                                            action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
-                                            data = Uri.fromParts("package", requireContext().packageName, null)
-                                        }
-                                        dialog.dismiss()
-                                        android11PlusSettingResultLauncher.launch(intent)
-                                    }
-                                    .setNegativeButton(R.string.not_now) { dialog, _ ->
-                                        dialog.dismiss()
-                                    }.show()
-                            }
-                        } else {
-                            val intent =
-                                Intent(
-                                    Intent.ACTION_PICK,
-                                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                                )
-                            intent.type = "image/*"
-                            requestGallery.launch(intent)
-                        }
-                    } else {
-                        requestFilePermissions.launch(READ_EXTERNAL_STORAGE)
-                    }
+                    selectPicture.launch(ACCEPTED_MIMETYPES)
                     true
                 }
                 else -> false
@@ -442,10 +302,11 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
         _binding = null
     }
 
-    override fun onClick(view: View, t: ImagesUi) {
+    override fun onClick(view: View, t: GalleryUi) {
         when (view.id) {
             R.id.add_new_property_photo_close -> {
-                propertyViewModel.photoUi(imagesUi = t)
+                propertyViewModel.removeImage(galleryUi = t)
+                photoAdapter.notifyDataSetChanged()
             }
         }
     }
@@ -455,8 +316,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Im
             R.id.new_property_location -> {
                 requestLocation.launch(
                     Intent(
-                        requireContext(),
-                        RequestLocationActivity::class.java
+                        requireContext(), RequestLocationActivity::class.java
                     )
                 )
 //                    registerForActivityResult(object : ActivityResultContract<RequestLocationActivity, LocationUi?>() {

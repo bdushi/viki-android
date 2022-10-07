@@ -6,9 +6,10 @@
     <string name="visit_your_profile">Shiko profilin</string>
     <string name="share">Shpernda</string>
     <string name="settings">Cilesimet</string>
-    <string name="allow_access">Allow access</string>
-    <string name="allow_access_detail">Allow access detail</string>
-    <string name="not_now">Not now</string>
+    <string name="allow_access">Lejo hyrjen</string>
+    <string name="allow_access_detail_storage">Lejo që Viki të ketë qasje në Galerinë tuaj</string>
+    <string name="allow_access_detail_location">Lejo që Viki të ketë qasje në vendndodhjen tuaj</string>
+    <string name="not_now">Jo tani</string>
     <string name="properties">Pronat</string>
     <string name="requests">Kerkesat</string>
     <string name="map_view">Map View</string>

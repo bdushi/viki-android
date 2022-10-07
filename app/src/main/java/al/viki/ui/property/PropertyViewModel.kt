@@ -8,7 +8,6 @@ import al.bruno.core.data.source.model.Operation
 import al.bruno.core.data.source.model.Unit
 import al.bruno.core.data.source.model.request.PropertyRequest
 import al.viki.model.*
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
@@ -65,10 +64,10 @@ class PropertyViewModel @Inject constructor(
     // The UI collects from this StateFlow to get its state updates
     val properties: StateFlow<State<Int>> = _properties
 
-    private val photoList: MutableList<ImagesUi> = mutableListOf()
+    private val photoList: MutableList<GalleryUi> = mutableListOf()
 
-    private val _photo = MutableStateFlow<List<ImagesUi>>(photoList)
-    val photo: StateFlow<List<ImagesUi>> = _photo
+    private val _photo = MutableStateFlow<List<GalleryUi>>(photoList)
+    val photo: StateFlow<List<GalleryUi>> = _photo
 
 //    var citiesUi: List<CityUi> by mutableStateOf(listOf())
 //        private set
@@ -190,12 +189,14 @@ class PropertyViewModel @Inject constructor(
         }
     }
 
-    fun photoUi(uri: Uri) {
-        photoList.add(ImagesUi(uri.toString()))
+    fun addImage(galleryUi: GalleryUi) {
+        photoList.add(galleryUi)
+        _photo.value = photoList
     }
 
-    fun photoUi(imagesUi: ImagesUi) {
-        photoList.remove(imagesUi)
+    fun removeImage(galleryUi: GalleryUi) {
+        photoList.remove(galleryUi)
+        _photo.value = photoList
     }
 
     fun save(newPropertyUi: NewPropertyUi) {
@@ -267,7 +268,7 @@ class PropertyViewModel @Inject constructor(
                                         .putStringArray(
                                             "PHOTO_UI",
                                             photo.value.map { photoUi ->
-                                                photoUi.photo
+                                                photoUi.uri.toString()
                                             }.toTypedArray()
                                         )
                                         .build()

@@ -1,10 +1,12 @@
 package al.viki.ui.details
 
 import al.bruno.core.State
+import al.viki.BuildConfig
 import al.viki.R
 import al.viki.databinding.FragmentRequestDetailsBinding
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.ui.home.HomeViewModel
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -49,6 +51,12 @@ class RequestDetailsFragment : Fragment() {
         binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.share -> {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, "http://${BuildConfig.HOST_NAME}request?id=${property.id}")
+                        type = "text/plain"
+                    }
+                    startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
                     true
                 }
                 R.id.delete -> {

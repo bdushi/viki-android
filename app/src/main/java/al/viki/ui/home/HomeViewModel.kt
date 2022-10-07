@@ -20,9 +20,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -37,7 +35,7 @@ class HomeViewModel @Inject constructor(
     // Backing property to avoid state updates from other classes
     private val _propertyTypes = MutableStateFlow<State<List<PropertyTypeUi>>>(State.Success(listOf()))
     // The UI collects from this StateFlow to get its state updates
-    val propertyTypes: StateFlow<State<List<PropertyTypeUi>>> = _propertyTypes
+    val propertyTypes: StateFlow<State<List<PropertyTypeUi>>> = _propertyTypes.asStateFlow()
 
 
     // Backing property to avoid state updates from other classes
@@ -126,6 +124,9 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             when (val response = propertyTypeRepository.propertyTypes()) {
                 is Result.Success -> {
+                    _propertyTypes.update {
+                        it
+                    }
                     _propertyTypes.value = State.Success(
                         response.data.map {
                             PropertyTypeUi(
@@ -175,8 +176,8 @@ class HomeViewModel @Inject constructor(
             when(val response = imageRepository.images("${BuildConfig.FILE_HOST_NAME}/resources/${id}")) {
                 is Result.Error -> _images.value = State.Error(response.error)
                 is Result.Success -> _images.value = State.Success(
-                    response.data.mapIndexed { index, s ->
-                        ImagesUi("${BuildConfig.FILE_HOST_NAME}/resources/$id/$index")
+                    response.data.map { s ->
+                        ImagesUi("${BuildConfig.FILE_HOST_NAME}/resources/$id/$s")
                     }
                 )
             }

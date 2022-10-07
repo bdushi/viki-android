@@ -2,6 +2,7 @@ package al.viki.common
 
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
+import al.viki.model.GalleryUi
 import al.viki.model.ImagesUi
 import al.viki.model.PropertyUi
 import android.app.Activity
@@ -33,12 +34,12 @@ val requestDiffUtil: DiffUtil.ItemCallback<RequestResponse> =
             return oldItem == newItem
         }
     }
-val photoDiffUtil: DiffUtil.ItemCallback<ImagesUi> = object : DiffUtil.ItemCallback<ImagesUi>() {
-    override fun areItemsTheSame(oldItem: ImagesUi, newItem: ImagesUi): Boolean {
-        return oldItem.photo == newItem.photo
+val photoDiffUtil: DiffUtil.ItemCallback<GalleryUi> = object : DiffUtil.ItemCallback<GalleryUi>() {
+    override fun areItemsTheSame(oldItem: GalleryUi, newItem: GalleryUi): Boolean {
+        return oldItem.uri == newItem.uri
     }
 
-    override fun areContentsTheSame(oldItem: ImagesUi, newItem: ImagesUi): Boolean {
+    override fun areContentsTheSame(oldItem: GalleryUi, newItem: GalleryUi): Boolean {
         return oldItem == newItem
     }
 }

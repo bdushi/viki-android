@@ -65,6 +65,7 @@ class AuthenticationActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         // Disable BackPress for AuthenticationActivity
     }

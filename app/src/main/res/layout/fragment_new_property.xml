@@ -300,7 +300,7 @@
                     android:padding="@dimen/small_dimen"
                     android:layout_marginTop="@dimen/micro_dimen"
                     android:onClick="@{onClick::onClick}"
-                    android:tint="@{newProperty.location != null ? @color/vikiColorPrimary : @color/success}"
+                    bind:tint="@{newProperty.location != null ? @color/vikiColorPrimary : @color/success}"
                     app:srcCompat="@drawable/ic_outline_my_location"
                     app:layout_constraintStart_toEndOf="@+id/new_property_address"
                     app:layout_constraintTop_toTopOf="@+id/new_property_address"

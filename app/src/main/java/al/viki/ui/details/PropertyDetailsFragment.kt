@@ -1,6 +1,7 @@
 package al.viki.ui.details
 
 import al.bruno.core.State
+import al.viki.BuildConfig
 import al.viki.R
 import al.viki.databinding.FragmentPropertyDetailsBinding
 import al.viki.foundation.common.collectLatestFlow
@@ -101,6 +102,12 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
         binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.share -> {
+                    val sendIntent: Intent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        putExtra(Intent.EXTRA_TEXT, "http://${BuildConfig.HOST_NAME}property?id=${property.id}")
+                        type = "text/plain"
+                    }
+                    startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
                     true
                 }
                 R.id.delete -> {

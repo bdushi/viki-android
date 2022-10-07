@@ -27,5 +27,5 @@ data class PropertyResponse(
     val unit: String,
     val longitude: Double,
     val latitude: Double) {
-    fun url() = "${BuildConfig.FILE_HOST_NAME}/resources/$id/0"
+    fun url() = "${BuildConfig.FILE_HOST_NAME}/resources/$id/${id}_0"
 }
