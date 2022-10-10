@@ -104,7 +104,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                 R.id.share -> {
                     val sendIntent: Intent = Intent().apply {
                         action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, "http://${BuildConfig.HOST_NAME}property?id=${property.id}")
+                        putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}property/${property.id}")
                         type = "text/plain"
                     }
                     startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))

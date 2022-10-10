@@ -44,7 +44,7 @@ class RequestDetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val property = args.request
+        val request = args.request
         binding?.topAppBar?.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
@@ -53,7 +53,7 @@ class RequestDetailsFragment : Fragment() {
                 R.id.share -> {
                     val sendIntent: Intent = Intent().apply {
                         action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, "http://${BuildConfig.HOST_NAME}request?id=${property.id}")
+                        putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}request/${request.id}")
                         type = "text/plain"
                     }
                     startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
@@ -63,9 +63,9 @@ class RequestDetailsFragment : Fragment() {
                     MaterialAlertDialogBuilder(requireContext())
                         .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
                         .setTitle(R.string.delete_request_title)
-                        .setMessage(getString(R.string.delete_messages, property.title))
+                        .setMessage(getString(R.string.delete_messages, request.title))
                         .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
-                            homeViewModel.deleteRequest(property.id)
+                            homeViewModel.deleteRequest(request.id)
                             dialogInterface.dismiss()
                         }.setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
                             dialogInterface.dismiss()
@@ -92,7 +92,7 @@ class RequestDetailsFragment : Fragment() {
                 }
             }
         }
-        binding?.request = property
+        binding?.request = request
         mapFragment =
             childFragmentManager.findFragmentById(R.id.details_property_location_in_map) as? SupportMapFragment
         mapFragment?.getMapAsync {
@@ -100,7 +100,7 @@ class RequestDetailsFragment : Fragment() {
             it.uiSettings.isZoomControlsEnabled = true
             it.uiSettings.setAllGesturesEnabled(true)
             it.uiSettings.isCompassEnabled = true
-            val latLng = LatLng(property.latitude, property.longitude)
+            val latLng = LatLng(request.latitude, request.longitude)
             val cameraPosition =
                 CameraPosition.Builder().target(latLng).zoom(15f).bearing(20f).build()
             it.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))

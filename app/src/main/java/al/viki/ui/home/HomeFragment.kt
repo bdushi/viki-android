@@ -77,7 +77,7 @@ class HomeFragment : Fragment() {
                             R.id.properties_share_item -> {
                                 val sendIntent: Intent = Intent().apply {
                                     action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TEXT, "http://${BuildConfig.HOST_NAME}property?id=${t.id}")
+                                    putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}property/${t.id}")
                                     type = "text/plain"
                                 }
                                 startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
@@ -121,7 +121,7 @@ class HomeFragment : Fragment() {
                             R.id.request_share_item -> {
                                 val sendIntent: Intent = Intent().apply {
                                     action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TEXT, "http://${BuildConfig.HOST_NAME}request?id=${t.id}")
+                                    putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}request/${t.id}")
                                     type = "text/plain"
                                 }
                                 startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
