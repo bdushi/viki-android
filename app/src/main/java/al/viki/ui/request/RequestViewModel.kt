@@ -36,12 +36,6 @@ class RequestViewModel @Inject constructor(
     val currencies: StateFlow<State<List<CurrencyUi>?>> = _currencies
 
     // Backing property to avoid state updates from other classes
-    private val _floorPlans = MutableStateFlow<State<List<FloorPlanUi>?>>(State.Success(null))
-
-    // The UI collects from this StateFlow to get its state updates
-    val floorPlans: StateFlow<State<List<FloorPlanUi>?>> = _floorPlans
-
-    // Backing property to avoid state updates from other classes
     private val _propertyTypes = MutableStateFlow<State<List<PropertyTypeUi>?>>(State.Success(null))
 
     // The UI collects from this StateFlow to get its state updates
@@ -60,21 +54,21 @@ class RequestViewModel @Inject constructor(
     val request: StateFlow<State<Int>> = _request
 
     init {
-        // (cityResponse, currencyResponse, floorPlanResponse, propertyTypeResponse, unitResponse)
         viewModelScope.launch(Dispatchers.IO) {
             coroutineScope {
-                val response = awaitAll(
+                val (cities, currencies, propertyTypes, units) = awaitAll(
                     async { cityRepository.cities() },
                     async { currencyRepository.currencies() },
                     async { propertyTypeRepository.propertyTypes() },
                     async { unitRepository.units() }
                 )
-                when (val city = response[0]) {
+
+                when (cities) {
                     is Result.Error -> {
-                        _cities.value = State.Error(city.error)
+                        _cities.value = State.Error(cities.error)
                     }
                     is Result.Success -> {
-                        _cities.value = State.Success((city.data as List<City>).map {
+                        _cities.value = State.Success((cities.data as List<City>).map {
                             CityUi(
                                 it.id ?: 0,
                                 it.city ?: "",
@@ -88,13 +82,13 @@ class RequestViewModel @Inject constructor(
                         })
                     }
                 }
-                when (val currency = response[1]) {
+                when (currencies) {
                     is Result.Error -> {
-                        _currencies.value = State.Error(currency.error)
+                        _currencies.value = State.Error(currencies.error)
                     }
                     is Result.Success -> {
                         _currencies.value = State.Success(
-                            (currency.data as List<Currency>).map {
+                            (currencies.data as List<Currency>).map {
                                 CurrencyUi(
                                     it.id ?: 0,
                                     it.currency ?: "",
@@ -106,13 +100,13 @@ class RequestViewModel @Inject constructor(
                         )
                     }
                 }
-                when (val propertyType = response[2]) {
+                when (propertyTypes) {
                     is Result.Error -> {
-                        _propertyTypes.value = State.Error(propertyType.error)
+                        _propertyTypes.value = State.Error(propertyTypes.error)
                     }
                     is Result.Success -> {
                         _propertyTypes.value = State.Success(
-                            (propertyType.data as List<PropertyType>).map {
+                            (propertyTypes.data as List<PropertyType>).map {
                                 PropertyTypeUi(
                                     it.id ?: 0,
                                     it.type ?: ""
@@ -121,13 +115,13 @@ class RequestViewModel @Inject constructor(
                         )
                     }
                 }
-                when (val unit = response[3]) {
+                when (units) {
                     is Result.Error -> {
-                        _units.value = State.Error(unit.error)
+                        _units.value = State.Error(units.error)
                     }
                     is Result.Success -> {
                         _units.value = State.Success(
-                            (unit.data as List<Unit>).map {
+                            (units.data as List<Unit>).map {
                                 UnitUi(
                                     it.id ?: 0,
                                     it.unit ?: ""
@@ -144,7 +138,7 @@ class RequestViewModel @Inject constructor(
     fun save(newRequestUi: NewRequestUi) {
         viewModelScope.launch(Dispatchers.IO) {
             _request.value = State.Loading
-            when(val response = propertyRepository.request(
+            when (val response = propertyRepository.request(
                 RequestRequest(
                     newRequestUi.title,
                     newRequestUi.description,
