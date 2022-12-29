@@ -9,8 +9,7 @@ import al.viki.common.NETWORK_PAGE_SIZE
 
 class PropertiesPagingSource constructor(
     private val propertyRepository: PropertyRepository,
-    private val type: String?,
-    private val searchQuery: CharSequence?
+    private val query: Map<String, String>
 ) : PagingSource<Int, PropertyResponse>() {
     override fun getRefreshKey(state: PagingState<Int, PropertyResponse>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -24,8 +23,7 @@ class PropertiesPagingSource constructor(
         return when (val response = propertyRepository.properties(
             page = position,
             size = 10,
-            type = type,
-            searchQuery = searchQuery
+            query = query
         )) {
             is Result.Error -> LoadResult.Error(Throwable(response.error))
             is Result.Success -> LoadResult.Page(
@@ -36,6 +34,7 @@ class PropertiesPagingSource constructor(
             else -> LoadResult.Error(Throwable())
         }
     }
+
     override val keyReuseSupported: Boolean
         get() = true
 }

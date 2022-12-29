@@ -134,7 +134,6 @@ class RequestViewModel @Inject constructor(
         }
     }
 
-
     fun save(newRequestUi: NewRequestUi) {
         viewModelScope.launch(Dispatchers.IO) {
             _request.value = State.Loading

@@ -1,7 +1,10 @@
 package al.bruno.adapter
 
-interface Selection {
-    fun selection(selection: Boolean)
-    fun selection() : Boolean
+import android.os.Parcelable
+
+interface Selection : Parcelable{
+    fun setSelected(selection: Boolean)
+    fun isSelected() : Boolean
     fun searchCriteria() : String
+    fun title() : String
 }

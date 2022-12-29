@@ -47,6 +47,9 @@
                 app:nullable="true"
                 android:defaultValue="@null"/>
         </action>
+        <action
+            android:id="@+id/action_homeFragment_to_filterFragment"
+            app:destination="@id/filterFragment" />
     </fragment>
     <fragment
         android:id="@+id/newPropertyFragment"
@@ -99,4 +102,8 @@
         android:id="@+id/requestNewAccountFragment"
         android:name="al.viki.ui.account.RequestNewAccountFragment"
         android:label="RequestNewAccountFragment" />
+    <fragment
+        android:id="@+id/filterFragment"
+        android:name="al.viki.ui.filter.FilterFragment"
+        android:label="FilterFragment" />
 </navigation>

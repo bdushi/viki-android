@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 33
     namespace 'al.bruno.adapter'
     defaultConfig {
         minSdk 21
@@ -40,6 +40,6 @@ dependencies {
     api 'androidx.paging:paging-runtime:3.2.0-alpha03'
     testImplementation 'androidx.paging:paging-common:3.2.0-alpha03'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
 }

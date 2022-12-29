@@ -44,9 +44,9 @@ class DropDownArrayAdapter<T : Selection, VM:ViewDataBinding, VD: ViewDataBindin
             spinnerHolder.bind(tt)
         }
         if(position == selection) {
-            tt.selection(true)
+            tt.setSelected(true)
         } else {
-            tt.selection(false)
+            tt.setSelected(false)
         }
         return contentView
     }

@@ -1,13 +1,15 @@
 package al.viki.model
-
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 import al.bruno.adapter.Selection
 
+@Parcelize
 data class PropertyTypeUi(
     val id: Long,
     var propertyType: String,
     var selection: Boolean = false
-    ) : Selection {
-    override fun selection(selection: Boolean) {
+    ) : Selection, Parcelable {
+    override fun setSelected(selection: Boolean) {
         this.selection = selection
     }
 
@@ -15,7 +17,11 @@ data class PropertyTypeUi(
         return propertyType
     }
 
-    override fun selection(): Boolean {
+    override fun title(): String {
+        return propertyType
+    }
+
+    override fun isSelected(): Boolean {
         return selection
     }
 

@@ -15,19 +15,17 @@ class PropertyRemoteDataSource @Inject constructor(private val propertyService: 
     override suspend fun properties(
         page: Int,
         size: Int,
-        type: String?,
-        searchQuery: CharSequence?
+        query: Map<String, String>
     ): Response<PageResponse<List<PropertyResponse>>> {
-        return propertyService.properties(page = page, size = size, type = type, searchQuery = searchQuery)
+        return propertyService.properties(page = page, size = size, query = query)
     }
 
     override suspend fun requests(
         page: Int,
         size: Int,
-        type: String?,
-        searchQuery: CharSequence?
+        query: Map<String, String>
     ): Response<PageResponse<List<RequestResponse>>> {
-        return propertyService.requests(page = page, size = size, type = type, searchQuery = searchQuery)
+        return propertyService.requests(page = page, size = size, query = query)
     }
 
     override suspend fun property(propertyRequest: PropertyRequest): Response<Int> {

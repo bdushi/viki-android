@@ -30,38 +30,33 @@ class HomeViewModel @Inject constructor(
     private val propertyTypeRepository: PropertyTypeRepository,
     private val userRepository: UserRepository,
     private val imageRepository: ImageRepository
-    ): ViewModel() {
-
-    // Backing property to avoid state updates from other classes
-    private val _propertyTypes = MutableStateFlow<State<List<PropertyTypeUi>>>(State.Success(listOf()))
-    // The UI collects from this StateFlow to get its state updates
-    val propertyTypes: StateFlow<State<List<PropertyTypeUi>>> = _propertyTypes.asStateFlow()
-
-
+) : ViewModel() {
     // Backing property to avoid state updates from other classes
     private val _user = MutableStateFlow<State<UserUi>>(State.Success(null))
+
     // The UI collects from this StateFlow to get its state updates
     val user: StateFlow<State<UserUi>> = _user
 
     // Backing property to avoid state updates from other classes
     private val _delete = MutableStateFlow<State<Boolean>>(State.Success(null))
+
     // The UI collects from this StateFlow to get its state updates
     val delete: StateFlow<State<Boolean>> = _delete
 
     // Backing property to avoid state updates from other classes
     private val _images = MutableStateFlow<State<List<ImagesUi>>>(State.Success(null))
+
     // The UI collects from this StateFlow to get its state updates
     val images: StateFlow<State<List<ImagesUi>>> = _images
 
     init {
-        propertyTypes()
         user()
     }
 
     private fun user() {
         _user.value = State.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            when(val response = userRepository.user()) {
+            when (val response = userRepository.user()) {
                 is Result.Error -> {
                     _user.value = State.Error(response.error)
                 }
@@ -84,8 +79,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun propertiesCollectionPagedList(
-        type: String? = null,
-        searchQuery: CharSequence? = null
+        query: Map<String, String>
     ): Flow<PagingData<PropertyResponse>> = Pager(
         config = PagingConfig(
             initialLoadSize = NETWORK_PAGE_SIZE,
@@ -95,15 +89,13 @@ class HomeViewModel @Inject constructor(
         pagingSourceFactory = {
             PropertiesPagingSource(
                 propertyRepository = propertyRepository,
-                type = type,
-                searchQuery = searchQuery
+                query = query
             )
         }
     ).flow
 
     fun requestCollectionPagedList(
-        type: String? = null,
-        searchQuery: CharSequence? = null
+        query: Map<String, String>
     ): Flow<PagingData<RequestResponse>> = Pager(
         config = PagingConfig(
             initialLoadSize = NETWORK_PAGE_SIZE,
@@ -113,42 +105,19 @@ class HomeViewModel @Inject constructor(
         pagingSourceFactory = {
             RequestPagingSource(
                 propertyRepository = propertyRepository,
-                type = type,
-                searchQuery = searchQuery
+                query = query
             )
         }
     ).flow
 
-    private fun propertyTypes() {
-        _propertyTypes.value = State.Loading
-        viewModelScope.launch(Dispatchers.IO) {
-            when (val response = propertyTypeRepository.propertyTypes()) {
-                is Result.Success -> {
-                    _propertyTypes.update {
-                        it
-                    }
-                    _propertyTypes.value = State.Success(
-                        response.data.map {
-                            PropertyTypeUi(
-                                it.id ?: 0,
-                                it.type ?: ""
-                            )
-                        }
-                    )
-                }
-                is Result.Error -> _propertyTypes.value = State.Error(response.error)
-            }
-        }
-    }
-
-
     fun deleteProperty(id: Long) {
         _delete.value = State.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            when(val response = propertyRepository.deleteProperty(id)) {
+            when (val response = propertyRepository.deleteProperty(id)) {
                 is Result.Error -> _delete.value = State.Error(response.error)
                 is Result.Success -> {
-                    when(val delete = imageRepository.delete("${BuildConfig.FILE_HOST_NAME}/resources/delete/${id}")) {
+                    when (val delete =
+                        imageRepository.delete("${BuildConfig.FILE_HOST_NAME}/resources/delete/${id}")) {
                         is Result.Error -> {
                             _delete.value = State.Error(delete.error)
                         }
@@ -164,7 +133,7 @@ class HomeViewModel @Inject constructor(
     fun deleteRequest(id: Long) {
         _delete.value = State.Loading
         viewModelScope.launch(Dispatchers.IO) {
-            when(val response = propertyRepository.deleteRequest(id)) {
+            when (val response = propertyRepository.deleteRequest(id)) {
                 is Result.Error -> _delete.value = State.Error(response.error)
                 is Result.Success -> _delete.value = State.Success(response.data)
             }
@@ -173,7 +142,8 @@ class HomeViewModel @Inject constructor(
 
     fun images(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {
-            when(val response = imageRepository.images("${BuildConfig.FILE_HOST_NAME}/resources/${id}")) {
+            when (val response =
+                imageRepository.images("${BuildConfig.FILE_HOST_NAME}/resources/${id}")) {
                 is Result.Error -> _images.value = State.Error(response.error)
                 is Result.Success -> _images.value = State.Success(
                     response.data.map { s ->

@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Viki" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Theme.Viki" parent="AppTheme">
         <item name="colorPrimary">@color/vikiColorPrimary</item>
         <item name="colorOnPrimary">@color/vikiColorOnPrimary</item>
         <item name="colorPrimaryContainer">@color/vikiColorPrimaryContainer</item>
         <item name="colorOnPrimaryContainer">@color/vikiColorOnPrimaryContainer</item>
         <item name="textInputStyle">@style/Widget.Design.TextInputLayout</item>
+    </style>
+    <style name="Theme.Viki.Dialog" parent="Theme.Material3.Light.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowMinWidthMajor">98%</item>
+        <item name="android:windowMinWidthMinor">98%</item>
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 </resources>

@@ -1,7 +1,10 @@
 package al.viki.model
 
 import al.bruno.adapter.Selection
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class CurrencyUi(
     val id: Long,
     val currency: String,
@@ -9,8 +12,8 @@ data class CurrencyUi(
     val code: String,
     val decimalMark: String,
     var selection: Boolean = false
-    ) : Selection {
-    override fun selection(selection: Boolean) {
+    ) : Selection, Parcelable {
+    override fun setSelected(selection: Boolean) {
         this.selection = selection
     }
 
@@ -18,7 +21,11 @@ data class CurrencyUi(
         return currency
     }
 
-    override fun selection(): Boolean {
+    override fun title(): String {
+        return currency
+    }
+
+    override fun isSelected(): Boolean {
         return selection
     }
 

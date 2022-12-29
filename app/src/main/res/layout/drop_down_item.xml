@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="@{selection.selection() ? View.VISIBLE : View.GONE }"
+            android:visibility="@{selection.isSelected() ? View.VISIBLE : View.GONE }"
             app:srcCompat="@drawable/ic_outline_check"/>
     </LinearLayout>
 </layout>

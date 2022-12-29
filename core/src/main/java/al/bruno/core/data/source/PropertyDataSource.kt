@@ -9,8 +9,8 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 
 interface PropertyDataSource {
-    suspend fun properties(page: Int, size: Int, type: String?, searchQuery: CharSequence?) : Response<PageResponse<List<PropertyResponse>>>
-    suspend fun requests(page: Int, size: Int, type: String?, searchQuery: CharSequence?) : Response<PageResponse<List<RequestResponse>>>
+    suspend fun properties(page: Int, size: Int, query: Map<String, String>) : Response<PageResponse<List<PropertyResponse>>>
+    suspend fun requests(page: Int, size: Int, query: Map<String, String>) : Response<PageResponse<List<RequestResponse>>>
     suspend fun property(propertyRequest: PropertyRequest) : Response<Int>
     suspend fun request(requestRequest: RequestRequest) : Response<Int>
     suspend fun deleteProperty(id: Long) : Response<ResponseBody>

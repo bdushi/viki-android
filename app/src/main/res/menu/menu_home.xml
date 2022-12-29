@@ -15,18 +15,6 @@
             android:icon="@drawable/ic_outline_arrow_left"
             android:title="@string/new_request" />
     </group>
-<!--    <group-->
-<!--        android:id="@+id/group_menu_map_view">-->
-<!--        <item android:id="@+id/menu_map_view"-->
-<!--            android:icon="@drawable/ic_outline_swap_horiz"-->
-<!--            android:title="@string/map_view" />-->
-<!--    </group>-->
-<!--    <group-->
-<!--        android:id="@+id/group_menu_share">-->
-<!--        <item android:id="@+id/menu_share"-->
-<!--            android:icon="@drawable/ic_outline_share"-->
-<!--            android:title="@string/share" />-->
-<!--    </group>-->
     <group
         android:id="@+id/group_menu_settings">
         <item android:id="@+id/menu_settings"

@@ -95,7 +95,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ga
 
     @SuppressLint("MissingPermission")
     private val requestLocationPermissions =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { it ->
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
             when {
                 it.getOrDefault(
                     Manifest.permission.ACCESS_FINE_LOCATION, false

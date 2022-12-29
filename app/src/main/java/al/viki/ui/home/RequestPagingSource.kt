@@ -9,8 +9,7 @@ import androidx.paging.PagingState
 
 class RequestPagingSource  constructor(
     private val propertyRepository: PropertyRepository,
-    private val type: String?,
-    private val searchQuery: CharSequence?
+    private val query: Map<String, String>
 ) : PagingSource<Int, RequestResponse>() {
     override fun getRefreshKey(state: PagingState<Int, RequestResponse>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
@@ -24,8 +23,7 @@ class RequestPagingSource  constructor(
         return when (val response = propertyRepository.requests(
             page = position,
             size = params.loadSize,
-            type = type,
-            searchQuery = searchQuery
+            query = query
         )) {
             is Result.Error -> LoadResult.Error(Throwable(response.error))
             is Result.Success -> LoadResult.Page(

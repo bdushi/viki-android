@@ -2,6 +2,10 @@
     <string name="app_name">Viki</string>
     <string name="search_property">Prone e Re</string>
     <string name="new_property">Porosi e Re</string>
+    <string name="filters">Filtera</string>
+    <string name="filter_property_type">Tipi i Prones</string>
+    <string name="filter_city">Qytetet</string>
+    <string name="filter_operation">Shitje / Qira</string>
     <string name="new_request">Kerkes e Re</string>
     <string name="visit_your_profile">Shiko profilin</string>
     <string name="share">Shpernda</string>
@@ -46,6 +50,7 @@
 
     <string name="permission_denied">Autorizim u mohua</string>
     <string name="app_version">Versioni</string>
+    <string name="all">All</string>
     <!-- Property Item -->
     <string name="item_title">Apartament</string>
     <string name="price_item">%f %s</string>

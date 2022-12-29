@@ -17,11 +17,10 @@ class PropertyRepository @Inject constructor(
     suspend fun properties(
         page: Int,
         size: Int,
-        type: String?,
-        searchQuery: CharSequence?
+        query: Map<String, String>
     ): Result<PageResponse<List<PropertyResponse>>> {
         return try {
-            val response = propertyRemoteDataSource.properties(page, size, type, searchQuery)
+            val response = propertyRemoteDataSource.properties(page, size, query)
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 Result.Success(body)
@@ -36,11 +35,10 @@ class PropertyRepository @Inject constructor(
     suspend fun requests(
         page: Int,
         size: Int,
-        type: String?,
-        searchQuery: CharSequence?
+        query: Map<String, String>
     ): Result<PageResponse<List<RequestResponse>>> {
         return try {
-            val response = propertyRemoteDataSource.requests(page, size, type, searchQuery)
+            val response = propertyRemoteDataSource.requests(page, size, query)
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 Result.Success(body)

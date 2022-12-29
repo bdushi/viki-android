@@ -12,7 +12,7 @@ import al.viki.common.propertiesDiffUtil
 import al.viki.common.requestDiffUtil
 import al.viki.databinding.*
 import al.viki.foundation.common.collectLatestFlow
-import al.viki.model.PropertyTypeUi
+import al.viki.model.FilterUi
 import al.viki.model.PropertyUi
 import al.viki.model.RequestUi
 import al.viki.model.UserUi
@@ -26,8 +26,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.AdapterView
-import android.widget.Toast
 import androidx.annotation.MenuRes
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.PopupMenu
@@ -43,7 +41,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : Fragment() {
     private var properties = true
     private var userUi: UserUi? = null
-    private var propertyTypeUi: PropertyTypeUi? = null
+    private var filterUi = FilterUi()
     private var _binding: FragmentHomeBinding? = null
     private var notifyAuthenticationChange: NotifyAuthenticationChange? = null
     private val homeViewModel: HomeViewModel by viewModels()
@@ -149,12 +147,6 @@ class HomeFragment : Fragment() {
         )
     }
 
-    private val propertyTypeAdapter by lazy {
-        DropDownAdapter<PropertyTypeUi, DropDownItemFilterBinding>(R.layout.drop_down_item_filter) { t, vm ->
-            vm.selection = t
-        }
-    }
-
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding
     override fun onCreateView(
@@ -168,8 +160,10 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding?.operationFilter?.adapter = propertyTypeAdapter
         binding?.property?.adapter = propertiesAdapter
+        binding?.filter?.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_filterFragment)
+        }
         binding?.menu?.setOnClickListener {
             showMenu(it, R.menu.menu_home)
         }
@@ -179,60 +173,34 @@ class HomeFragment : Fragment() {
 
         binding?.refreshProperty?.setOnRefreshListener {
             if (properties) {
-                collectLatestFlow(homeViewModel.propertiesCollectionPagedList()) {
+                collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
                     propertiesAdapter.submitData(it)
                 }
             } else {
-                collectLatestFlow(homeViewModel.requestCollectionPagedList()) {
+                collectLatestFlow(homeViewModel.requestCollectionPagedList(filterUi.getQuery())) {
                     requestsAdapter.submitData(it)
                 }
             }
             binding?.refreshProperty?.isRefreshing = false
         }
 
-        binding?.operationFilter?.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    adapterView: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    propertyTypeUi = adapterView?.getItemAtPosition(position) as PropertyTypeUi?
-                    if (properties) {
-                        collectLatestFlow(homeViewModel.propertiesCollectionPagedList(propertyTypeUi?.propertyType)) {
-                            propertiesAdapter.submitData(it)
-                        }
-                    } else {
-                        collectLatestFlow(homeViewModel.requestCollectionPagedList(propertyTypeUi?.propertyType)) {
-                            requestsAdapter.submitData(it)
-                        }
-                    }
-                }
-
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    propertyTypeUi = null
-                }
-
-            }
-
         binding?.search?.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 activity?.hideSoftKeyBoard()
                 if (properties) {
                     collectLatestFlow(
+                    // type = propertyTypeUi?.propertyType,
                         homeViewModel.propertiesCollectionPagedList(
-                            type = propertyTypeUi?.propertyType,
-                            searchQuery = textView.text
+                            filterUi.getQuery(textView.text.toString())
                         )
                     ) {
                         propertiesAdapter.submitData(it)
                     }
                 } else {
                     collectLatestFlow(
+                    // type = propertyTypeUi?.propertyType,
                         homeViewModel.requestCollectionPagedList(
-                            type = propertyTypeUi?.propertyType,
-                            searchQuery = textView.text
+                            filterUi.getQuery(textView.text.toString())
                         )
                     ) {
                         requestsAdapter.submitData(it)
@@ -247,18 +215,18 @@ class HomeFragment : Fragment() {
                 activity?.hideSoftKeyBoard()
                 if (properties) {
                     collectLatestFlow(
+                    // type = propertyTypeUi?.propertyType,
                         homeViewModel.propertiesCollectionPagedList(
-                            type = propertyTypeUi?.propertyType,
-                            searchQuery = binding?.search?.text
+                            filterUi.getQuery(binding?.search?.text.toString())
                         )
                     ) {
                         propertiesAdapter.submitData(it)
                     }
                 } else {
                     collectLatestFlow(
+                    // type = propertyTypeUi?.propertyType,
                         homeViewModel.requestCollectionPagedList(
-                            type = propertyTypeUi?.propertyType,
-                            searchQuery = binding?.search?.text
+                            filterUi.getQuery(binding?.search?.text.toString())
                         )
                     ) {
                         requestsAdapter.submitData(it)
@@ -272,11 +240,13 @@ class HomeFragment : Fragment() {
         binding?.searchInputLayout?.setEndIconOnClickListener {
             activity?.hideSoftKeyBoard()
             if (properties) {
-                collectLatestFlow(homeViewModel.propertiesCollectionPagedList(type = propertyTypeUi?.propertyType)) {
+                // type = propertyTypeUi?.propertyType
+                collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
                     propertiesAdapter.submitData(it)
                 }
             } else {
-                collectLatestFlow(homeViewModel.requestCollectionPagedList(type = propertyTypeUi?.propertyType)) {
+                // type = propertyTypeUi?.propertyType)
+                collectLatestFlow(homeViewModel.requestCollectionPagedList(filterUi.getQuery())) {
                     requestsAdapter.submitData(it)
                 }
             }
@@ -295,11 +265,11 @@ class HomeFragment : Fragment() {
                 is State.Success -> {
                     response.t?.let {
                         if (properties) {
-                            collectLatestFlow(homeViewModel.propertiesCollectionPagedList()) {
+                            collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
                                 propertiesAdapter.submitData(it)
                             }
                         } else {
-                            collectLatestFlow(homeViewModel.requestCollectionPagedList()) {
+                            collectLatestFlow(homeViewModel.requestCollectionPagedList(filterUi.getQuery())) {
                                 requestsAdapter.submitData(it)
                             }
                         }
@@ -307,36 +277,14 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        collectLatestFlow(homeViewModel.propertiesCollectionPagedList()) {
+        collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
             propertiesAdapter.submitData(it)
         }
 
-        collectLatestFlow(homeViewModel.requestCollectionPagedList()) {
+        collectLatestFlow(homeViewModel.requestCollectionPagedList(filterUi.getQuery())) {
             requestsAdapter.submitData(it)
         }
 
-        collectLatestFlow(homeViewModel.propertyTypes) {
-            when (it) {
-                is State.Success -> {
-                    it.t?.let { items ->
-                        val filters = items.toMutableList()
-                        filters.add(
-                            0,
-                            PropertyTypeUi(
-                                -1,
-                                "ALL",
-                                false
-                            )
-                        )
-                        propertyTypeAdapter.setItem(filters)
-                    }
-                }
-                is State.Error -> {
-
-                }
-                is State.Loading -> {}
-            }
-        }
         collectLatestFlow(homeViewModel.user) {
             when (it) {
                 is State.Error -> {}

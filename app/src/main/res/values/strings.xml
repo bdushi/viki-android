@@ -4,6 +4,10 @@
     <string name="default_channel_description" translatable="false">Viki General Notification</string>
     <string name="search_property">Search Property</string>
     <string name="new_property">New Property</string>
+    <string name="filters">Filters</string>
+    <string name="filter_property_type">Properties Type</string>
+    <string name="filter_city">Cities</string>
+    <string name="filter_operation">Operation</string>
     <string name="new_request">New Request</string>
     <string name="visit_your_profile">Visit your profile</string>
     <string name="share">Share</string>
@@ -48,6 +52,7 @@
 
     <string name="permission_denied">Permission Denied</string>
     <string name="app_version">App Version</string>
+    <string name="all">All</string>
     <!-- Property Item -->
     <string name="item_title">Apartment</string>
     <string name="price_item">%.2f %s</string>

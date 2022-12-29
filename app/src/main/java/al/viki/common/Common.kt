@@ -1,5 +1,6 @@
 package al.viki.common
 
+import al.bruno.adapter.Selection
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
 import al.viki.model.GalleryUi
@@ -42,6 +43,17 @@ val photoDiffUtil: DiffUtil.ItemCallback<GalleryUi> = object : DiffUtil.ItemCall
     override fun areContentsTheSame(oldItem: GalleryUi, newItem: GalleryUi): Boolean {
         return oldItem == newItem
     }
+}
+
+val filterDiffUtil: DiffUtil.ItemCallback<Selection> = object : DiffUtil.ItemCallback<Selection>() {
+    override fun areItemsTheSame(oldItem: Selection, newItem: Selection): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun areContentsTheSame(oldItem: Selection, newItem: Selection): Boolean {
+        TODO("Not yet implemented")
+    }
+
 }
 
 //fun <T : Any> toMap(obj: T): Map<String, Any?> {
