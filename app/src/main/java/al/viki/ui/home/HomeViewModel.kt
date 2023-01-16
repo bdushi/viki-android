@@ -10,9 +10,7 @@ import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
 import al.viki.BuildConfig
 import al.viki.common.NETWORK_PAGE_SIZE
-import al.viki.model.ImagesUi
-import al.viki.model.PropertyTypeUi
-import al.viki.model.UserUi
+import al.viki.model.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -42,6 +40,12 @@ class HomeViewModel @Inject constructor(
 
     // The UI collects from this StateFlow to get its state updates
     val delete: StateFlow<State<Boolean>> = _delete
+
+    // Backing property to avoid state updates from other classes
+    private val _items = MutableStateFlow<State<List<ClusterItem>>>(State.Success(null))
+
+    // The UI collects from this StateFlow to get its state updates
+    val items: StateFlow<State<List<ClusterItem>>> = _items
 
     // Backing property to avoid state updates from other classes
     private val _images = MutableStateFlow<State<List<ImagesUi>>>(State.Success(null))
@@ -109,6 +113,42 @@ class HomeViewModel @Inject constructor(
             )
         }
     ).flow
+
+    fun items(query: Map<String, String>, properties: Boolean) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (properties) {
+                when (val response = propertyRepository.properties(
+                    page = 0,
+                    size = 100,
+                    query = query
+                )) {
+                    is Result.Error -> _delete.value = State.Error(response.error)
+                    is Result.Success -> {
+                        _items.value = State.Success(
+                            response.data.pageResponse?.map {
+                                PropertyUi.toPropertyUi(it)
+                            }
+                        )
+                    }
+                }
+            } else {
+                when (val response = propertyRepository.requests(
+                    page = 0,
+                    size = 100,
+                    query = query
+                )) {
+                    is Result.Error -> _delete.value = State.Error(response.error)
+                    is Result.Success -> {
+                        _items.value = State.Success(
+                            response.data.pageResponse?.map {
+                                RequestUi.toRequestUi(it)
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
 
     fun deleteProperty(id: Long) {
         _delete.value = State.Loading

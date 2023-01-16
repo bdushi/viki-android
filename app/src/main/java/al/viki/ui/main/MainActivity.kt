@@ -9,9 +9,7 @@ import al.viki.authentication.auth.NotifyAuthenticationChange
 import al.viki.common.ACCESS_TOKEN
 import al.viki.common.Entry
 import al.viki.common.TOPIC
-import al.viki.model.PropertyUi
 import al.viki.model.PropertyUi.Companion.bundleToPropertyUi
-import al.viki.model.PropertyUi.Companion.mapToPropertyUi
 import al.viki.model.RequestUi.Companion.bundleToRequestUi
 import android.Manifest.permission.POST_NOTIFICATIONS
 import android.content.Intent

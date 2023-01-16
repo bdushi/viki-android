@@ -20,8 +20,7 @@ class FilterViewModel @Inject constructor(
     private val currencyRepository: CurrencyRepository,
     private val operationRepository: OperationRepository,
     private val propertyTypeRepository: PropertyTypeRepository,
-    private val unitRepository: UnitRepository,
-    private val propertyRepository: PropertyRepository
+    private val unitRepository: UnitRepository
     ): ViewModel() {
     // Backing property to avoid state updates from other classes
     private val _cities = MutableStateFlow<State<List<CityUi>?>>(State.Success(null))

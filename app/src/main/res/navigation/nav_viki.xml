@@ -48,8 +48,12 @@
                 android:defaultValue="@null"/>
         </action>
         <action
-            android:id="@+id/action_homeFragment_to_filterFragment"
-            app:destination="@id/filterFragment" />
+            android:id="@+id/action_homeFragment_to_mapViewFragment"
+            app:destination="@id/mapViewFragment">
+            <argument
+                android:name="filter"
+                app:argType="al.viki.model.FilterUi" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/newPropertyFragment"
@@ -103,7 +107,11 @@
         android:name="al.viki.ui.account.RequestNewAccountFragment"
         android:label="RequestNewAccountFragment" />
     <fragment
-        android:id="@+id/filterFragment"
-        android:name="al.viki.ui.filter.FilterFragment"
-        android:label="FilterFragment" />
+        android:id="@+id/mapViewFragment"
+        android:name="al.viki.ui.map.MapViewFragment"
+        android:label="MapViewFragment">
+        <argument
+            android:name="filter"
+            app:argType="al.viki.model.FilterUi" />
+    </fragment>
 </navigation>

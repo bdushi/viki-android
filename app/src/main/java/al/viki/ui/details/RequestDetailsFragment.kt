@@ -53,7 +53,7 @@ class RequestDetailsFragment : Fragment() {
                 R.id.share -> {
                     val sendIntent: Intent = Intent().apply {
                         action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}request/${request.id}")
+                        putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}request/${request.getId()}")
                         type = "text/plain"
                     }
                     startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
@@ -65,7 +65,7 @@ class RequestDetailsFragment : Fragment() {
                         .setTitle(R.string.delete_request_title)
                         .setMessage(getString(R.string.delete_messages, request.title))
                         .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
-                            homeViewModel.deleteRequest(request.id)
+                            homeViewModel.deleteRequest(request.getId())
                             dialogInterface.dismiss()
                         }.setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
                             dialogInterface.dismiss()
@@ -100,7 +100,7 @@ class RequestDetailsFragment : Fragment() {
             it.uiSettings.isZoomControlsEnabled = true
             it.uiSettings.setAllGesturesEnabled(true)
             it.uiSettings.isCompassEnabled = true
-            val latLng = LatLng(request.latitude, request.longitude)
+            val latLng = LatLng(request.getLatitude(), request.getLongitude())
             val cameraPosition =
                 CameraPosition.Builder().target(latLng).zoom(15f).bearing(20f).build()
             it.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))

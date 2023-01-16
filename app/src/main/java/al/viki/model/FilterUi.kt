@@ -1,20 +1,31 @@
 package al.viki.model
 
 import al.viki.R
+import android.os.Parcelable
 import android.view.View
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.CompoundButton
+import android.widget.CompoundButton.OnCheckedChangeListener
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.parcelize.IgnoredOnParcel
+import kotlinx.parcelize.Parcelize
 
-class FilterUi : OnItemSelectedListener {
-    var type: String? = null
-    var city: String? = null
-    var operation: String? = null
-    var unit: String? = null
-    var currency: String? = null
-    var price: String? = null
+@Parcelize
+class FilterUi(
+    var properties: Boolean = true,
+    var type: String? = null,
+    var city: String? = null,
+    var operation: String? = null,
+    var unit: String? = null,
+    var currency: String? = null,
+    var price: String? = null,
     var area: String? = null
-
+) : OnItemSelectedListener, OnCheckedChangeListener, Parcelable {
+    @IgnoredOnParcel
     private var query: HashMap<String, String> = HashMap()
+    @IgnoredOnParcel
+    val isProperties = MutableStateFlow(true)
     override fun onItemSelected(adapter: AdapterView<*>, view: View, position: Int, id: Long) {
         when(adapter.id) {
             R.id.filter_property_type -> {
@@ -37,6 +48,12 @@ class FilterUi : OnItemSelectedListener {
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
 
+    }
+    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+        properties = isChecked
+        isProperties.value = isChecked
+        if(!isChecked)
+            operation = null
     }
 
     fun getQuery() : Map<String, String> {

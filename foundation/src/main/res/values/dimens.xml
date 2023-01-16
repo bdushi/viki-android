@@ -7,4 +7,7 @@
     <dimen name="large_dimen">32dp</dimen>
     <dimen name="xlarge_dimen">48dp</dimen>
     <dimen name="extra_large_dimen">64dp</dimen>
+    <dimen name="img_max_width">128dp</dimen>
+    <dimen name="custom_profile_image">50dp</dimen>
+    <dimen name="custom_profile_padding">1dp</dimen>
 </resources>

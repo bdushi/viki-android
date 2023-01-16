@@ -1,27 +1,18 @@
 package al.viki
 
 import al.viki.common.Entry
-import al.viki.model.PropertyUi
 import al.viki.model.PropertyUi.Companion.mapToPropertyUi
-import al.viki.model.RequestUi
 import al.viki.model.RequestUi.Companion.mapToRequestUi
 import al.viki.ui.main.MainActivity
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
 import androidx.navigation.NavDeepLinkBuilder
-import androidx.paging.LOGGER
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import java.util.*
 
 /**
  * https://firebase.google.com/docs/cloud-messaging/android/client

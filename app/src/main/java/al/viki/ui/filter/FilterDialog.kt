@@ -3,26 +3,29 @@ package al.viki.ui.filter
 import al.bruno.adapter.DropDownAdapter
 import al.bruno.core.State
 import al.viki.R
+import al.viki.databinding.DialogFilterBinding
 import al.viki.databinding.DropDownItemBinding
-import al.viki.databinding.FragmentFilterBinding
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.*
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.fragment.app.Fragment
+import android.view.ViewGroup
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class FilterFragment : Fragment(R.layout.fragment_filter) {
+class FilterDialog : DialogFragment() {
 
     private val filterViewModel: FilterViewModel by viewModels()
 
-    private var _binding: FragmentFilterBinding? = null
+    private var onFilterListener: ((FilterUi?) -> Unit)? = null
+
+    private var _binding: DialogFilterBinding? = null
+    private var filterUi = FilterUi()
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding
-
     private val currencyAdapter =
         DropDownAdapter<CurrencyUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
             vm.selection = t
@@ -43,36 +46,66 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
         DropDownAdapter<OperationUi, DropDownItemBinding>(R.layout.drop_down_item) { t, vm ->
             vm.selection = t
         }
+
+    class Builder {
+        fun build(): FilterDialog {
+            return newInstance()
+        }
+    }
+
+    companion object {
+        private fun newInstance(): FilterDialog {
+            return FilterDialog()
+        }
+    }
+
+    fun setOnFilterListener(onFilterListener: ((FilterUi?) -> Unit)): FilterDialog {
+        this.onFilterListener = onFilterListener
+        return this
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(STYLE_NO_TITLE, R.style.Theme_Viki_Dialog)
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        _binding = DialogFilterBinding.inflate(inflater, container, false)
+        return binding?.root
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentFilterBinding.bind(view)
-        binding?.filter = FilterUi()
+        binding?.filter = filterUi
         binding?.currencyAdapter = currencyAdapter
         binding?.unitAdapter = unitAdapter
         binding?.cityAdapter = cityAdapter
         binding?.operationAdapter = operationAdapter
         binding?.propertyTypeAdapter = propertyTypeAdapter
         binding?.topAppBar?.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            dismiss()
         }
 
         binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.apply_filters -> {
-                    findNavController().popBackStack()
+                R.id.apply -> {
+                    val f = binding?.filter
+                    val ff = filterUi
+                    onFilterListener?.invoke(f)
+                    dismiss()
                     true
                 }
                 else -> false
             }
         }
-
+        binding?.lifecycleOwner = this
         collectLatestFlow(filterViewModel.propertyTypes) {
             when (it) {
                 is State.Error -> {}
                 is State.Success -> {
                     it.t?.let { propertyType ->
                         val propertyList = propertyType.toMutableList()
-                        propertyList.add(0, PropertyTypeUi(-1, "All", false))
+                        propertyList.add(0, PropertyTypeUi(-1, "ALL", false))
                         propertyTypeAdapter.setItem(propertyList)
                     }
                 }
@@ -85,7 +118,7 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
                 is State.Success -> {
                     it.t?.let { operations ->
                         val operationList = operations.toMutableList()
-                        operationList.add(0, OperationUi(-1, "All", false))
+                        operationList.add(0, OperationUi(-1, "ALL", false))
                         operationAdapter.setItem(operationList)
                     }
                 }
@@ -98,7 +131,7 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
                 is State.Success -> {
                     it.t?.let { cities ->
                         val cityList = cities.toMutableList()
-                        cityList.add(0, CityUi(-1, "All", "-1", CountryUi(-1, "All", "-1"),false))
+                        cityList.add(0, CityUi(-1, "ALL", "-1", CountryUi(-1, "ALL", "-1"),false))
                         cityAdapter.setItem(cityList)
                     }
                 }
@@ -110,7 +143,9 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
                 is State.Error -> {}
                 is State.Success -> {
                     it.t?.let { currencies ->
-                        currencyAdapter.setItem(currencies)
+                        val currencyList  = currencies.toMutableList()
+                        currencyList.add(0, CurrencyUi(-1, "ALL", "all", "all", ".", false))
+                        currencyAdapter.setItem(currencyList)
                     }
                 }
                 is State.Loading -> {}
@@ -118,13 +153,19 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
         }
         collectLatestFlow(filterViewModel.units) {
             when (it) {
-                is State.Error -> {}
+                is State.Error -> {
+
+                }
                 is State.Success -> {
                     it.t?.let { units ->
-                        unitAdapter.setItem(units)
+                        val unitList = units.toMutableList()
+                        unitList.add(0, UnitUi(-1, "ALL", false))
+                        unitAdapter.setItem(unitList)
                     }
                 }
-                is State.Loading -> {}
+                is State.Loading -> {
+
+                }
             }
         }
     }

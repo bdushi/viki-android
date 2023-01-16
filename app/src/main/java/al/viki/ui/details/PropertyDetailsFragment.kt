@@ -61,7 +61,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
             it.uiSettings.isZoomControlsEnabled = true
             it.uiSettings.setAllGesturesEnabled(true)
             it.uiSettings.isCompassEnabled = true
-            val latLng = LatLng(property.latitude, property.longitude)
+            val latLng = LatLng(property.getLatitude(), property.getLongitude())
             val cameraPosition =
                 CameraPosition.Builder().target(latLng).zoom(15f).bearing(20f).build()
             it.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
@@ -72,7 +72,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                     )
             )
         }
-        homeViewModel.images(property.id)
+        homeViewModel.images(property.getId())
         binding?.onClick = View.OnClickListener {
             when (PackageManager.PERMISSION_GRANTED) {
                 ContextCompat.checkSelfPermission(
@@ -104,7 +104,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                 R.id.share -> {
                     val sendIntent: Intent = Intent().apply {
                         action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}property/${property.id}")
+                        putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}property/${property.getId()}")
                         type = "text/plain"
                     }
                     startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
@@ -116,7 +116,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                         .setTitle(R.string.delete_property_title)
                         .setMessage(getString(R.string.delete_messages, property.title))
                         .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
-                            homeViewModel.deleteProperty(property.id)
+                            homeViewModel.deleteProperty(property.getId())
                             dialogInterface.dismiss()
                         }.setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
                             dialogInterface.dismiss()

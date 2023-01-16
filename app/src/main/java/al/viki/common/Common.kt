@@ -4,14 +4,10 @@ import al.bruno.adapter.Selection
 import al.bruno.core.data.source.model.response.PropertyResponse
 import al.bruno.core.data.source.model.response.RequestResponse
 import al.viki.model.GalleryUi
-import al.viki.model.ImagesUi
-import al.viki.model.PropertyUi
 import android.app.Activity
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.DiffUtil
-import kotlin.reflect.KClass
-import kotlin.reflect.full.memberProperties
 
 
 val propertiesDiffUtil: DiffUtil.ItemCallback<PropertyResponse> =

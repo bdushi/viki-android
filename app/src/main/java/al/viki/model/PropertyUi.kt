@@ -7,9 +7,9 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class PropertyUi(
-    val id: Long,
-    val title: String,
-    val description: String,
+    private val id: Long,
+    private val title: String,
+    private val description: String,
     val operation: String,
     val username: String,
     val email: String,
@@ -29,9 +29,9 @@ data class PropertyUi(
     val price: Double,
     val floorPlan: String?,
     val unit: String,
-    val longitude: Double,
-    val latitude: Double
-) : Parcelable {
+    private val longitude: Double,
+    private val latitude: Double
+) : Parcelable, ClusterItem {
     companion object {
         fun toPropertyUi(t: PropertyResponse) = PropertyUi(
             t.id,
@@ -116,5 +116,25 @@ data class PropertyUi(
                 bundle.getDouble("latitude"),
             )
         }
+    }
+
+    override fun getTitle(): String {
+        return title
+    }
+
+    override fun getId(): Long {
+        return id
+    }
+
+    override fun getLongitude(): Double {
+        return longitude
+    }
+
+    override fun getLatitude(): Double {
+        return latitude
+    }
+
+    override fun getDescription(): String {
+        return description
     }
 }

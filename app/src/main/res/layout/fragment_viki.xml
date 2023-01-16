@@ -49,20 +49,20 @@
         android:layout_marginBottom="@dimen/micro_dimen"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/refresh_property"
+        app:layout_constraintBottom_toTopOf="@id/nav_viki_fragment"
         app:layout_constraintTop_toBottomOf="@id/search_input_layout">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/map_view"
+            android:id="@+id/label"
             style="@style/TextAppearance.AppCompat.Title"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:padding="@dimen/small_dimen"
             android:drawablePadding="@dimen/small_dimen"
-            android:text="@string/map_view"
+            android:text="@string/properties"
             android:layout_weight="1"
             android:gravity="center_vertical"
-            android:drawableStart="@drawable/ic_outline_map"/>
+            android:drawableStart="@drawable/ic_outline_swap_horiz"/>
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/filter"
             style="@style/TextAppearance.AppCompat.Title"
@@ -75,18 +75,11 @@
             android:gravity="center_vertical"
             android:drawableStart="@drawable/ic_outline_filter_list"/>
     </LinearLayout>
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/refresh_property"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_viki_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/property"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_viki" />
 </androidx.constraintlayout.widget.ConstraintLayout>

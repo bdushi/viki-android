@@ -16,6 +16,7 @@ import al.viki.model.FilterUi
 import al.viki.model.PropertyUi
 import al.viki.model.RequestUi
 import al.viki.model.UserUi
+import al.viki.ui.filter.FilterDialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.InsetDrawable
@@ -39,7 +40,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-    private var properties = true
     private var userUi: UserUi? = null
     private var filterUi = FilterUi()
     private var _binding: FragmentHomeBinding? = null
@@ -161,18 +161,46 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.property?.adapter = propertiesAdapter
-        binding?.filter?.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_filterFragment)
-        }
         binding?.menu?.setOnClickListener {
             showMenu(it, R.menu.menu_home)
         }
-        binding?.label?.setOnClickListener {
-            switchView(it)
+        binding?.mapView?.setOnClickListener {
+            findNavController()
+                .navigate(
+                    HomeFragmentDirections.actionHomeFragmentToMapViewFragment(filterUi)
+                )
+        }
+        binding?.filter?.setOnClickListener {
+            FilterDialog
+                .Builder()
+                .build()
+                .setOnFilterListener { filter ->
+                    filter?.let { it ->
+                        filterUi = filter
+                        switchAdapter(filter)
+                        if (it.properties) {
+                            collectLatestFlow(homeViewModel.propertiesCollectionPagedList(it.getQuery())) {
+                                propertiesAdapter.submitData(it)
+                            }
+                        } else {
+                            collectLatestFlow(homeViewModel.requestCollectionPagedList(it.getQuery())) {
+                                requestsAdapter.submitData(it)
+                            }
+                        }
+                    }
+                }
+                .show(
+                    parentFragmentManager,
+                    FilterDialog::class.java.name
+                )
         }
 
         binding?.refreshProperty?.setOnRefreshListener {
-            if (properties) {
+            /**
+             * Reset filter to default value
+             */
+            switchAdapter(FilterUi())
+            if (filterUi.properties) {
                 collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
                     propertiesAdapter.submitData(it)
                 }
@@ -187,9 +215,8 @@ class HomeFragment : Fragment() {
         binding?.search?.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 activity?.hideSoftKeyBoard()
-                if (properties) {
+                if (filterUi.properties) {
                     collectLatestFlow(
-                    // type = propertyTypeUi?.propertyType,
                         homeViewModel.propertiesCollectionPagedList(
                             filterUi.getQuery(textView.text.toString())
                         )
@@ -198,7 +225,6 @@ class HomeFragment : Fragment() {
                     }
                 } else {
                     collectLatestFlow(
-                    // type = propertyTypeUi?.propertyType,
                         homeViewModel.requestCollectionPagedList(
                             filterUi.getQuery(textView.text.toString())
                         )
@@ -213,9 +239,8 @@ class HomeFragment : Fragment() {
         binding?.search?.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 activity?.hideSoftKeyBoard()
-                if (properties) {
+                if (filterUi.properties) {
                     collectLatestFlow(
-                    // type = propertyTypeUi?.propertyType,
                         homeViewModel.propertiesCollectionPagedList(
                             filterUi.getQuery(binding?.search?.text.toString())
                         )
@@ -224,7 +249,6 @@ class HomeFragment : Fragment() {
                     }
                 } else {
                     collectLatestFlow(
-                    // type = propertyTypeUi?.propertyType,
                         homeViewModel.requestCollectionPagedList(
                             filterUi.getQuery(binding?.search?.text.toString())
                         )
@@ -239,19 +263,17 @@ class HomeFragment : Fragment() {
 
         binding?.searchInputLayout?.setEndIconOnClickListener {
             activity?.hideSoftKeyBoard()
-            if (properties) {
-                // type = propertyTypeUi?.propertyType
+            binding?.search?.setText("")
+            binding?.search?.clearFocus()
+            if (filterUi.properties) {
                 collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
                     propertiesAdapter.submitData(it)
                 }
             } else {
-                // type = propertyTypeUi?.propertyType)
                 collectLatestFlow(homeViewModel.requestCollectionPagedList(filterUi.getQuery())) {
                     requestsAdapter.submitData(it)
                 }
             }
-            binding?.search?.setText("")
-            binding?.search?.clearFocus()
         }
 
         collectLatestFlow(homeViewModel.delete) { response ->
@@ -264,7 +286,7 @@ class HomeFragment : Fragment() {
                 }
                 is State.Success -> {
                     response.t?.let {
-                        if (properties) {
+                        if (filterUi.properties) {
                             collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
                                 propertiesAdapter.submitData(it)
                             }
@@ -296,16 +318,13 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun switchView(view: View) {
-        properties = !properties
-        if (properties) {
-            (view as MaterialTextView).setText(R.string.properties)
+    private fun switchAdapter(filterUi: FilterUi) {
+        if (filterUi.properties) {
             binding?.property?.adapter = propertiesAdapter
                 .withLoadStateFooter(
                     footer = propertiesLoadStateAdapter
                 )
         } else {
-            (view as MaterialTextView).setText(R.string.requests)
             binding?.property?.adapter = requestsAdapter
                 .withLoadStateFooter(
                     footer = requestsLoadStateAdapter
