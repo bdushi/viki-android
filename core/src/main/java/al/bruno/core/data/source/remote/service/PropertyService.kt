@@ -27,4 +27,10 @@ interface PropertyService {
 
     @DELETE("api/requests/{id}")
     suspend fun deleteRequest(@Path("id") id: Long) : Response<ResponseBody>
+
+    @GET("api/report/property")
+    suspend fun property(@Query("id") id: Long) : Response<PropertyResponse>
+
+    @GET("api/report/request")
+    suspend fun request(@Query("id") id: Long) : Response<RequestResponse>
 }

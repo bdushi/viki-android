@@ -25,7 +25,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val propertyRepository: PropertyRepository,
-    private val propertyTypeRepository: PropertyTypeRepository,
     private val userRepository: UserRepository,
     private val imageRepository: ImageRepository
 ) : ViewModel() {
@@ -46,12 +45,6 @@ class HomeViewModel @Inject constructor(
 
     // The UI collects from this StateFlow to get its state updates
     val items: StateFlow<State<List<ClusterItem>>> = _items
-
-    // Backing property to avoid state updates from other classes
-    private val _images = MutableStateFlow<State<List<ImagesUi>>>(State.Success(null))
-
-    // The UI collects from this StateFlow to get its state updates
-    val images: StateFlow<State<List<ImagesUi>>> = _images
 
     init {
         user()
@@ -176,20 +169,6 @@ class HomeViewModel @Inject constructor(
             when (val response = propertyRepository.deleteRequest(id)) {
                 is Result.Error -> _delete.value = State.Error(response.error)
                 is Result.Success -> _delete.value = State.Success(response.data)
-            }
-        }
-    }
-
-    fun images(id: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
-            when (val response =
-                imageRepository.images("${BuildConfig.FILE_HOST_NAME}/resources/${id}")) {
-                is Result.Error -> _images.value = State.Error(response.error)
-                is Result.Success -> _images.value = State.Success(
-                    response.data.map { s ->
-                        ImagesUi("${BuildConfig.FILE_HOST_NAME}/resources/$id/$s")
-                    }
-                )
             }
         }
     }

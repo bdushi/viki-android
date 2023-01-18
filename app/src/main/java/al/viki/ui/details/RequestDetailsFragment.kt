@@ -5,6 +5,7 @@ import al.viki.BuildConfig
 import al.viki.R
 import al.viki.databinding.FragmentRequestDetailsBinding
 import al.viki.foundation.common.collectLatestFlow
+import al.viki.model.RequestUi
 import al.viki.ui.home.HomeViewModel
 import android.content.Intent
 import android.os.Bundle
@@ -25,26 +26,23 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class RequestDetailsFragment : Fragment() {
+class RequestDetailsFragment : Fragment(R.layout.fragment_request_details) {
     private val homeViewModel: HomeViewModel by viewModels()
+    private val detailsViewModel: DetailsViewModel by viewModels()
     private val args: RequestDetailsFragmentArgs by navArgs()
     private var mapFragment: SupportMapFragment? = null
 
     private var _binding: FragmentRequestDetailsBinding? = null
     private val binding get() = _binding
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        _binding = FragmentRequestDetailsBinding.inflate(inflater, container, false)
-        return binding?.root
-    }
+    private var request: RequestUi? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val request = args.request
+        _binding = FragmentRequestDetailsBinding.bind(view)
+        detailsViewModel.request(args.id)
+        mapFragment =
+            childFragmentManager.findFragmentById(R.id.details_property_location_in_map) as? SupportMapFragment
         binding?.topAppBar?.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
@@ -53,7 +51,7 @@ class RequestDetailsFragment : Fragment() {
                 R.id.share -> {
                     val sendIntent: Intent = Intent().apply {
                         action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}request/${request.getId()}")
+                        putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}request/${args.id}")
                         type = "text/plain"
                     }
                     startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
@@ -63,9 +61,9 @@ class RequestDetailsFragment : Fragment() {
                     MaterialAlertDialogBuilder(requireContext())
                         .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
                         .setTitle(R.string.delete_request_title)
-                        .setMessage(getString(R.string.delete_messages, request.title))
+                        .setMessage(getString(R.string.delete_messages, request?.title))
                         .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
-                            homeViewModel.deleteRequest(request.getId())
+                            homeViewModel.deleteRequest(args.id)
                             dialogInterface.dismiss()
                         }.setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
                             dialogInterface.dismiss()
@@ -76,6 +74,9 @@ class RequestDetailsFragment : Fragment() {
                 }
                 else -> false
             }
+        }
+        binding?.requestDetailsErrorRefresh?.setOnClickListener {
+            detailsViewModel.request(args.id)
         }
         collectLatestFlow(homeViewModel.delete) {
             when (it) {
@@ -92,24 +93,46 @@ class RequestDetailsFragment : Fragment() {
                 }
             }
         }
-        binding?.request = request
-        mapFragment =
-            childFragmentManager.findFragmentById(R.id.details_property_location_in_map) as? SupportMapFragment
-        mapFragment?.getMapAsync {
-            it.mapType = GoogleMap.MAP_TYPE_SATELLITE
-            it.uiSettings.isZoomControlsEnabled = true
-            it.uiSettings.setAllGesturesEnabled(true)
-            it.uiSettings.isCompassEnabled = true
-            val latLng = LatLng(request.getLatitude(), request.getLongitude())
-            val cameraPosition =
-                CameraPosition.Builder().target(latLng).zoom(15f).bearing(20f).build()
-            it.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-            it.addMarker(
-                MarkerOptions()
-                    .position(
-                        latLng
-                    )
-            )
+        collectLatestFlow(detailsViewModel.request) {
+            when (it) {
+                is State.Error -> {
+                    binding?.requestDetailsError?.visibility = View.VISIBLE
+                    binding?.requestDetails?.visibility = View.GONE
+                    binding?.requestDetailsProgressIndicator?.visibility = View.GONE
+                }
+                is State.Loading -> {
+                    binding?.requestDetailsProgressIndicator?.visibility = View.VISIBLE
+                    binding?.requestDetailsError?.visibility = View.GONE
+                    binding?.requestDetails?.visibility = View.GONE
+                }
+                is State.Success -> {
+                    binding?.requestDetails?.visibility = View.VISIBLE
+                    binding?.requestDetailsError?.visibility = View.GONE
+                    binding?.requestDetailsProgressIndicator?.visibility = View.GONE
+                    request = it.t
+                    _binding?.request = it.t
+                    it.t?.let { request ->
+                        _binding?.request = request
+                        mapFragment?.getMapAsync { map ->
+                            map.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                            map.uiSettings.isZoomControlsEnabled = true
+                            map.uiSettings.setAllGesturesEnabled(true)
+                            map.uiSettings.isCompassEnabled = true
+                            val latLng = LatLng(request.getLatitude(), request.getLongitude())
+                            val cameraPosition =
+                                CameraPosition.Builder().target(latLng).zoom(15f).bearing(20f)
+                                    .build()
+                            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                            map.addMarker(
+                                MarkerOptions()
+                                    .position(
+                                        latLng
+                                    )
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 

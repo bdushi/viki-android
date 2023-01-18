@@ -4,12 +4,12 @@ import al.bruno.core.BuildConfig
 import al.viki.foundation.R
 import al.viki.model.ClusterItem
 import android.content.Context
-import android.graphics.Bitmap
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptor
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -21,11 +21,15 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.ui.IconGenerator
 
 
-class ItemRenderer(private val context: Context, map: GoogleMap, clusterManager: ClusterManager<ClusterItem>) : DefaultClusterRenderer<ClusterItem>(context, map, clusterManager) {
+class ItemRenderer(
+    private val context: Context,
+    map: GoogleMap,
+    clusterManager: ClusterManager<ClusterItem>
+) : DefaultClusterRenderer<ClusterItem>(context, map, clusterManager) {
     private val mIconGenerator: IconGenerator = IconGenerator(context)
-    private var mImageView: ImageView = ImageView(context)
+    private val mImageView: ImageView = ImageView(context)
+    private val mDimension = context.resources.getDimension(R.dimen.custom_profile_image).toInt()
     init {
-        val mDimension = context.resources.getDimension(R.dimen.custom_profile_image).toInt()
         val padding = context.resources.getDimension(R.dimen.custom_profile_padding).toInt()
         mImageView.layoutParams = ViewGroup.LayoutParams(mDimension, mDimension)
         mImageView.setPadding(padding, padding, padding, padding)
@@ -67,8 +71,7 @@ class ItemRenderer(private val context: Context, map: GoogleMap, clusterManager:
                 drawable.setTint(ContextCompat.getColor(context, R.color.vikiColorBackground))
             })
             .into(mImageView)
-        val icon: Bitmap = mIconGenerator.makeIcon()
-        return BitmapDescriptorFactory.fromBitmap(icon)
+        return BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon())
     }
 
     override fun shouldRenderAsCluster(cluster: Cluster<ClusterItem>): Boolean {

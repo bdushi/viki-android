@@ -15,4 +15,6 @@ interface PropertyDataSource {
     suspend fun request(requestRequest: RequestRequest) : Response<Int>
     suspend fun deleteProperty(id: Long) : Response<ResponseBody>
     suspend fun deleteRequest(id: Long) : Response<ResponseBody>
+    suspend fun property(id: Long) : Response<PropertyResponse>
+    suspend fun request(id: Long) : Response<RequestResponse>
 }

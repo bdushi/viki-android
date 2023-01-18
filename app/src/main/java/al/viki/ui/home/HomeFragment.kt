@@ -68,9 +68,8 @@ class HomeFragment : Fragment() {
                         when (view.id) {
                             R.id.properties -> findNavController()
                                 .navigate(
-                                    HomeFragmentDirections.actionHomeFragmentToPropertyDetailsFragment(
-                                        PropertyUi.toPropertyUi(t)
-                                    )
+                                    HomeFragmentDirections
+                                        .actionHomeFragmentToPropertyDetailsFragment(t.id)
                                 )
                             R.id.properties_share_item -> {
                                 val sendIntent: Intent = Intent().apply {
@@ -112,9 +111,8 @@ class HomeFragment : Fragment() {
                         when (view.id) {
                             R.id.requests -> findNavController()
                                 .navigate(
-                                    HomeFragmentDirections.actionHomeFragmentToRequestDetailsFragment(
-                                        RequestUi.toRequestUi(t)
-                                    )
+                                    HomeFragmentDirections
+                                        .actionHomeFragmentToRequestDetailsFragment(t.id)
                                 )
                             R.id.request_share_item -> {
                                 val sendIntent: Intent = Intent().apply {

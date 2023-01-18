@@ -16,8 +16,8 @@
             android:id="@+id/action_homeFragment_to_propertyDetailsFragment"
             app:destination="@id/propertyDetailsFragment">
             <argument
-                android:name="property"
-                app:argType="al.viki.model.PropertyUi" />
+                android:name="id"
+                app:argType="long" />
         </action>
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
@@ -35,8 +35,8 @@
             android:id="@+id/action_homeFragment_to_requestDetailsFragment"
             app:destination="@id/requestDetailsFragment">
             <argument
-                android:name="request"
-                app:argType="al.viki.model.RequestUi" />
+                android:name="id"
+                app:argType="long" />
         </action>
         <action
             android:id="@+id/action_homeFragment_to_settingsFragment"
@@ -78,16 +78,16 @@
         android:name="al.viki.ui.details.PropertyDetailsFragment"
         android:label="@string/property_details" >
         <argument
-            android:name="property"
-            app:argType="al.viki.model.PropertyUi" />
+            android:name="id"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/requestDetailsFragment"
         android:name="al.viki.ui.details.RequestDetailsFragment"
         android:label="@string/request_details">
         <argument
-            android:name="request"
-            app:argType="al.viki.model.RequestUi" />
+            android:name="id"
+            app:argType="long" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
@@ -113,5 +113,19 @@
         <argument
             android:name="filter"
             app:argType="al.viki.model.FilterUi" />
+        <action
+            android:id="@+id/action_mapViewFragment_to_propertyDetailsFragment"
+            app:destination="@id/propertyDetailsFragment">
+            <argument
+                android:name="id"
+                app:argType="long" />
+        </action>
+        <action
+            android:id="@+id/action_mapViewFragment_to_requestDetailsFragment"
+            app:destination="@id/requestDetailsFragment">
+            <argument
+                android:name="id"
+                app:argType="long" />
+        </action>
     </fragment>
 </navigation>

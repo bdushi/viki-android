@@ -103,4 +103,31 @@ class PropertyRepository @Inject constructor(
             Result.Error(ex.message)
         }
     }
+
+    suspend fun property(id: Long) : Result<PropertyResponse> {
+        return try {
+            val response = propertyRemoteDataSource.property(id)
+            val body = response.body()
+            if (response.isSuccessful && body != null) {
+                Result.Success(body)
+            } else {
+                Result.Error(response.message())
+            }
+        } catch (ex: Exception) {
+            Result.Error(ex.message)
+        }
+    }
+    suspend fun request(id: Long) : Result<RequestResponse> {
+        return try {
+            val response = propertyRemoteDataSource.request(id)
+            val body = response.body()
+            if (response.isSuccessful && body != null) {
+                Result.Success(body)
+            } else {
+                Result.Error(response.message())
+            }
+        } catch (ex: Exception) {
+            Result.Error(ex.message)
+        }
+    }
 }

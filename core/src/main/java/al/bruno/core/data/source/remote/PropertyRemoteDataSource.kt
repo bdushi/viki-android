@@ -32,8 +32,16 @@ class PropertyRemoteDataSource @Inject constructor(private val propertyService: 
         return propertyService.property(propertyRequest)
     }
 
+    override suspend fun property(id: Long): Response<PropertyResponse> {
+        return propertyService.property(id)
+    }
+
     override suspend fun request(requestRequest: RequestRequest): Response<Int> {
         return propertyService.request(requestRequest)
+    }
+
+    override suspend fun request(id: Long): Response<RequestResponse> {
+        return propertyService.request(id)
     }
 
     override suspend fun deleteProperty(id: Long): Response<ResponseBody> {

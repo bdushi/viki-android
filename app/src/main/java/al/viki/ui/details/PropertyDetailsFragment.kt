@@ -5,6 +5,7 @@ import al.viki.BuildConfig
 import al.viki.R
 import al.viki.databinding.FragmentPropertyDetailsBinding
 import al.viki.foundation.common.collectLatestFlow
+import al.viki.model.PropertyUi
 import al.viki.ui.home.HomeViewModel
 import android.Manifest
 import android.content.Intent
@@ -35,10 +36,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>() {
+    private val detailsViewModel: DetailsViewModel by viewModels()
     private val homeViewModel: HomeViewModel by viewModels()
     private val args: PropertyDetailsFragmentArgs by navArgs()
     private var mapFragment: SupportMapFragment? = null
     private val isPhotoNotEmpty = ObservableBoolean(false)
+    private var property: PropertyUi? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -50,29 +53,16 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val property = args.property
+        detailsViewModel.property(args.id)
+        detailsViewModel.images(args.id)
         binding?.topAppBar?.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
         mapFragment =
             childFragmentManager.findFragmentById(R.id.details_property_location_in_map) as? SupportMapFragment
-        mapFragment?.getMapAsync {
-            it.mapType = GoogleMap.MAP_TYPE_SATELLITE
-            it.uiSettings.isZoomControlsEnabled = true
-            it.uiSettings.setAllGesturesEnabled(true)
-            it.uiSettings.isCompassEnabled = true
-            val latLng = LatLng(property.getLatitude(), property.getLongitude())
-            val cameraPosition =
-                CameraPosition.Builder().target(latLng).zoom(15f).bearing(20f).build()
-            it.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-            it.addMarker(
-                MarkerOptions()
-                    .position(
-                        latLng
-                    )
-            )
-        }
-        homeViewModel.images(property.getId())
+
+        binding?.isNotEmpty = isPhotoNotEmpty
+        binding?.adapter = photoAdapter
         binding?.onClick = View.OnClickListener {
             when (PackageManager.PERMISSION_GRANTED) {
                 ContextCompat.checkSelfPermission(
@@ -96,15 +86,12 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                 }
             }
         }
-        binding?.isNotEmpty = isPhotoNotEmpty
-        binding?.adapter = photoAdapter
-        binding?.property = property
         binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.share -> {
                     val sendIntent: Intent = Intent().apply {
                         action = Intent.ACTION_SEND
-                        putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}property/${property.getId()}")
+                        putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}property/${args.id}")
                         type = "text/plain"
                     }
                     startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
@@ -114,9 +101,9 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                     MaterialAlertDialogBuilder(requireContext())
                         .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
                         .setTitle(R.string.delete_property_title)
-                        .setMessage(getString(R.string.delete_messages, property.title))
+                        .setMessage(getString(R.string.delete_messages, property?.title))
                         .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
-                            homeViewModel.deleteProperty(property.getId())
+                            homeViewModel.deleteProperty(args.id)
                             dialogInterface.dismiss()
                         }.setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
                             dialogInterface.dismiss()
@@ -126,6 +113,49 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                     true
                 }
                 else -> false
+            }
+        }
+        binding?.propertyDetailsErrorRefresh?.setOnClickListener {
+            detailsViewModel.property(args.id)
+        }
+        collectLatestFlow(detailsViewModel.property) {
+            when (it) {
+                is State.Error -> {
+                    binding?.propertyDetailsError?.visibility = View.VISIBLE
+                    binding?.propertyDetails?.visibility = View.GONE
+                    binding?.propertyDetailsProgressIndicator?.visibility = View.GONE
+                }
+                is State.Loading -> {
+                    binding?.propertyDetailsProgressIndicator?.visibility = View.VISIBLE
+                    binding?.propertyDetailsError?.visibility = View.GONE
+                    binding?.propertyDetails?.visibility = View.GONE
+                }
+                is State.Success -> {
+                    binding?.propertyDetails?.visibility = View.VISIBLE
+                    binding?.propertyDetailsError?.visibility = View.GONE
+                    binding?.propertyDetailsProgressIndicator?.visibility = View.GONE
+                    property = it.t
+                    it.t?.let { property ->
+                        binding?.property = property
+                        mapFragment?.getMapAsync { map ->
+                            map.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                            map.uiSettings.isZoomControlsEnabled = true
+                            map.uiSettings.setAllGesturesEnabled(true)
+                            map.uiSettings.isCompassEnabled = true
+                            val latLng = LatLng(property.getLatitude(), property.getLongitude())
+                            val cameraPosition =
+                                CameraPosition.Builder().target(latLng).zoom(15f).bearing(20f)
+                                    .build()
+                            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+                            map.addMarker(
+                                MarkerOptions()
+                                    .position(
+                                        latLng
+                                    )
+                            )
+                        }
+                    }
+                }
             }
         }
         collectLatestFlow(homeViewModel.delete) {
@@ -143,7 +173,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                 }
             }
         }
-        collectLatestFlow(homeViewModel.images) {
+        collectLatestFlow(detailsViewModel.images) {
             when (it) {
                 is State.Error -> {
 
