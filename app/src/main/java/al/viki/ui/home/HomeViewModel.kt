@@ -109,6 +109,7 @@ class HomeViewModel @Inject constructor(
 
     fun items(query: Map<String, String>, properties: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
+            _delete.value = State.Loading
             if (properties) {
                 when (val response = propertyRepository.properties(
                     page = 0,

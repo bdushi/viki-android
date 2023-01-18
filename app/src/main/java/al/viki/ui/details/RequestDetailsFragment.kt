@@ -81,10 +81,14 @@ class RequestDetailsFragment : Fragment(R.layout.fragment_request_details) {
         collectLatestFlow(homeViewModel.delete) {
             when (it) {
                 is State.Error -> {
-
+                    binding?.requestDetailsError?.visibility = View.VISIBLE
+                    binding?.requestDetails?.visibility = View.GONE
+                    binding?.requestDetailsProgressIndicator?.visibility = View.GONE
                 }
                 is State.Loading -> {
-
+                    binding?.requestDetailsProgressIndicator?.visibility = View.VISIBLE
+                    binding?.requestDetailsError?.visibility = View.GONE
+                    binding?.requestDetails?.visibility = View.GONE
                 }
                 is State.Success -> {
                     if (it.t == true) {

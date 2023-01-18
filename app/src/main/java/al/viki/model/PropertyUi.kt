@@ -30,7 +30,8 @@ data class PropertyUi(
     val floorPlan: String?,
     val unit: String,
     private val longitude: Double,
-    private val latitude: Double
+    private val latitude: Double,
+    val images: List<ImagesUi> = listOf()
 ) : Parcelable, ClusterItem {
     companion object {
         fun toPropertyUi(t: PropertyResponse) = PropertyUi(
@@ -58,6 +59,33 @@ data class PropertyUi(
             t.unit,
             t.longitude,
             t.latitude
+        )
+        fun toPropertyUi(t: PropertyResponse, images: List<ImagesUi>) = PropertyUi(
+            t.id,
+            t.title,
+            t.description,
+            t.operation,
+            t.username,
+            t.email,
+            t.firstName,
+            t.lastName,
+            t.city,
+            t.zipCode,
+            t.country,
+            t.countryCode,
+            t.address,
+            t.currency,
+            t.symbol,
+            t.code,
+            t.decimalMark,
+            t.type,
+            t.area,
+            t.price,
+            t.floorPlan,
+            t.unit,
+            t.longitude,
+            t.latitude,
+            images
         )
         fun mapToPropertyUi(map: Map<String, String>): PropertyUi {
             return PropertyUi(

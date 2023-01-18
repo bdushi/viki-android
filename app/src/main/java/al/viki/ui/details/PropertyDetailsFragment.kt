@@ -54,7 +54,6 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         detailsViewModel.property(args.id)
-        detailsViewModel.images(args.id)
         binding?.topAppBar?.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
@@ -154,6 +153,20 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                                     )
                             )
                         }
+                        if (property.images.isNotEmpty()) {
+                            isPhotoNotEmpty.set(false)
+                            photoAdapter.submitList(property.images)
+                            binding?.let { detailsProperty ->
+                                TabLayoutMediator(
+                                    detailsProperty.detailsPropertyItemDotIndicator,
+                                    detailsProperty.detailsPropertyItem
+                                ) { _, _ ->
+                                    //Some implementation
+                                }.attach()
+                            }
+                        } else {
+                            isPhotoNotEmpty.set(true)
+                        }
                     }
                 }
             }
@@ -161,40 +174,18 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
         collectLatestFlow(homeViewModel.delete) {
             when (it) {
                 is State.Error -> {
-
+                    binding?.propertyDetailsError?.visibility = View.VISIBLE
+                    binding?.propertyDetails?.visibility = View.GONE
+                    binding?.propertyDetailsProgressIndicator?.visibility = View.GONE
                 }
                 is State.Loading -> {
-
+                    binding?.propertyDetailsProgressIndicator?.visibility = View.VISIBLE
+                    binding?.propertyDetailsError?.visibility = View.GONE
+                    binding?.propertyDetails?.visibility = View.GONE
                 }
                 is State.Success -> {
                     if (it.t == true) {
                         findNavController().popBackStack()
-                    }
-                }
-            }
-        }
-        collectLatestFlow(detailsViewModel.images) {
-            when (it) {
-                is State.Error -> {
-
-                }
-                is State.Loading -> {
-
-                }
-                is State.Success -> {
-                    if (it.t?.isNotEmpty() == true) {
-                        isPhotoNotEmpty.set(false)
-                        photoAdapter.submitList(it.t)
-                        binding?.let { detailsProperty ->
-                            TabLayoutMediator(
-                                detailsProperty.detailsPropertyItemDotIndicator,
-                                detailsProperty.detailsPropertyItem
-                            ) { _, _ ->
-                                //Some implementation
-                            }.attach()
-                        }
-                    } else {
-                        isPhotoNotEmpty.set(true)
                     }
                 }
             }
