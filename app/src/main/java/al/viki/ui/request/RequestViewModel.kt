@@ -21,7 +21,7 @@ class RequestViewModel @Inject constructor(
     private val currencyRepository: CurrencyRepository,
     private val propertyTypeRepository: PropertyTypeRepository,
     private val unitRepository: UnitRepository,
-    private val propertyRepository: PropertyRepository
+    private val requestRepository: RequestRepository
 ) : ViewModel() {
     // Backing property to avoid state updates from other classes
     private val _cities = MutableStateFlow<State<List<CityUi>?>>(State.Success(null))
@@ -137,7 +137,7 @@ class RequestViewModel @Inject constructor(
     fun save(newRequestUi: NewRequestUi) {
         viewModelScope.launch(Dispatchers.IO) {
             _request.value = State.Loading
-            when (val response = propertyRepository.request(
+            when (val response = requestRepository.request(
                 RequestRequest(
                     newRequestUi.title,
                     newRequestUi.description,

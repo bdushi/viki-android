@@ -4,9 +4,12 @@ import al.viki.common.Entry
 import al.viki.model.PropertyUi.Companion.mapToPropertyUi
 import al.viki.model.RequestUi.Companion.mapToRequestUi
 import al.viki.ui.main.MainActivity
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.content.pm.PackageManager
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.os.bundleOf
@@ -44,7 +47,7 @@ class VikiMessagesService : FirebaseMessagingService() {
             .setContentTitle(message.notification?.title)
             .setContentText(message.notification?.body)
             .setContentIntent(
-                if(message.data.getValue("entry") == Entry.PROPERTIES.name) {
+                if(message.data.getValue("entry") == Entry.PROPERTY.name) {
                     NavDeepLinkBuilder(this)
                         .setGraph(R.navigation.nav_viki)
                         .addDestination(
@@ -74,7 +77,13 @@ class VikiMessagesService : FirebaseMessagingService() {
             // important when you want to update a specific notification before it´s clicked by the user
             // more or less random number, not important to be absolutely unique
             createNotificationChannel(channel)
-            notify(((System.currentTimeMillis() % Integer.MAX_VALUE)).toInt(), builder.build())
+            if (ActivityCompat.checkSelfPermission(
+                    this@VikiMessagesService,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                notify(((System.currentTimeMillis() % Integer.MAX_VALUE)).toInt(), builder.build())
+            }
         }
     }
 }

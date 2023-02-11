@@ -6,21 +6,22 @@
     xmlns:tools="http://schemas.android.com/tools">
     <data>
         <variable
-            name="property"
-            type="al.bruno.core.data.source.model.response.PropertyResponse" />
+            name="properties"
+            type="al.bruno.core.data.source.model.response.PropertiesResponse" />
         <variable
             name="onClick"
             type="al.bruno.adapter.OnClickListener" />
 
+        <import type="al.viki.common.Entry"/>
         <import type="android.view.View"/>
     </data>
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/properties"
+        android:id="@+id/properties_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/micro_dimen"
         app:cardCornerRadius="@dimen/micro_dimen"
-        android:onClick="@{(v) -> onClick.onClick(v, property)}">
+        android:onClick="@{(v) -> onClick.onClick(v, properties)}">
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:elevation="1dp"
                 android:padding="@dimen/small_dimen"
-                android:onClick="@{(v) -> onClick.onClick(v, property)}"
+                android:onClick="@{(v) -> onClick.onClick(v, properties)}"
                 app:srcCompat="@drawable/ic_outline_share"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/properties_delete_item"/>
@@ -42,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:elevation="1dp"
                 android:padding="@dimen/small_dimen"
-                android:onClick="@{(v) -> onClick.onClick(v, property)}"
+                android:onClick="@{(v) -> onClick.onClick(v, properties)}"
                 app:srcCompat="@drawable/ic_outline_delete"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
@@ -51,7 +52,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/micro_dimen"
-                bind:cloud="@{property.url}"
+                android:visibility="@{properties.request ? View.GONE : View.VISIBLE}"
+                bind:cloud="@{properties.url}"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +62,7 @@
                 android:id="@+id/properties_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{property.title}"
+                android:text="@{properties.title}"
                 android:layout_marginTop="@dimen/micro_dimen"
                 style="@style/TextAppearance.AppCompat.Title"
                 tools:text="@string/item_title"
@@ -72,7 +74,7 @@
                 android:id="@+id/properties_item_price"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{@string/price_item((property.price * property.area), property.code)}"
+                android:text="@{@string/price_item((properties.price * properties.area), properties.code)}"
                 android:textColor="@color/vikiColorRed"
                 android:layout_marginTop="@dimen/micro_dimen"
                 tools:text="@string/property_price"
@@ -84,7 +86,7 @@
                 android:id="@+id/properties_item_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{property.address}"
+                android:text="@{properties.address}"
                 android:layout_marginTop="@dimen/micro_dimen"
                 tools:text="@string/property_address"
                 app:layout_constraintStart_toStartOf="parent"
@@ -104,29 +106,30 @@
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{property.floorPlan}"
+                    android:text="@{properties.floorPlan}"
                     android:layout_marginEnd="@dimen/normal_dimen"
-                    android:visibility="@{property.floorPlan != null ? View.VISIBLE : View.GONE }"
+                    android:visibility="@{properties.floorPlan != null ? View.VISIBLE : View.GONE }"
                     tools:text="@string/property_floor_plan" />
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/area_item(property.area, property.unit)}"
+                    android:text="@{@string/area_item(properties.area, properties.unit)}"
                     android:layout_marginEnd="@dimen/normal_dimen"
                     tools:text="@string/property_area"/>
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/price_item_per_unit(property.price, property.code, property.unit)}"
+                    android:text="@{@string/price_item_per_unit(properties.price, properties.code, properties.unit)}"
                     android:layout_marginEnd="@dimen/normal_dimen"
                     tools:text="@string/property_price"/>
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{property.operation}"
+                    android:text="@{properties.operation}"
                     android:layout_gravity="end"
                     android:gravity="end"
                     android:textStyle="bold"
+                    android:visibility="@{properties.request ? View.GONE : View.VISIBLE}"
                     tools:text="@string/operation_item"/>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>

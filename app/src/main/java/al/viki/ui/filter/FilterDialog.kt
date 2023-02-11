@@ -89,9 +89,7 @@ class FilterDialog : DialogFragment() {
         binding?.topAppBar?.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.apply -> {
-                    val f = binding?.filter
-                    val ff = filterUi
-                    onFilterListener?.invoke(f)
+                    onFilterListener?.invoke(binding?.filter)
                     dismiss()
                     true
                 }

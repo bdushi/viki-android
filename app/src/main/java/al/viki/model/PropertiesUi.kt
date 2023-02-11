@@ -1,12 +1,13 @@
 package al.viki.model
 
-import al.bruno.core.data.source.model.response.PropertyResponse
+import al.bruno.core.data.source.model.response.PropertiesResponse
+import al.viki.common.Entry
 import android.os.Bundle
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class PropertyUi(
+data class PropertiesUi(
     val id: Long,
     val title: String,
     val description: String,
@@ -31,36 +32,11 @@ data class PropertyUi(
     val unit: String,
     val longitude: Double,
     val latitude: Double,
+    val entry: String,
     val images: List<ImagesUi> = listOf()
 ) : Parcelable {
     companion object {
-        fun toPropertyUi(t: PropertyResponse) = PropertyUi(
-            t.id,
-            t.title,
-            t.description,
-            t.operation,
-            t.username,
-            t.email,
-            t.firstName,
-            t.lastName,
-            t.city,
-            t.zipCode,
-            t.country,
-            t.countryCode,
-            t.address,
-            t.currency,
-            t.symbol,
-            t.code,
-            t.decimalMark,
-            t.type,
-            t.area,
-            t.price,
-            t.floorPlan,
-            t.unit,
-            t.longitude,
-            t.latitude
-        )
-        fun toPropertyUi(t: PropertyResponse, images: List<ImagesUi>) = PropertyUi(
+        fun toPropertyUi(t: PropertiesResponse) = PropertiesUi(
             t.id,
             t.title,
             t.description,
@@ -85,10 +61,39 @@ data class PropertyUi(
             t.unit,
             t.longitude,
             t.latitude,
+            t.entry
+        )
+
+        fun toPropertyUi(t: PropertiesResponse, images: List<ImagesUi>) = PropertiesUi(
+            t.id,
+            t.title,
+            t.description,
+            t.operation,
+            t.username,
+            t.email,
+            t.firstName,
+            t.lastName,
+            t.city,
+            t.zipCode,
+            t.country,
+            t.countryCode,
+            t.address,
+            t.currency,
+            t.symbol,
+            t.code,
+            t.decimalMark,
+            t.type,
+            t.area,
+            t.price,
+            t.floorPlan,
+            t.unit,
+            t.longitude,
+            t.latitude,
+            t.entry,
             images
         )
-        fun mapToPropertyUi(map: Map<String, String>): PropertyUi {
-            return PropertyUi(
+        fun mapToPropertyUi(map: Map<String, String>): PropertiesUi {
+            return PropertiesUi(
                 map.getValue("id").toLong(),
                 map.getValue("title"),
                 map.getValue("description"),
@@ -113,11 +118,12 @@ data class PropertyUi(
                 map.getValue("unit"),
                 map.getValue("longitude").toDouble(),
                 map.getValue("latitude").toDouble(),
+                map.getValue("entry")
             )
         }
 
-        fun bundleToPropertyUi(bundle: Bundle): PropertyUi {
-            return PropertyUi(
+        fun bundleToPropertyUi(bundle: Bundle): PropertiesUi {
+            return PropertiesUi(
                 bundle.getLong("id"),
                 bundle.getString("title", ""),
                 bundle.getString("description", ""),
@@ -142,6 +148,7 @@ data class PropertyUi(
                 bundle.getString("unit", ""),
                 bundle.getDouble("longitude"),
                 bundle.getDouble("latitude"),
+                bundle.getString("entry", Entry.PROPERTY.name)
             )
         }
     }

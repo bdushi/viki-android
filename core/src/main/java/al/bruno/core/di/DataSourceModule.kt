@@ -11,7 +11,13 @@ import dagger.hilt.android.components.ActivityComponent
 @InstallIn(ActivityComponent::class)
 abstract class DataSourceModule {
     @Binds
+    abstract fun providePropertiesRemoteDataSource(propertiesRemoteDataSource: PropertiesRemoteDataSource): PropertiesDataSource
+
+    @Binds
     abstract fun providePropertyRemoteDataSource(propertyRemoteDataSource: PropertyRemoteDataSource): PropertyDataSource
+
+    @Binds
+    abstract fun provideRequestRemoteDataSource(requestRemoteDataSource: RequestRemoteDataSource): RequestDataSource
 
     @Binds
     abstract fun provideCityRemoteDataSource(cityRemoteDataSource: CityRemoteDataSource): CityDataSource

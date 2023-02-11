@@ -1,6 +1,7 @@
 package al.viki.model
 
 import al.viki.R
+import al.viki.common.Entry
 import android.os.Parcelable
 import android.view.View
 import android.widget.AdapterView
@@ -20,7 +21,8 @@ class FilterUi(
     var unit: String? = null,
     var currency: String? = null,
     var price: String? = null,
-    var area: String? = null
+    var area: String? = null,
+    private var entry: Entry = Entry.PROPERTY
 ) : OnItemSelectedListener, OnCheckedChangeListener, Parcelable {
     @IgnoredOnParcel
     private var query: HashMap<String, String> = HashMap()
@@ -52,8 +54,12 @@ class FilterUi(
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         properties = isChecked
         isProperties.value = isChecked
-        if(!isChecked)
+        if(!isChecked) {
             operation = null
+            entry = Entry.REQUEST
+        } else {
+            entry = Entry.PROPERTY
+        }
     }
 
     fun getQuery() : Map<String, String> {
@@ -79,6 +85,7 @@ class FilterUi(
         area?.let {
             query["currency"] = it
         }
+        query["label"] = entry.name
         return query
     }
 
@@ -106,6 +113,7 @@ class FilterUi(
             query["currency"] = it
         }
         query["searchQuery"] = searchQuery
+        query["label"] = entry.name
         return query
     }
 }

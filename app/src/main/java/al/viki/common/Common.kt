@@ -1,7 +1,7 @@
 package al.viki.common
 
 import al.bruno.adapter.Selection
-import al.bruno.core.data.source.model.response.PropertyResponse
+import al.bruno.core.data.source.model.response.PropertiesResponse
 import al.bruno.core.data.source.model.response.RequestResponse
 import al.viki.model.GalleryUi
 import android.app.Activity
@@ -10,13 +10,13 @@ import android.view.inputmethod.InputMethodManager
 import androidx.recyclerview.widget.DiffUtil
 
 
-val propertiesDiffUtil: DiffUtil.ItemCallback<PropertyResponse> =
-    object : DiffUtil.ItemCallback<PropertyResponse>() {
-        override fun areItemsTheSame(oldItem: PropertyResponse, newItem: PropertyResponse): Boolean {
+val propertiesDiffUtil: DiffUtil.ItemCallback<PropertiesResponse> =
+    object : DiffUtil.ItemCallback<PropertiesResponse>() {
+        override fun areItemsTheSame(oldItem: PropertiesResponse, newItem: PropertiesResponse): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: PropertyResponse, newItem: PropertyResponse): Boolean {
+        override fun areContentsTheSame(oldItem: PropertiesResponse, newItem: PropertiesResponse): Boolean {
             return oldItem == newItem
         }
     }

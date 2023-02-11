@@ -7,6 +7,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
@@ -32,6 +33,19 @@ inline fun <T> LifecycleOwner.collectLatestFlow(
     crossinline collector: suspend (T) -> Unit
 ) {
     lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.STARTED) {
+            flow
+                .catch { e -> e.printStackTrace() }
+                .collectLatest { collector(it) }
+        }
+    }
+}
+
+inline fun <T> LifecycleOwner.collectLatestFlowIO(
+    flow: Flow<T>,
+    crossinline collector: suspend (T) -> Unit
+) {
+    lifecycleScope.launch(Dispatchers.Default) {
         repeatOnLifecycle(Lifecycle.State.STARTED) {
             flow
                 .catch { e -> e.printStackTrace() }

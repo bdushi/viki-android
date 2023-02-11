@@ -49,7 +49,7 @@ object Adapter {
         Glide
             .with(imageView.context)
             .load(photo)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .error(ContextCompat.getDrawable(imageView.context, R.drawable.ic_outline_image_not_supported)?.also {
                 it.setTint(ContextCompat.getColor(imageView.context, R.color.vikiColorBackground))
             })
@@ -66,7 +66,7 @@ object Adapter {
         Glide
             .with(imageView.context)
             .load(photo)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .error(ContextCompat.getDrawable(imageView.context, R.drawable.ic_outline_image_not_supported)?.also {
                 it.setTint(ContextCompat.getColor(imageView.context, R.color.vikiColorBackground))
             })
@@ -86,7 +86,7 @@ object Adapter {
         Glide
             .with(imageView.context)
             .load(url)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
             .error(ContextCompat.getDrawable(imageView.context, R.drawable.ic_outline_image_not_supported)?.also {
                 it.setTint(ContextCompat.getColor(imageView.context, R.color.vikiColorBackground))
             })

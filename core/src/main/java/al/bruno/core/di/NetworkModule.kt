@@ -50,10 +50,11 @@ class NetworkModule {
         return MoshiConverterFactory.create(
             Moshi
                 .Builder()
+//                .add(LabelResponse::class.java, EnumJsonAdapter.create(LabelResponse::class.java)
+//                    .withUnknownFallback(LabelResponse.REQUEST))
                 .build()
         )
     }
-
     @Provides
     @Singleton
     fun baseUrl(): String = BuildConfig.HOST_NAME
@@ -75,8 +76,15 @@ class NetworkModule {
 
     @Provides
     @Reusable
+    fun propertiesService(retrofit: Retrofit): PropertiesService = retrofit.create(PropertiesService::class.java)
+
+    @Provides
+    @Reusable
     fun propertyService(retrofit: Retrofit): PropertyService = retrofit.create(PropertyService::class.java)
 
+    @Provides
+    @Reusable
+    fun requestService(retrofit: Retrofit): RequestService = retrofit.create(RequestService::class.java)
 
     @Provides
     @Reusable
@@ -86,16 +94,13 @@ class NetworkModule {
     @Reusable
     fun currencyService(retrofit: Retrofit): CurrencyService = retrofit.create(CurrencyService::class.java)
 
-
     @Provides
     @Reusable
     fun floorPlanService(retrofit: Retrofit): FloorPlanService = retrofit.create(FloorPlanService::class.java)
 
-
     @Provides
     @Reusable
     fun operationService(retrofit: Retrofit): OperationService = retrofit.create(OperationService::class.java)
-
 
     @Provides
     @Reusable
@@ -104,7 +109,6 @@ class NetworkModule {
     @Provides
     @Reusable
     fun unitService(retrofit: Retrofit): UnitService = retrofit.create(UnitService::class.java)
-
 
     @Provides
     @Reusable
@@ -117,7 +121,6 @@ class NetworkModule {
     @Provides
     @Reusable
     fun userService(retrofit: Retrofit): UserService = retrofit.create(UserService::class.java)
-
 
     @Provides
     @Reusable

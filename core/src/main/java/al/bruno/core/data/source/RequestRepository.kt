@@ -1,16 +1,16 @@
 package al.bruno.core.data.source
 
-import al.bruno.core.data.source.remote.PropertyRemoteDataSource
 import al.bruno.core.Result
-import al.bruno.core.data.source.model.request.PropertyRequest
+import al.bruno.core.data.source.model.request.RequestRequest
+import al.bruno.core.data.source.remote.RequestRemoteDataSource
 import javax.inject.Inject
 
-class PropertyRepository @Inject constructor(
-    private val propertyRemoteDataSource: PropertyRemoteDataSource)
+class RequestRepository @Inject constructor(
+    private val requestDataSource: RequestRemoteDataSource)
 {
-    suspend fun property(propertyRequest: PropertyRequest): Result<Int> {
+    suspend fun request(requestRequest: RequestRequest): Result<Int> {
         return try {
-            val response = propertyRemoteDataSource.property(propertyRequest)
+            val response = requestDataSource.request(requestRequest)
             val body = response.body()
             if (response.isSuccessful && body != null) {
                 Result.Success(body)
@@ -21,10 +21,9 @@ class PropertyRepository @Inject constructor(
             Result.Error(ex.message)
         }
     }
-
-    suspend fun deleteProperty(id: Long) : Result<Boolean> {
+    suspend fun deleteRequest(id: Long) : Result<Boolean> {
         return try {
-            val response = propertyRemoteDataSource.deleteProperty(id)
+            val response = requestDataSource.deleteRequest(id)
             if (response.isSuccessful) {
                 Result.Success(response.isSuccessful)
             } else {

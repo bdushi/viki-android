@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                                 MainActivity::class.java.name,
                                 bundle.getString("entry").toString()
                             )
-                            if (bundle.getString("entry") == Entry.PROPERTIES.name) {
+                            if (bundle.getString("entry") == Entry.PROPERTY.name) {
                                 navController.navigate(
                                     R.id.propertyDetailsFragment,
                                     bundleOf("property" to bundleToPropertyUi(bundle))

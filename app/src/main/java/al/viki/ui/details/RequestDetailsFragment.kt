@@ -5,13 +5,12 @@ import al.viki.BuildConfig
 import al.viki.R
 import al.viki.databinding.FragmentRequestDetailsBinding
 import al.viki.foundation.common.collectLatestFlow
+import al.viki.model.PropertiesUi
 import al.viki.model.RequestUi
 import al.viki.ui.home.HomeViewModel
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -35,7 +34,7 @@ class RequestDetailsFragment : Fragment(R.layout.fragment_request_details) {
     private var _binding: FragmentRequestDetailsBinding? = null
     private val binding get() = _binding
 
-    private var request: RequestUi? = null
+    private var request: PropertiesUi? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -97,7 +96,7 @@ class RequestDetailsFragment : Fragment(R.layout.fragment_request_details) {
                 }
             }
         }
-        collectLatestFlow(detailsViewModel.request) {
+        collectLatestFlow(detailsViewModel.properties) {
             when (it) {
                 is State.Error -> {
                     binding?.requestDetailsError?.visibility = View.VISIBLE
@@ -122,7 +121,7 @@ class RequestDetailsFragment : Fragment(R.layout.fragment_request_details) {
                             map.uiSettings.isZoomControlsEnabled = true
                             map.uiSettings.setAllGesturesEnabled(true)
                             map.uiSettings.isCompassEnabled = true
-                            val latLng = LatLng(request.getLatitude(), request.getLongitude())
+                            val latLng = LatLng(request.latitude, request.longitude)
                             val cameraPosition =
                                 CameraPosition.Builder().target(latLng).zoom(15f).bearing(20f)
                                     .build()

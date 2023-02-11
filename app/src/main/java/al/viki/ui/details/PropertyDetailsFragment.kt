@@ -5,6 +5,7 @@ import al.viki.BuildConfig
 import al.viki.R
 import al.viki.databinding.FragmentPropertyDetailsBinding
 import al.viki.foundation.common.collectLatestFlow
+import al.viki.model.PropertiesUi
 import al.viki.model.PropertyUi
 import al.viki.ui.home.HomeViewModel
 import android.Manifest
@@ -41,7 +42,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
     private val args: PropertyDetailsFragmentArgs by navArgs()
     private var mapFragment: SupportMapFragment? = null
     private val isPhotoNotEmpty = ObservableBoolean(false)
-    private var property: PropertyUi? = null
+    private var propertiesUi: PropertiesUi? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -58,7 +59,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
             findNavController().popBackStack()
         }
         mapFragment =
-            childFragmentManager.findFragmentById(R.id.details_property_location_in_map) as? SupportMapFragment
+            childFragmentManager.findFragmentById(R.id.details_property_location_in_map) as SupportMapFragment
 
         binding?.isNotEmpty = isPhotoNotEmpty
         binding?.adapter = photoAdapter
@@ -100,7 +101,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                     MaterialAlertDialogBuilder(requireContext())
                         .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
                         .setTitle(R.string.delete_property_title)
-                        .setMessage(getString(R.string.delete_messages, property?.title))
+                        .setMessage(getString(R.string.delete_messages, propertiesUi?.title))
                         .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
                             homeViewModel.deleteProperty(args.id)
                             dialogInterface.dismiss()
@@ -117,7 +118,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
         binding?.propertyDetailsErrorRefresh?.setOnClickListener {
             detailsViewModel.property(args.id)
         }
-        collectLatestFlow(detailsViewModel.property) {
+        collectLatestFlow(detailsViewModel.properties) {
             when (it) {
                 is State.Error -> {
                     binding?.propertyDetailsError?.visibility = View.VISIBLE
@@ -133,7 +134,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                     binding?.propertyDetails?.visibility = View.VISIBLE
                     binding?.propertyDetailsError?.visibility = View.GONE
                     binding?.propertyDetailsProgressIndicator?.visibility = View.GONE
-                    property = it.t
+                    propertiesUi = it.t
                     it.t?.let { property ->
                         binding?.property = property
                         mapFragment?.getMapAsync { map ->
@@ -141,7 +142,7 @@ class PropertyDetailsFragment : DetailsFragment<FragmentPropertyDetailsBinding>(
                             map.uiSettings.isZoomControlsEnabled = true
                             map.uiSettings.setAllGesturesEnabled(true)
                             map.uiSettings.isCompassEnabled = true
-                            val latLng = LatLng(property.getLatitude(), property.getLongitude())
+                            val latLng = LatLng(property.latitude, property.longitude)
                             val cameraPosition =
                                 CameraPosition.Builder().target(latLng).zoom(15f).bearing(20f)
                                     .build()

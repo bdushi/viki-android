@@ -7,7 +7,7 @@
     <data>
         <variable
             name="request"
-            type="al.viki.model.RequestUi" />
+            type="al.viki.model.PropertiesUi" />
     </data>
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/request_details_root"

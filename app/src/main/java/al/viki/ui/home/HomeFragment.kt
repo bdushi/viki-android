@@ -2,7 +2,7 @@ package al.viki.ui.home
 
 import al.bruno.adapter.*
 import al.bruno.core.State
-import al.bruno.core.data.source.model.response.PropertyResponse
+import al.bruno.core.data.source.model.response.PropertiesResponse
 import al.bruno.core.data.source.model.response.RequestResponse
 import al.viki.BuildConfig
 import al.viki.R
@@ -13,8 +13,6 @@ import al.viki.common.requestDiffUtil
 import al.viki.databinding.*
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.FilterUi
-import al.viki.model.PropertyUi
-import al.viki.model.RequestUi
 import al.viki.model.UserUi
 import al.viki.ui.filter.FilterDialog
 import android.content.Context
@@ -35,7 +33,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -52,96 +49,79 @@ class HomeFragment : Fragment() {
                 propertiesAdapter.retry()
             }
         }
-    private val requestsLoadStateAdapter =
-        LoadStateAdapter<LoadStateFooterViewItemBinding>(R.layout.load_state_footer_view_item) { loadState, vm ->
-            vm.loadState = loadState
-            vm.onClick = View.OnClickListener {
-                requestsAdapter.retry()
-            }
-        }
+
     private val propertiesAdapter by lazy {
-        PagedListAdapter<PropertyResponse, PropertiesItemBinding>(
+        PagedListAdapter<PropertiesResponse, PropertiesItemBinding>(
             R.layout.properties_item, { t, vm ->
-                vm.property = t
-                vm.onClick = object : OnClickListener<PropertyResponse> {
-                    override fun onClick(view: View, t: PropertyResponse) {
+                vm.properties = t
+                vm.onClick = object : OnClickListener<PropertiesResponse> {
+                    override fun onClick(view: View, t: PropertiesResponse) {
                         when (view.id) {
-                            R.id.properties -> findNavController()
-                                .navigate(
-                                    HomeFragmentDirections
-                                        .actionHomeFragmentToPropertyDetailsFragment(t.id)
-                                )
+                            R.id.properties_item ->
+                                if (t.isRequest()) {
+                                    findNavController()
+                                        .navigate(
+                                            HomeFragmentDirections
+                                                .actionHomeFragmentToRequestDetailsFragment(t.id)
+                                        )
+                                } else {
+                                    findNavController()
+                                        .navigate(
+                                            HomeFragmentDirections
+                                                .actionHomeFragmentToPropertyDetailsFragment(t.id)
+                                        )
+                                }
                             R.id.properties_share_item -> {
                                 val sendIntent: Intent = Intent().apply {
                                     action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}property/${t.id}")
+                                    putExtra(
+                                        Intent.EXTRA_TEXT,
+                                        "${BuildConfig.HOST_NAME}property/${t.id}"
+                                    )
                                     type = "text/plain"
                                 }
-                                startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
+                                startActivity(
+                                    Intent.createChooser(
+                                        sendIntent,
+                                        getString(R.string.app_name)
+                                    )
+                                )
                             }
-                            R.id.properties_delete_item -> {
-                                MaterialAlertDialogBuilder(requireContext())
-                                    .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
-                                    .setTitle(R.string.delete_property_title)
-                                    .setMessage(getString(R.string.delete_messages, t.title))
-                                    .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
-                                        homeViewModel.deleteProperty(t.id)
-                                        dialogInterface.dismiss()
-                                    }
-                                    .setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
-                                        dialogInterface.dismiss()
-                                    }
-                                    .setCancelable(false)
-                                    .show()
-                            }
+                            R.id.properties_delete_item ->
+                                if(t.isRequest()) {
+                                    MaterialAlertDialogBuilder(requireContext())
+                                        .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
+                                        .setTitle(R.string.delete_property_title)
+                                        .setMessage(getString(R.string.delete_messages, t.title))
+                                        .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
+                                            homeViewModel.deleteProperty(t.id)
+                                            dialogInterface.dismiss()
+                                        }
+                                        .setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
+                                            dialogInterface.dismiss()
+                                        }
+                                        .setCancelable(false)
+                                        .show()
+                                } else {
+                                    MaterialAlertDialogBuilder(requireContext())
+                                        .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
+                                        .setTitle(R.string.delete_property_title)
+                                        .setMessage(getString(R.string.delete_messages, t.title))
+                                        .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
+                                            homeViewModel.deleteProperty(t.id)
+                                            dialogInterface.dismiss()
+                                        }
+                                        .setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
+                                            dialogInterface.dismiss()
+                                        }
+                                        .setCancelable(false)
+                                        .show()
+                                }
                         }
                     }
                 }
             },
             propertiesDiffUtil
-        )
-    }
-
-    private val requestsAdapter by lazy {
-        PagedListAdapter<RequestResponse, RequestItemBinding>(
-            R.layout.request_item, { t, vm ->
-                vm.request = t
-                vm.onClick = object : OnClickListener<RequestResponse> {
-                    override fun onClick(view: View, t: RequestResponse) {
-                        when (view.id) {
-                            R.id.requests -> findNavController()
-                                .navigate(
-                                    HomeFragmentDirections
-                                        .actionHomeFragmentToRequestDetailsFragment(t.id)
-                                )
-                            R.id.request_share_item -> {
-                                val sendIntent: Intent = Intent().apply {
-                                    action = Intent.ACTION_SEND
-                                    putExtra(Intent.EXTRA_TEXT, "${BuildConfig.HOST_NAME}request/${t.id}")
-                                    type = "text/plain"
-                                }
-                                startActivity(Intent.createChooser(sendIntent, getString(R.string.app_name)))
-                            }
-                            R.id.request_delete_item -> {
-                                MaterialAlertDialogBuilder(requireContext())
-                                    .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
-                                    .setTitle(R.string.delete_request_title)
-                                    .setMessage(getString(R.string.delete_messages, t.title))
-                                    .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
-                                        homeViewModel.deleteRequest(t.id)
-                                        dialogInterface.dismiss()
-                                    }
-                                    .setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
-                                        dialogInterface.dismiss()
-                                    }
-                                    .setCancelable(false)
-                                    .show()
-                            }
-                        }
-                    }
-                }
-            },
-            requestDiffUtil
         )
     }
 
@@ -159,6 +139,9 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.property?.adapter = propertiesAdapter
+            .withLoadStateFooter(
+                footer = propertiesLoadStateAdapter
+            )
         binding?.menu?.setOnClickListener {
             showMenu(it, R.menu.menu_home)
         }
@@ -175,15 +158,8 @@ class HomeFragment : Fragment() {
                 .setOnFilterListener { filter ->
                     filter?.let { it ->
                         filterUi = filter
-                        switchAdapter(filter)
-                        if (it.properties) {
-                            collectLatestFlow(homeViewModel.propertiesCollectionPagedList(it.getQuery())) {
-                                propertiesAdapter.submitData(it)
-                            }
-                        } else {
-                            collectLatestFlow(homeViewModel.requestCollectionPagedList(it.getQuery())) {
-                                requestsAdapter.submitData(it)
-                            }
+                        collectLatestFlow(homeViewModel.propertiesCollectionPagedList(it.getQuery())) {
+                            propertiesAdapter.submitData(it)
                         }
                     }
                 }
@@ -194,18 +170,8 @@ class HomeFragment : Fragment() {
         }
 
         binding?.refreshProperty?.setOnRefreshListener {
-            /**
-             * Reset filter to default value
-             */
-            switchAdapter(FilterUi())
-            if (filterUi.properties) {
-                collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
-                    propertiesAdapter.submitData(it)
-                }
-            } else {
-                collectLatestFlow(homeViewModel.requestCollectionPagedList(filterUi.getQuery())) {
-                    requestsAdapter.submitData(it)
-                }
+            collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
+                propertiesAdapter.submitData(it)
             }
             binding?.refreshProperty?.isRefreshing = false
         }
@@ -213,22 +179,12 @@ class HomeFragment : Fragment() {
         binding?.search?.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 activity?.hideSoftKeyBoard()
-                if (filterUi.properties) {
-                    collectLatestFlow(
-                        homeViewModel.propertiesCollectionPagedList(
-                            filterUi.getQuery(textView.text.toString())
-                        )
-                    ) {
-                        propertiesAdapter.submitData(it)
-                    }
-                } else {
-                    collectLatestFlow(
-                        homeViewModel.requestCollectionPagedList(
-                            filterUi.getQuery(textView.text.toString())
-                        )
-                    ) {
-                        requestsAdapter.submitData(it)
-                    }
+                collectLatestFlow(
+                    homeViewModel.propertiesCollectionPagedList(
+                        filterUi.getQuery(textView.text.toString())
+                    )
+                ) {
+                    propertiesAdapter.submitData(it)
                 }
                 return@setOnEditorActionListener true
             }
@@ -237,22 +193,12 @@ class HomeFragment : Fragment() {
         binding?.search?.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 activity?.hideSoftKeyBoard()
-                if (filterUi.properties) {
-                    collectLatestFlow(
-                        homeViewModel.propertiesCollectionPagedList(
-                            filterUi.getQuery(binding?.search?.text.toString())
-                        )
-                    ) {
-                        propertiesAdapter.submitData(it)
-                    }
-                } else {
-                    collectLatestFlow(
-                        homeViewModel.requestCollectionPagedList(
-                            filterUi.getQuery(binding?.search?.text.toString())
-                        )
-                    ) {
-                        requestsAdapter.submitData(it)
-                    }
+                collectLatestFlow(
+                    homeViewModel.propertiesCollectionPagedList(
+                        filterUi.getQuery(binding?.search?.text.toString())
+                    )
+                ) {
+                    propertiesAdapter.submitData(it)
                 }
                 return@setOnKeyListener true
             }
@@ -263,17 +209,10 @@ class HomeFragment : Fragment() {
             activity?.hideSoftKeyBoard()
             binding?.search?.setText("")
             binding?.search?.clearFocus()
-            if (filterUi.properties) {
-                collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
-                    propertiesAdapter.submitData(it)
-                }
-            } else {
-                collectLatestFlow(homeViewModel.requestCollectionPagedList(filterUi.getQuery())) {
-                    requestsAdapter.submitData(it)
-                }
+            collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
+                propertiesAdapter.submitData(it)
             }
         }
-
         collectLatestFlow(homeViewModel.delete) { response ->
             when (response) {
                 is State.Error -> {
@@ -284,25 +223,16 @@ class HomeFragment : Fragment() {
                 }
                 is State.Success -> {
                     response.t?.let {
-                        if (filterUi.properties) {
-                            collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
-                                propertiesAdapter.submitData(it)
-                            }
-                        } else {
-                            collectLatestFlow(homeViewModel.requestCollectionPagedList(filterUi.getQuery())) {
-                                requestsAdapter.submitData(it)
-                            }
+                        collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
+                            propertiesAdapter.submitData(it)
                         }
                     }
                 }
             }
         }
+
         collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
             propertiesAdapter.submitData(it)
-        }
-
-        collectLatestFlow(homeViewModel.requestCollectionPagedList(filterUi.getQuery())) {
-            requestsAdapter.submitData(it)
         }
 
         collectLatestFlow(homeViewModel.user) {
@@ -313,20 +243,6 @@ class HomeFragment : Fragment() {
                     userUi = it.t
                 }
             }
-        }
-    }
-
-    private fun switchAdapter(filterUi: FilterUi) {
-        if (filterUi.properties) {
-            binding?.property?.adapter = propertiesAdapter
-                .withLoadStateFooter(
-                    footer = propertiesLoadStateAdapter
-                )
-        } else {
-            binding?.property?.adapter = requestsAdapter
-                .withLoadStateFooter(
-                    footer = requestsLoadStateAdapter
-                )
         }
     }
 

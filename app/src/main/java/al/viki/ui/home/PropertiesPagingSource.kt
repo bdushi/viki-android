@@ -1,26 +1,26 @@
 package al.viki.ui.home
 
-import al.bruno.core.data.source.PropertyRepository
-import al.bruno.core.data.source.model.response.PropertyResponse
+import al.bruno.core.data.source.model.response.PropertiesResponse
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import al.bruno.core.Result
+import al.bruno.core.data.source.PropertiesRepository
 import al.viki.common.NETWORK_PAGE_SIZE
 
 class PropertiesPagingSource constructor(
-    private val propertyRepository: PropertyRepository,
+    private val propertiesRepository: PropertiesRepository,
     private val query: Map<String, String>
-) : PagingSource<Int, PropertyResponse>() {
-    override fun getRefreshKey(state: PagingState<Int, PropertyResponse>): Int? {
+) : PagingSource<Int, PropertiesResponse>() {
+    override fun getRefreshKey(state: PagingState<Int, PropertiesResponse>): Int? {
         return state.anchorPosition?.let { anchorPosition ->
             state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
                 ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
         }
     }
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PropertyResponse> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, PropertiesResponse> {
         val position = params.key ?: 0
-        return when (val response = propertyRepository.properties(
+        return when (val response = propertiesRepository.properties(
             page = position,
             size = 10,
             query = query
