@@ -6,5 +6,5 @@ import retrofit2.Response
 
 interface PropertyDataSource {
     suspend fun property(propertyRequest: PropertyRequest) : Response<Int>
-    suspend fun deleteProperty(id: Long) : Response<ResponseBody>
+    suspend fun deleteProperty(id: Long) : Response<Boolean>
 }

@@ -37,7 +37,9 @@ import com.google.maps.android.clustering.ClusterManager.OnClusterClickListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MapViewFragment : Fragment(R.layout.fragment_map_view), ClusterManager.OnClusterItemClickListener<ClusterItemUi>, OnClusterClickListener<ClusterItemUi> {
+class MapViewFragment : Fragment(R.layout.fragment_map_view),
+    ClusterManager.OnClusterItemClickListener<ClusterItemUi>,
+    OnClusterClickListener<ClusterItemUi> {
     private var _binding: FragmentMapViewBinding? = null
     private val binding get() = _binding
     private var googleMap: GoogleMap? = null
@@ -72,6 +74,7 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view), ClusterManager.OnC
                 }
             }
         }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentMapViewBinding.bind(view)
@@ -86,7 +89,7 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view), ClusterManager.OnC
                         .build()
                         .setOnFilterListener { filter ->
                             filter?.let { it ->
-                                homeViewModel.properties(
+                                homeViewModel.clusterProperties(
                                     query = it.getQuery()
                                 )
                             }
@@ -104,9 +107,13 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view), ClusterManager.OnC
         mapView?.getMapAsync { googleMap ->
             when (PackageManager.PERMISSION_GRANTED) {
                 checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION),
-                checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) -> {
+                checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) -> {
                     googleMap.isMyLocationEnabled = true
-                } else -> {
+                }
+                else -> {
                     requestLocationPermissions.launch(
                         arrayOf(
                             Manifest.permission.ACCESS_FINE_LOCATION,
@@ -116,9 +123,14 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view), ClusterManager.OnC
                 }
             }
             this.googleMap = googleMap
-            if(clusterManager == null)
+            if (clusterManager == null)
                 clusterManager = ClusterManager<ClusterItemUi>(requireContext(), googleMap)
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(41.3275, 19.8187), 10.5f))
+            googleMap.animateCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(41.3275, 19.8187),
+                    10.5f
+                )
+            )
             googleMap.uiSettings.isZoomControlsEnabled = true
             googleMap.uiSettings.isMyLocationButtonEnabled = true
             googleMap.uiSettings.isCompassEnabled = true
@@ -133,7 +145,7 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view), ClusterManager.OnC
             }
         }
 
-        homeViewModel.properties(query = args.filter.getQuery())
+        homeViewModel.clusterProperties(query = args.filter.getQuery())
     }
 
     override fun onDestroyView() {
@@ -148,7 +160,7 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view), ClusterManager.OnC
     }
 
     override fun onClusterItemClick(item: ClusterItemUi): Boolean {
-        if(item.isRequest) {
+        if (item.isRequest) {
             findNavController()
                 .navigate(
                     MapViewFragmentDirections
@@ -156,8 +168,7 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view), ClusterManager.OnC
                             item.id
                         )
                 )
-        }
-         else {
+        } else {
             findNavController()
                 .navigate(
                     MapViewFragmentDirections
@@ -179,7 +190,7 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view), ClusterManager.OnC
     }
 
     private fun cluster(clusterManager: ClusterManager<ClusterItemUi>) {
-        collectLatestFlow(homeViewModel.clusterItem) {
+        collectLatestFlow(homeViewModel.clusterProperties) {
             when (it) {
                 is State.Error -> {
                     binding?.mapViewProgressIndicator?.visibility = View.GONE
@@ -201,7 +212,10 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view), ClusterManager.OnC
                                         .load(item.url)
                                         .onlyRetrieveFromCache(true)
                                         .into(object : CustomTarget<Drawable>() {
-                                            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                                            override fun onResourceReady(
+                                                resource: Drawable,
+                                                transition: Transition<in Drawable>?
+                                            ) {
                                                 item.drawable = resource
                                             }
 

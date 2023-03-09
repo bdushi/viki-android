@@ -12,7 +12,7 @@ class PropertyRemoteDataSource @Inject constructor(private val propertyService: 
         return propertyService.property(propertyRequest = propertyRequest)
     }
 
-    override suspend fun deleteProperty(id: Long): Response<ResponseBody> {
+    override suspend fun deleteProperty(id: Long): Response<Boolean> {
         return propertyService.deleteProperty(id = id)
     }
 }

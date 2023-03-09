@@ -75,8 +75,7 @@ class DetailsViewModel @Inject constructor(
             _properties.value = State.Loading
             when (val response = propertiesRepository.properties(id)) {
                 is Result.Error -> _properties.value = State.Error(response.error)
-                is Result.Success -> _properties.value =
-                    State.Success(PropertiesUi.toPropertyUi(response.data))
+                is Result.Success -> _properties.value = State.Success(PropertiesUi.toPropertyUi(response.data))
             }
         }
     }

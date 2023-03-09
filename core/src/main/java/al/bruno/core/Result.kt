@@ -1,9 +1,7 @@
 package al.bruno.core
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.*
+import retrofit2.Response
 
 /**
  * A generic class that holds a value with its loading status.
@@ -20,15 +18,13 @@ sealed class Result<out R> {
         }
     }
 }
-
-/**
- *
- */
-//fun <T> Flow<T>.asResult(){
-//    map<T,Result<T>> {
-//        Result.Success(it)
-//    }.onStart {
-//        emit(Result.Unauthorized)
-//    }.catch {
-//        emit(Result.Error("")) }
-//}
+suspend fun <T> Response<T>.asResponse(): Flow<Result<T>> = flow {
+    val body = this@asResponse.body()
+    if(this@asResponse.isSuccessful && body != null) {
+        emit(Result.Success<T>(body))
+    } else {
+        emit(Result.Error(this@asResponse.message()))
+    }
+}.catch {
+    emit(Result.Error(it.message))
+}

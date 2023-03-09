@@ -31,6 +31,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -82,6 +83,7 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mainViewModel.logEvent()
         authorizationInterceptor.setOnSessionListen {
             startActivity(
                 Intent(this@MainActivity, AuthenticationActivity::class.java)
@@ -95,16 +97,11 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                     val token = it[stringPreferencesKey(ACCESS_TOKEN)]
                     if (token != null) {
                         authorizationInterceptor.token = token
-
                         setContentView(R.layout.activity_main)
                         val navHostFragment =
                             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
                         val navController = navHostFragment.navController
                         intent.extras?.let { bundle ->
-                            Log.d(
-                                MainActivity::class.java.name,
-                                bundle.getString("entry").toString()
-                            )
                             if (bundle.getString("entry") == Entry.PROPERTY.name) {
                                 navController.navigate(
                                     R.id.propertyDetailsFragment,

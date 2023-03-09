@@ -33,6 +33,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -317,7 +318,7 @@ class HomeFragment : Fragment() {
         super.onAttach(context)
         when (context) {
             is NotifyAuthenticationChange -> notifyAuthenticationChange = context
-            else -> throw RuntimeException("$context must implement NotifyLanguageChange")
+            else -> throw RuntimeException("$context must implement NotifyAuthenticationChange")
         }
     }
 }

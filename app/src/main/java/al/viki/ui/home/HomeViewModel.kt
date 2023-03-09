@@ -4,21 +4,18 @@ import al.bruno.core.Result
 import al.bruno.core.State
 import al.bruno.core.data.source.*
 import al.bruno.core.data.source.model.response.PropertiesResponse
-import al.bruno.core.data.source.model.response.RequestResponse
 import al.viki.BuildConfig
 import al.viki.common.NETWORK_PAGE_SIZE
-import al.viki.model.*
+import al.viki.model.ClusterItemUi
+import al.viki.model.UserUi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,10 +39,10 @@ class HomeViewModel @Inject constructor(
     val delete: StateFlow<State<Boolean>> = _delete
 
     // Backing property to avoid state updates from other classes
-    private val _clusterItem = MutableStateFlow<State<List<ClusterItemUi>>>(State.Success(null))
+    private val _clusterProperties = MutableStateFlow<State<List<ClusterItemUi>>>(State.Loading)
 
     // The UI collects from this StateFlow to get its state updates
-    val clusterItem: StateFlow<State<List<ClusterItemUi>>> = _clusterItem
+    val clusterProperties: StateFlow<State<List<ClusterItemUi>>> = _clusterProperties
 
     init {
         user()
@@ -92,28 +89,33 @@ class HomeViewModel @Inject constructor(
         }
     ).flow
 
-    fun properties(query: Map<String, String>) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _clusterItem.value = State.Loading
-            when (val response = propertiesRepository.properties(
+    fun clusterProperties(query: Map<String, String>) {
+        viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
+            _clusterProperties.value = propertiesRepository.properties(
                 query = query
-            )) {
-                is Result.Error -> _clusterItem.value = State.Error(response.error)
-                is Result.Success -> {
-                    _clusterItem.value = State.Success(
-                        response.data.map {
-                            ClusterItemUi(
-                                it.id,
-                                it.title,
-                                it.description,
-                                it.longitude,
-                                it.latitude,
-                                it.isRequest()
+            )
+                .onStart {
+                    State.Loading
+                }
+                .map {
+                    when (it) {
+                        is Result.Error -> State.Error(it.error)
+                        is Result.Success -> {
+                            State.Success(
+                                it.data.map { response ->
+                                    ClusterItemUi(
+                                        response.id,
+                                        response.title,
+                                        response.description,
+                                        response.longitude,
+                                        response.latitude,
+                                        response.isRequest()
+                                    )
+                                }
                             )
                         }
-                    )
-                }
-            }
+                    }
+                }.stateIn(viewModelScope).value
         }
     }
 

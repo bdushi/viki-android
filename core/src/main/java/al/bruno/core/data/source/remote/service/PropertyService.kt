@@ -10,5 +10,5 @@ interface PropertyService {
     suspend fun property(@Body propertyRequest: PropertyRequest) : Response<Int>
 
     @DELETE("api/properties/{id}")
-    suspend fun deleteProperty(@Path("id") id: Long) : Response<ResponseBody>
+    suspend fun deleteProperty(@Path("id") id: Long) : Response<Boolean>
 }

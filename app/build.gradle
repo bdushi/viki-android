@@ -78,7 +78,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
-    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.7.21'
+    implementation 'org.jetbrains.kotlin:kotlin-reflect:1.8.10'
 
     //google map
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
