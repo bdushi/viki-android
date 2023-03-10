@@ -1,0 +1,64 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="al.bruno.properties"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+8-->/Users/bruno/AndroidStudioProjects/Viki/viki/properties/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="33" />
+9-->/Users/bruno/AndroidStudioProjects/Viki/viki/properties/src/main/AndroidManifest.xml
+10
+11    <permission
+11-->[androidx.core:core:1.9.0] /Users/bruno/.gradle/caches/transforms-3/01b55daad8da4e982591d374433f43e5/transformed/core-1.9.0/AndroidManifest.xml:22:5-24:47
+12        android:name="al.bruno.properties.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+12-->[androidx.core:core:1.9.0] /Users/bruno/.gradle/caches/transforms-3/01b55daad8da4e982591d374433f43e5/transformed/core-1.9.0/AndroidManifest.xml:23:9-81
+13        android:protectionLevel="signature" />
+13-->[androidx.core:core:1.9.0] /Users/bruno/.gradle/caches/transforms-3/01b55daad8da4e982591d374433f43e5/transformed/core-1.9.0/AndroidManifest.xml:24:9-44
+14
+15    <uses-permission android:name="al.bruno.properties.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+15-->[androidx.core:core:1.9.0] /Users/bruno/.gradle/caches/transforms-3/01b55daad8da4e982591d374433f43e5/transformed/core-1.9.0/AndroidManifest.xml:26:5-97
+15-->[androidx.core:core:1.9.0] /Users/bruno/.gradle/caches/transforms-3/01b55daad8da4e982591d374433f43e5/transformed/core-1.9.0/AndroidManifest.xml:26:22-94
+16
+17    <application
+17-->/Users/bruno/AndroidStudioProjects/Viki/viki/properties/src/main/AndroidManifest.xml:3:5-9:45
+18        android:allowBackup="true"
+18-->/Users/bruno/AndroidStudioProjects/Viki/viki/properties/src/main/AndroidManifest.xml:4:9-35
+19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+19-->[androidx.core:core:1.9.0] /Users/bruno/.gradle/caches/transforms-3/01b55daad8da4e982591d374433f43e5/transformed/core-1.9.0/AndroidManifest.xml:28:18-86
+20        android:debuggable="true"
+21        android:icon="@mipmap/ic_launcher"
+21-->/Users/bruno/AndroidStudioProjects/Viki/viki/properties/src/main/AndroidManifest.xml:5:9-43
+22        android:label="@string/app_name"
+22-->/Users/bruno/AndroidStudioProjects/Viki/viki/properties/src/main/AndroidManifest.xml:6:9-41
+23        android:roundIcon="@mipmap/ic_launcher_round"
+23-->/Users/bruno/AndroidStudioProjects/Viki/viki/properties/src/main/AndroidManifest.xml:7:9-54
+24        android:supportsRtl="true"
+24-->/Users/bruno/AndroidStudioProjects/Viki/viki/properties/src/main/AndroidManifest.xml:8:9-35
+25        android:theme="@style/Theme.Viki" >
+25-->/Users/bruno/AndroidStudioProjects/Viki/viki/properties/src/main/AndroidManifest.xml:9:9-42
+26        <provider
+26-->[androidx.emoji2:emoji2:1.2.0] /Users/bruno/.gradle/caches/transforms-3/8d1ff05923c920f3f78e154277adbfe3/transformed/emoji2-1.2.0/AndroidManifest.xml:24:9-32:20
+27            android:name="androidx.startup.InitializationProvider"
+27-->[androidx.emoji2:emoji2:1.2.0] /Users/bruno/.gradle/caches/transforms-3/8d1ff05923c920f3f78e154277adbfe3/transformed/emoji2-1.2.0/AndroidManifest.xml:25:13-67
+28            android:authorities="al.bruno.properties.androidx-startup"
+28-->[androidx.emoji2:emoji2:1.2.0] /Users/bruno/.gradle/caches/transforms-3/8d1ff05923c920f3f78e154277adbfe3/transformed/emoji2-1.2.0/AndroidManifest.xml:26:13-68
+29            android:exported="false" >
+29-->[androidx.emoji2:emoji2:1.2.0] /Users/bruno/.gradle/caches/transforms-3/8d1ff05923c920f3f78e154277adbfe3/transformed/emoji2-1.2.0/AndroidManifest.xml:27:13-37
+30            <meta-data
+30-->[androidx.emoji2:emoji2:1.2.0] /Users/bruno/.gradle/caches/transforms-3/8d1ff05923c920f3f78e154277adbfe3/transformed/emoji2-1.2.0/AndroidManifest.xml:29:13-31:52
+31                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+31-->[androidx.emoji2:emoji2:1.2.0] /Users/bruno/.gradle/caches/transforms-3/8d1ff05923c920f3f78e154277adbfe3/transformed/emoji2-1.2.0/AndroidManifest.xml:30:17-75
+32                android:value="androidx.startup" />
+32-->[androidx.emoji2:emoji2:1.2.0] /Users/bruno/.gradle/caches/transforms-3/8d1ff05923c920f3f78e154277adbfe3/transformed/emoji2-1.2.0/AndroidManifest.xml:31:17-49
+33            <meta-data
+33-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/bruno/.gradle/caches/transforms-3/6d789ace065410d4fdeafe4f4ed6c0ae/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:31:13-33:52
+34                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+34-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/bruno/.gradle/caches/transforms-3/6d789ace065410d4fdeafe4f4ed6c0ae/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:32:17-78
+35                android:value="androidx.startup" />
+35-->[androidx.lifecycle:lifecycle-process:2.4.1] /Users/bruno/.gradle/caches/transforms-3/6d789ace065410d4fdeafe4f4ed6c0ae/transformed/lifecycle-process-2.4.1/AndroidManifest.xml:33:17-49
+36        </provider>
+37    </application>
+38
+39</manifest>

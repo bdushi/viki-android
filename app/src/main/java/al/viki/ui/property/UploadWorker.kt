@@ -1,6 +1,7 @@
 package al.viki.ui.property
 
 import al.bruno.core.data.source.ImageRepository
+import al.viki.factory.ChildWorkerFactory
 import al.viki.foundation.common.toFile
 import android.content.Context
 import android.net.Uri
@@ -8,10 +9,11 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.Dispatchers
-import okhttp3.*
+import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 
 /**
@@ -20,11 +22,11 @@ import okhttp3.RequestBody.Companion.asRequestBody
  * https://proandroiddev.com/customize-workmanager-with-appstartup-hilt-97c16d103052
  */
 
-class UploadWorker constructor(
-    workerParams: WorkerParameters,
-    appContext: Context,
+class UploadWorker @AssistedInject constructor(
+    @Assisted params: WorkerParameters,
+    @Assisted appContext: Context,
     private val imageRepository: ImageRepository
-) : CoroutineWorker(appContext, workerParams) {
+) : CoroutineWorker(appContext, params) {
     override suspend fun doWork(): Result {
         Log.d(UploadWorker::class.java.name, "UploadWorker")
         val photoList = inputData.getStringArray("PHOTO_UI")
@@ -66,4 +68,9 @@ class UploadWorker constructor(
         }
         return Result.success()
     }
+
+//    @AssistedFactory
+//    interface Factory : ChildWorkerFactory
+//    @AssistedFactory
+//    interface Factory : AssistedWorkerFactory<UploadWorker>
 }

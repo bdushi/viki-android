@@ -1,11 +1,8 @@
 package al.viki
 
 import al.viki.di.DaggerAppComponent
-import al.viki.factory.VikiWorkerFactory
 import android.app.Application
-import android.util.Log
 import androidx.work.Configuration
-import androidx.work.WorkManager
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject

@@ -11,7 +11,9 @@ import com.google.firebase.storage.ktx.storage
 import id.zelory.compressor.Compressor
 import kotlinx.coroutines.Dispatchers
 
-class UploadProfilePictureWorker(private val appContext: Context, workerParams: WorkerParameters) :
+class UploadProfilePictureWorker(
+    private val appContext: Context,
+    workerParams: WorkerParameters) :
     CoroutineWorker(appContext, workerParams) {
     override suspend fun doWork(): Result {
         val photo = inputData.getString("PHOTO_UI")

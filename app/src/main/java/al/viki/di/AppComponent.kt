@@ -22,8 +22,11 @@ import javax.inject.Singleton
     AuthModule::class,
     AuthDataSourceModule::class,
     ActivityBindingModule::class,
+    WorkerBindingModule::class,
     WorkManagerModule::class])
 interface AppComponent : AndroidInjector<VikiApplication> {
+//    @Component.Factory
+//    interface Factory : AndroidInjector.Factory<VikiApplication>
     @Component.Factory
     interface Factory {
         fun application(@BindsInstance application: Context): AppComponent
