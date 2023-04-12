@@ -1,6 +1,6 @@
-package al.bruno.core.data.source.remote.service
+package al.viki.core.remote.service
 
-import al.bruno.core.data.source.model.User
+import al.viki.core.model.User
 import retrofit2.Response
 import retrofit2.http.GET
 

@@ -5,13 +5,12 @@ import al.bruno.core.asResponse
 import al.bruno.core.data.source.model.response.PageResponse
 import al.bruno.core.data.source.model.response.PropertiesResponse
 import al.bruno.core.data.source.remote.PropertiesRemoteDataSource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class PropertiesRepository  @Inject constructor(
-    private val propertiesRemoteDataSource: PropertiesRemoteDataSource) {
+class PropertiesRepository @Inject constructor(
+    private val propertiesRemoteDataSource: PropertiesRemoteDataSource
+) {
 
     suspend fun properties(
         page: Int,
@@ -31,7 +30,7 @@ class PropertiesRepository  @Inject constructor(
         }
     }
 
-    suspend fun properties(id: Long) : Result<PropertiesResponse> {
+    suspend fun properties(id: Long): Result<PropertiesResponse> {
         return try {
             val response = propertiesRemoteDataSource.properties(id)
             val body = response.body()
@@ -47,7 +46,7 @@ class PropertiesRepository  @Inject constructor(
 
     suspend fun properties(
         query: Map<String, String>
-    ) = propertiesRemoteDataSource
+    ) =  propertiesRemoteDataSource
         .properties(query)
         .asResponse()
 }

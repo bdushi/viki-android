@@ -10,7 +10,7 @@ class ItemViewHolder<T, VM : ViewDataBinding>(itemView: View, private val bindin
     fun bind(t:T) {
         binding?.let {
             bindingData.invoke(t, it)
-            it.executePendingBindings()
+                it.executePendingBindings()
         }
     }
 }

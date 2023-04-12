@@ -44,9 +44,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <ProgressBar
+            android:id="@+id/new_property_progress_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="@{propertyViewModel.properties instanceof State.Loading ? View.VISIBLE : View.GONE }"
             android:layout_gravity="center"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

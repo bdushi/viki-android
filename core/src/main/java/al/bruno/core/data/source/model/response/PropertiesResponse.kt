@@ -27,7 +27,8 @@ data class PropertiesResponse(
     val unit: String,
     val longitude: Double,
     val latitude: Double,
-    val entry: String) {
-    fun url() = "${BuildConfig.FILE_HOST_NAME}/resources/$id/${id}_0"
-    fun isRequest() = entry == "request"
+    val entry: String
+) {
+    fun url(): String = "${BuildConfig.FILE_HOST_NAME}/resources/${id}/${id}_0"
+    fun isRequest(): Boolean = entry == "request"
 }

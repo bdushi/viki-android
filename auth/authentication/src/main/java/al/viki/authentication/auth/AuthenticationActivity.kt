@@ -7,6 +7,7 @@ import al.viki.authentication.register.RegisterActivity
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
@@ -32,6 +33,9 @@ class AuthenticationActivity : AppCompatActivity() {
 //            .build()
 //            .inject(this)
         super.onCreate(savedInstanceState)
+        onBackPressedDispatcher.addCallback {
+            // Disable BackPress for AuthenticationActivity
+        }
         val binding = ActivityAuthenticationBinding.inflate(layoutInflater)
         binding.lifecycleOwner = this
         binding.auth = authenticationViewModel
@@ -63,10 +67,5 @@ class AuthenticationActivity : AppCompatActivity() {
                 }
             }
         }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        // Disable BackPress for AuthenticationActivity
     }
 }

@@ -1,9 +1,8 @@
 package al.bruno.core.di
 
-import al.viki.UserPreferencesSerializer
+import al.bruno.core.UserPreferencesSerializer
 import al.viki.common.VIKI_DATA_STORE_PREFERENCES
 import al.viki.common.VIKI_PREFERENCES
-import android.app.Application
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory

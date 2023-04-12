@@ -1,9 +1,12 @@
 package al.viki.model
 
+import al.viki.BuildConfig
 import android.graphics.drawable.Drawable
+import com.bumptech.glide.RequestManager
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterItem
-import al.bruno.core.BuildConfig
 
 data class ClusterItemUi(
     val id: Long,
@@ -12,9 +15,22 @@ data class ClusterItemUi(
     val longitude: Double,
     val latitude: Double,
     val isRequest: Boolean,
-    val url: String = "${BuildConfig.FILE_HOST_NAME}/resources/${id}/${id}_0",
     var drawable: Drawable? = null
 ) : ClusterItem {
+    fun drawable(requestManager: RequestManager) {
+        requestManager
+            .load("${BuildConfig.FILE_HOST_NAME}/resources/${id}/${id}_0")
+            .into(object : CustomTarget<Drawable>() {
+                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                    drawable = resource
+                }
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                    drawable = placeholder
+                }
+            })
+    }
+
     override fun getTitle(): String {
         return title
     }

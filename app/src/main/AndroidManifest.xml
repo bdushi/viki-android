@@ -15,7 +15,7 @@
     <uses-permission
         android:name="android.permission.≈"
         android:maxSdkVersion="28" />
-
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
     <application
         android:name=".VikiApplication"
         android:allowBackup="true"
@@ -67,6 +67,13 @@
             </intent-filter>
         </service>
 
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/facebook_client_token"/>
+
         <activity
             android:name=".ui.main.MainActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
@@ -83,7 +90,7 @@
 
         <activity
             android:name=".authentication.auth.AuthenticationActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize"/>
 
         <activity
             android:name="al.viki.authentication.forgot.password.ForgotPasswordActivity"

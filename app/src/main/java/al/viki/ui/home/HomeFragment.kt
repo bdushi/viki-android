@@ -1,20 +1,22 @@
 package al.viki.ui.home
 
 import al.bruno.adapter.*
+import al.bruno.analytics.AnalyticsServiceProviders
 import al.bruno.core.State
 import al.bruno.core.data.source.model.response.PropertiesResponse
-import al.bruno.core.data.source.model.response.RequestResponse
 import al.viki.BuildConfig
 import al.viki.R
 import al.viki.authentication.auth.NotifyAuthenticationChange
 import al.viki.common.hideSoftKeyBoard
 import al.viki.common.propertiesDiffUtil
-import al.viki.common.requestDiffUtil
+import al.viki.common.toUserUi
+import al.viki.core.di.UserProvider
 import al.viki.databinding.*
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.FilterUi
 import al.viki.model.UserUi
 import al.viki.ui.filter.FilterDialog
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.graphics.drawable.InsetDrawable
@@ -33,12 +35,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.analytics.FirebaseAnalytics
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
-    private var userUi: UserUi? = null
+    @Inject
+    lateinit var analyticsServiceProviders: AnalyticsServiceProviders
+
+    @Inject
+    lateinit var userProvider: UserProvider
+
     private var filterUi = FilterUi()
     private var _binding: FragmentHomeBinding? = null
     private var notifyAuthenticationChange: NotifyAuthenticationChange? = null
@@ -87,9 +95,20 @@ class HomeFragment : Fragment() {
                                         getString(R.string.app_name)
                                     )
                                 )
+                                analyticsServiceProviders.logEvent(
+                                    FirebaseAnalytics.Event.SCREEN_VIEW,
+                                    Pair(
+                                        FirebaseAnalytics.Param.SCREEN_NAME,
+                                        HomeFragment::class.java.name
+                                    ),
+                                    Pair(
+                                        FirebaseAnalytics.Param.SCREEN_CLASS,
+                                        HomeFragment::class.java.name
+                                    )
+                                )
                             }
                             R.id.properties_delete_item ->
-                                if(t.isRequest()) {
+                                if (t.isRequest()) {
                                     MaterialAlertDialogBuilder(requireContext())
                                         .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
                                         .setTitle(R.string.delete_property_title)
@@ -109,7 +128,7 @@ class HomeFragment : Fragment() {
                                         .setTitle(R.string.delete_property_title)
                                         .setMessage(getString(R.string.delete_messages, t.title))
                                         .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
-                                            homeViewModel.deleteProperty(t.id)
+                                            homeViewModel.deleteRequest(t.id)
                                             dialogInterface.dismiss()
                                         }
                                         .setNegativeButton(R.string.cancel_title) { dialogInterface, _ ->
@@ -158,10 +177,8 @@ class HomeFragment : Fragment() {
                 .build()
                 .setOnFilterListener { filter ->
                     filter?.let { it ->
-                        filterUi = filter
-                        collectLatestFlow(homeViewModel.propertiesCollectionPagedList(it.getQuery())) {
-                            propertiesAdapter.submitData(it)
-                        }
+                        filterUi = it
+                        homeViewModel.query.value = it.getQuery()
                     }
                 }
                 .show(
@@ -171,22 +188,14 @@ class HomeFragment : Fragment() {
         }
 
         binding?.refreshProperty?.setOnRefreshListener {
-            collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
-                propertiesAdapter.submitData(it)
-            }
+            homeViewModel.query.value = filterUi.getQuery()
             binding?.refreshProperty?.isRefreshing = false
         }
 
         binding?.search?.setOnEditorActionListener { textView, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_GO) {
                 activity?.hideSoftKeyBoard()
-                collectLatestFlow(
-                    homeViewModel.propertiesCollectionPagedList(
-                        filterUi.getQuery(textView.text.toString())
-                    )
-                ) {
-                    propertiesAdapter.submitData(it)
-                }
+                homeViewModel.query.value = filterUi.getQuery(textView.text.toString())
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
@@ -194,13 +203,7 @@ class HomeFragment : Fragment() {
         binding?.search?.setOnKeyListener { _, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                 activity?.hideSoftKeyBoard()
-                collectLatestFlow(
-                    homeViewModel.propertiesCollectionPagedList(
-                        filterUi.getQuery(binding?.search?.text.toString())
-                    )
-                ) {
-                    propertiesAdapter.submitData(it)
-                }
+                homeViewModel.query.value = filterUi.getQuery(binding?.search?.text.toString())
                 return@setOnKeyListener true
             }
             return@setOnKeyListener false
@@ -210,10 +213,9 @@ class HomeFragment : Fragment() {
             activity?.hideSoftKeyBoard()
             binding?.search?.setText("")
             binding?.search?.clearFocus()
-            collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
-                propertiesAdapter.submitData(it)
-            }
+            homeViewModel.query.value = filterUi.getQuery()
         }
+
         collectLatestFlow(homeViewModel.delete) { response ->
             when (response) {
                 is State.Error -> {
@@ -224,26 +226,14 @@ class HomeFragment : Fragment() {
                 }
                 is State.Success -> {
                     response.t?.let {
-                        collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
-                            propertiesAdapter.submitData(it)
-                        }
+                        homeViewModel.query.value = filterUi.getQuery()
                     }
                 }
             }
         }
 
-        collectLatestFlow(homeViewModel.propertiesCollectionPagedList(filterUi.getQuery())) {
+        collectLatestFlow(homeViewModel.propertiesCollectionPagedList) {
             propertiesAdapter.submitData(it)
-        }
-
-        collectLatestFlow(homeViewModel.user) {
-            when (it) {
-                is State.Error -> {}
-                is State.Loading -> {}
-                is State.Success -> {
-                    userUi = it.t
-                }
-            }
         }
     }
 
@@ -252,6 +242,7 @@ class HomeFragment : Fragment() {
         _binding = null
     }
 
+    @SuppressLint("RestrictedApi")
     private fun showMenu(v: View, @MenuRes menuRes: Int) {
         val popup = PopupMenu(v.context, v)
         popup.menuInflater.inflate(menuRes, popup.menu)
@@ -261,8 +252,7 @@ class HomeFragment : Fragment() {
             menuBuilder.setOptionalIconsVisible(true)
             for (item in menuBuilder.visibleItems) {
                 if (item.itemId == R.id.menu_profile) {
-                    item.title =
-                        if (userUi != null) "${userUi?.username}" else getString(R.string.app_name)
+                    item.title = userProvider.user?.username
                 }
                 val iconMarginPx =
                     TypedValue.applyDimension(
@@ -291,14 +281,14 @@ class HomeFragment : Fragment() {
                 R.id.menu_profile -> {
                     findNavController()
                         .navigate(
-                            HomeFragmentDirections.actionHomeFragmentToProfileFragment(userUi)
+                            HomeFragmentDirections.actionHomeFragmentToProfileFragment(toUserUi(userProvider.user))
                         )
                     true
                 }
                 R.id.menu_settings -> {
                     findNavController()
                         .navigate(
-                            HomeFragmentDirections.actionHomeFragmentToSettingsFragment(userUi)
+                            HomeFragmentDirections.actionHomeFragmentToSettingsFragment(toUserUi(userProvider.user))
                         )
                     true
                 }

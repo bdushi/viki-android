@@ -3,6 +3,7 @@ package al.viki.ui.map
 import al.viki.foundation.R
 import al.viki.model.ClusterItemUi
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.google.android.gms.maps.GoogleMap
@@ -62,7 +63,7 @@ class ItemRenderer(
      * @param person person to return an BitmapDescriptor for
      * @return the person's profile photo as a BitmapDescriptor
      */
-    private fun getItemIcon(item: ClusterItemUi): BitmapDescriptor {
+    private fun getItemIcon(item: ClusterItemUi): BitmapDescriptor  {
         mImageView.setImageDrawable(item.drawable)
         return BitmapDescriptorFactory.fromBitmap(mIconGenerator.makeIcon())
     }

@@ -18,6 +18,7 @@ sealed class Result<out R> {
         }
     }
 }
+
 suspend fun <T> Response<T>.asResponse(): Flow<Result<T>> = flow {
     val body = this@asResponse.body()
     if(this@asResponse.isSuccessful && body != null) {

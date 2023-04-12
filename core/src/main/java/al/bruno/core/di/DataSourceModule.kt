@@ -1,6 +1,7 @@
 package al.bruno.core.di
 
 import al.bruno.core.data.source.*
+import al.bruno.core.data.source.local.SettingsLocalDataSource
 import al.bruno.core.data.source.remote.*
 import dagger.Binds
 import dagger.Module
@@ -44,8 +45,8 @@ abstract class DataSourceModule {
     abstract fun provideRequestAccountRemoteDataSource(authorityRemoteDataSource: RequestAccountRemoteDataSource): RequestAccountDataSource
 
     @Binds
-    abstract fun provideUserRemoteDataSource(userRemoteDataSource: UserRemoteDataSource): UserDataSource
+    abstract fun provideImageRemoteDataSource(imageRemoteDataSource: ImageRemoteDataSource): ImageDataSource
 
     @Binds
-    abstract fun provideImageRemoteDataSource(imageRemoteDataSource: ImageRemoteDataSource): ImageDataSource
+    abstract fun provideSettingsLocalDataSource(settingsLocalDataSource: SettingsLocalDataSource): SettingsDataSource
 }

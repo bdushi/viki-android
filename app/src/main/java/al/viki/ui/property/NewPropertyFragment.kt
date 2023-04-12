@@ -229,13 +229,18 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ga
 
         collectLatestFlow(propertyViewModel.properties) {
             when (it) {
-                is State.Error -> {}
+                is State.Error -> {
+                    binding?.newPropertyProgressIndicator?.visibility = View.GONE
+                }
                 is State.Success -> {
+                    binding?.newPropertyProgressIndicator?.visibility = View.GONE
                     it.t?.let {
                         findNavController().popBackStack()
                     }
                 }
-                is State.Loading -> {}
+                is State.Loading -> {
+                    binding?.newPropertyProgressIndicator?.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -335,7 +340,7 @@ class NewPropertyFragment : Fragment(), View.OnClickListener, OnClickListener<Ga
             }
             R.id.new_property_save -> {
                 binding?.newProperty?.let { newPropertyUi ->
-                    propertyViewModel.save(newPropertyUi)
+                    propertyViewModel.saveProperties.value = newPropertyUi
                 }
             }
         }

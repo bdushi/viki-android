@@ -3,121 +3,88 @@ package al.viki.ui.home
 import al.bruno.core.Result
 import al.bruno.core.State
 import al.bruno.core.data.source.*
-import al.bruno.core.data.source.model.response.PropertiesResponse
 import al.viki.BuildConfig
 import al.viki.common.NETWORK_PAGE_SIZE
 import al.viki.model.ClusterItemUi
-import al.viki.model.UserUi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.bumptech.glide.RequestManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 
 @HiltViewModel
+@OptIn(ExperimentalCoroutinesApi::class)
 class HomeViewModel @Inject constructor(
     private val propertyRepository: PropertyRepository,
     private val requestRepository: RequestRepository,
     private val propertiesRepository: PropertiesRepository,
-    private val userRepository: UserRepository,
-    private val imageRepository: ImageRepository
+    private val imageRepository: ImageRepository,
+    private val requestManager: RequestManager,
 ) : ViewModel() {
-    // Backing property to avoid state updates from other classes
-    private val _user = MutableStateFlow<State<UserUi>>(State.Success(null))
-
-    // The UI collects from this StateFlow to get its state updates
-    val user: StateFlow<State<UserUi>> = _user
-
     // Backing property to avoid state updates from other classes
     private val _delete = MutableStateFlow<State<Boolean>>(State.Success(null))
 
     // The UI collects from this StateFlow to get its state updates
     val delete: StateFlow<State<Boolean>> = _delete
 
-    // Backing property to avoid state updates from other classes
-    private val _clusterProperties = MutableStateFlow<State<List<ClusterItemUi>>>(State.Loading)
+    val query = MutableStateFlow<Map<String, String>>(emptyMap())
 
-    // The UI collects from this StateFlow to get its state updates
-    val clusterProperties: StateFlow<State<List<ClusterItemUi>>> = _clusterProperties
-
-    init {
-        user()
+    val propertiesCollectionPagedList = query.flatMapLatest {
+        Pager(
+            config = PagingConfig(
+                initialLoadSize = NETWORK_PAGE_SIZE,
+                pageSize = NETWORK_PAGE_SIZE,
+                enablePlaceholders = true
+            ),
+            pagingSourceFactory = {
+                PropertiesPagingSource(
+                    propertiesRepository = propertiesRepository,
+                    query = it
+                )
+            }
+        ).flow
+            .cachedIn(viewModelScope)
+            .stateIn(
+                viewModelScope + Dispatchers.IO,
+                SharingStarted.WhileSubscribed(5_000),
+                PagingData.empty()
+            )
     }
 
-    private fun user() {
-        _user.value = State.Loading
-        viewModelScope.launch(Dispatchers.IO) {
-            when (val response = userRepository.user()) {
-                is Result.Error -> {
-                    _user.value = State.Error(response.error)
-                }
-                is Result.Success -> {
-                    _user.value = State.Success(
-                        UserUi(
-                            response.data.id,
-                            response.data.username,
-                            response.data.email,
-                            response.data.firstName,
-                            response.data.lastName,
-                            response.data.phone,
-                            response.data.address,
-                            response.data.authorities,
+    val clusterProperties = query.flatMapLatest {
+        propertiesRepository.properties(it)
+    }.map {
+        when (it) {
+            is Result.Error -> State.Error(it.error)
+            is Result.Success -> {
+                State.Success(
+                    it.data.map { response ->
+                        val item = ClusterItemUi(
+                            response.id,
+                            response.title,
+                            response.description,
+                            response.longitude,
+                            response.latitude,
+                            response.isRequest()
                         )
-                    )
-                }
+                        item.drawable(requestManager)
+                        item
+                    }
+                )
             }
         }
     }
-
-    fun propertiesCollectionPagedList(
-        query: Map<String, String>
-    ): Flow<PagingData<PropertiesResponse>> = Pager(
-        config = PagingConfig(
-            initialLoadSize = NETWORK_PAGE_SIZE,
-            pageSize = NETWORK_PAGE_SIZE,
-            enablePlaceholders = true
-        ),
-        pagingSourceFactory = {
-            PropertiesPagingSource(
-                propertiesRepository = propertiesRepository,
-                query = query
-            )
-        }
-    ).flow
-
-    fun clusterProperties(query: Map<String, String>) {
-        viewModelScope.launch(start = CoroutineStart.UNDISPATCHED) {
-            _clusterProperties.value = propertiesRepository.properties(
-                query = query
-            )
-                .onStart {
-                    State.Loading
-                }
-                .map {
-                    when (it) {
-                        is Result.Error -> State.Error(it.error)
-                        is Result.Success -> {
-                            State.Success(
-                                it.data.map { response ->
-                                    ClusterItemUi(
-                                        response.id,
-                                        response.title,
-                                        response.description,
-                                        response.longitude,
-                                        response.latitude,
-                                        response.isRequest()
-                                    )
-                                }
-                            )
-                        }
-                    }
-                }.stateIn(viewModelScope).value
-        }
-    }
+        .stateIn(
+            viewModelScope + Dispatchers.IO,
+            SharingStarted.WhileSubscribed(5_000),
+            State.Loading
+        )
 
     fun deleteProperty(id: Long) {
         viewModelScope.launch(Dispatchers.IO) {

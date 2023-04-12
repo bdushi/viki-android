@@ -1,4 +1,4 @@
-package al.viki.domain
+package al.bruno.analytics
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("al.viki.domain.test", appContext.packageName)
+        assertEquals("al.bruno.analytics.test", appContext.packageName)
     }
 }

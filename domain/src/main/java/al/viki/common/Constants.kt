@@ -1,5 +1,6 @@
 package al.viki.common
 
+const val CONSENT = "consent"
 const val ACCESS_TOKEN = "access_token"
 const val REFRESH_TOKEN = "refresh_token"
 const val VIKI_PREFERENCES = "viki_preferences"

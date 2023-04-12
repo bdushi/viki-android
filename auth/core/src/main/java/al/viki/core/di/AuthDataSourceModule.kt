@@ -3,10 +3,12 @@ package al.viki.core.di
 import al.viki.core.AuthDataSource
 import al.viki.core.RegistrationDataSource
 import al.viki.core.TokenDataSource
+import al.viki.core.UserDataSource
 import al.viki.core.local.AuthLocalDataSource
 import al.viki.core.remote.AuthRemoteDataSource
 import al.viki.core.remote.RegistrationRemoteDataSource
 import al.viki.core.remote.TokenRemoteDataSource
+import al.viki.core.remote.UserRemoteDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -28,4 +30,8 @@ abstract class AuthDataSourceModule {
 
     @Binds
     abstract fun provideTokenRemoteDataSource(tokenRemoteDataSource: TokenRemoteDataSource): TokenDataSource
+
+    @Binds
+    abstract fun provideUserRemoteDataSource(userRemoteDataSource: UserRemoteDataSource): UserDataSource
+
 }

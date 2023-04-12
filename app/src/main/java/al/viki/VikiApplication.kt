@@ -16,15 +16,8 @@ import javax.inject.Inject
 
 @HiltAndroidApp
 class VikiApplication : Application(), Configuration.Provider {
-
     @Inject
     lateinit var vikiWorkerFactory: HiltWorkerFactory
-
-    override fun onCreate() {
-        super.onCreate()
-
-    }
-
     override fun getWorkManagerConfiguration() = Configuration
         .Builder()
         .setMinimumLoggingLevel(android.util.Log.DEBUG)

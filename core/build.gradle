@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
+    id "com.google.protobuf" version "0.8.17"
 }
 
 android {
@@ -38,13 +39,23 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.core:core-ktx:1.9.0'
     api project(path: ':domain')
+    // DateStore
+    api 'androidx.preference:preference-ktx:1.2.0'
+    api "androidx.datastore:datastore-preferences:1.0.0"
+    api  "com.google.protobuf:protobuf-javalite:3.19.2"
+    api  "androidx.datastore:datastore-core:1.0.0"
+    // Retrofit
+    api 'com.squareup.retrofit2:retrofit:2.9.0'
+    api 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.9'
+    api 'com.squareup.retrofit2:converter-moshi:2.9.0'
+//    api 'com.squareup.moshi:moshi-kotlin:1.14.0'
+    // RxJava
+    api 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    api 'io.reactivex.rxjava3:rxjava:3.1.6'
     // worker
-    api "androidx.work:work-runtime-ktx:2.8.0"
+    api "androidx.work:work-runtime-ktx:2.8.1"
     api 'androidx.hilt:hilt-work:1.0.0'
     kapt "androidx.hilt:hilt-compiler:1.0.0"
-    // Import the BoM for the Firebase platform
-    api platform('com.google.firebase:firebase-bom:30.2.0')
-    api 'com.google.firebase:firebase-storage-ktx'
     api 'id.zelory:compressor:3.0.1'
 //    implementation 'com.google.firebase:firebase-perf-ktx'
     // hilt
@@ -54,4 +65,22 @@ dependencies {
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+}
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:3.21.5"
+    }
+    // Generates the java Protobuf-lite code for the Protobufs in this project. See
+    // https://github.com/google/protobuf-gradle-plugin#customizing-protobuf-compilation
+    // for more information.
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option 'lite'
+                }
+            }
+        }
+    }
 }

@@ -5,6 +5,7 @@ import al.bruno.core.State
 import al.viki.core.RegistrationRepository
 import al.viki.core.model.User
 import al.bruno.core.data.source.model.response.ValidationResponse
+import al.viki.core.model.request.UserRegister
 import al.viki.core.model.response.AuthResponse
 import android.net.Uri
 import androidx.lifecycle.ViewModel
@@ -46,7 +47,7 @@ class RegisterViewModel @Inject constructor(private val registrationRepository: 
         _register.value = State.Loading
         viewModelScope.launch {
             when (val response = registrationRepository.register(
-                user = User(
+                user = UserRegister(
                     username = username.value,
                     email = email.value.toString(),
                     firstName = firstName.value,

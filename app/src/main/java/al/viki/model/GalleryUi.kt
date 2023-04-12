@@ -2,6 +2,6 @@ package al.viki.model
 
 import android.net.Uri
 
-class GalleryUi (
+data class GalleryUi (
     val uri: Uri
 )

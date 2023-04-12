@@ -6,7 +6,6 @@ import al.viki.R
 import al.viki.databinding.FragmentPropertyDetailsBinding
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.PropertiesUi
-import al.viki.model.PropertyUi
 import al.viki.ui.home.HomeViewModel
 import android.Manifest
 import android.content.Intent
@@ -18,6 +17,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.ObservableBoolean
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs

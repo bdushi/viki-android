@@ -1,72 +1,14 @@
 plugins {
-    id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
-    id "com.google.protobuf" version "0.8.17"
+    id 'java-library'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
-android {
-    namespace 'al.bruno.domain'
-    compileSdk 33
-    defaultConfig {
-        minSdk 21
-        targetSdk 33
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles "consumer-rules.pro"
-    }
-
-    buildTypes {
-        debug {
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-        release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = '11'
-    }
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.9.0'
-    // DateStore
-    api 'androidx.preference:preference-ktx:1.2.0'
-    api "androidx.datastore:datastore-preferences:1.0.0"
-    api  "com.google.protobuf:protobuf-javalite:3.19.2"
-    api  "androidx.datastore:datastore-core:1.0.0"
-    // Retrofit
-    api 'com.squareup.retrofit2:retrofit:2.9.0'
-    api 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.9'
-    api 'com.squareup.retrofit2:converter-moshi:2.9.0'
-//    api 'com.squareup.moshi:moshi-kotlin:1.14.0'
-    // RxJava
-    api 'io.reactivex.rxjava3:rxandroid:3.0.2'
-    api 'io.reactivex.rxjava3:rxjava:3.1.6'
-
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
 
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.21.5"
-    }
-    // Generates the java Protobuf-lite code for the Protobufs in this project. See
-    // https://github.com/google/protobuf-gradle-plugin#customizing-protobuf-compilation
-    // for more information.
-    generateProtoTasks {
-        all().each { task ->
-            task.builtins {
-                java {
-                    option 'lite'
-                }
-            }
-        }
-    }
-}

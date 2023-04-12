@@ -1,4 +1,4 @@
-package al.viki
+package al.bruno.core
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer

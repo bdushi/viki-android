@@ -1,23 +1,24 @@
 package al.viki.ui.property
 
+import al.bruno.analytics.AnalyticsServiceProviders
+import al.bruno.analytics.events.*
 import al.bruno.core.Result
 import al.bruno.core.State
-import al.bruno.core.asResult
 import al.bruno.core.data.source.*
 import al.bruno.core.data.source.model.*
 import al.bruno.core.data.source.model.Operation
-import al.bruno.core.data.source.model.Unit
 import al.bruno.core.data.source.model.request.PropertyRequest
+import al.viki.core.di.UserProvider
 import al.viki.model.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import javax.inject.Inject
 
 @HiltViewModel
@@ -28,7 +29,9 @@ class PropertyViewModel @Inject constructor(
     private val propertyTypeRepository: PropertyTypeRepository,
     private val unitRepository: UnitRepository,
     private val propertyRepository: PropertyRepository,
-    private val workManager: WorkManager
+    private val workManager: WorkManager,
+    private val analyticsServiceProviders: AnalyticsServiceProviders,
+    private val userProvider: UserProvider
 ) : ViewModel() {
     // Backing property to avoid state updates from other classes
     private val _cities = MutableStateFlow<State<List<CityUi>?>>(State.Success(null))
@@ -60,11 +63,7 @@ class PropertyViewModel @Inject constructor(
     // The UI collects from this StateFlow to get its state updates
     val units: StateFlow<State<List<UnitUi>?>> = _units
 
-    // Backing property to avoid state updates from other classes
-    private val _properties = MutableStateFlow<State<Int>>(State.Success(null))
-
-    // The UI collects from this StateFlow to get its state updates
-    val properties: StateFlow<State<Int>> = _properties
+    val saveProperties = MutableStateFlow(NewPropertyUi())
 
     private val photoList: MutableList<GalleryUi> = mutableListOf()
 
@@ -201,86 +200,108 @@ class PropertyViewModel @Inject constructor(
         _photo.value = photoList
     }
 
-    fun save(newPropertyUi: NewPropertyUi) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _properties.value = State.Loading
-            propertyRepository.property(
-                PropertyRequest(
-                    newPropertyUi.title,
-                    newPropertyUi.description,
-                    newPropertyUi.floorPlan,
-                    PropertyType(
-                        newPropertyUi.propertyType?.id,
-                        newPropertyUi.propertyType?.propertyType
-                    ),
-                    Operation(
-                        newPropertyUi.operation?.id,
-                        newPropertyUi.operation?.operation
-                    ),
-                    Attribute(
-                        newPropertyUi.price,
-                        newPropertyUi.area,
-                        Currency(
-                            newPropertyUi.currency?.id,
-                            newPropertyUi.currency?.currency,
-                            newPropertyUi.currency?.symbol,
-                            newPropertyUi.currency?.code,
-                            newPropertyUi.currency?.decimalMark
-                        ),
-                        Unit(
-                            newPropertyUi.unit?.id,
-                            newPropertyUi.unit?.unit
-                        ),
-                    ),
-                    Address(
-                        newPropertyUi.address,
-                        "TODO-This going to be defined in the future",
-                        City(
-                            newPropertyUi.city?.id,
-                            newPropertyUi.city?.city,
-                            newPropertyUi.city?.zipCode,
-                            Country(
-                                newPropertyUi.city?.countryUi?.id,
-                                newPropertyUi.city?.countryUi?.country,
-                                newPropertyUi.city?.countryUi?.countryCode
-                            )
-                        ),
-                        Country(
-                            newPropertyUi.city?.countryUi?.id,
-                            newPropertyUi.city?.countryUi?.country,
-                            newPropertyUi.city?.countryUi?.countryCode
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    val properties = saveProperties.flatMapLatest { newProperty ->
+        propertyRepository.property(
+            save(newProperty)
+        ).map {
+            when (it) {
+                is Result.Error -> State.Error(it.error)
+                is Result.Success -> {
+                    analyticsServiceProviders
+                        .logEvent(
+                            CREATE_NEW_PROPERTY_EVENT,
+                            Pair(USERNAME, userProvider.user?.username),
+                            Pair(PROPERTY_ID, it.data.toString()),
+                            Pair(FLOOR_PLAN, newProperty.floorPlan),
+                            Pair(OPERATION, newProperty.operation),
+                            Pair(PROPERTY_TYPE, newProperty.propertyType),
+                            Pair(CURRENCY, newProperty.currency),
+                            Pair(UNIT, newProperty.unit),
+                            Pair(AREA, newProperty.area),
+                            Pair(PRICE, newProperty.price),
+                            Pair(LONGITUDE, newProperty.location?.longitude),
+                            Pair(LATITUDE, newProperty.location?.latitude)
                         )
-                    ),
-                    Location(
-                        newPropertyUi.location?.longitude ?: 0.0,
-                        newPropertyUi.location?.latitude ?: 0.0
-                    )
-                )
-            ).map {
-                when(it) {
-                    is Result.Error ->  _properties.value = State.Error(it.error)
-                    is Result.Success -> {
-                        workManager
-                            .enqueue(
-                                OneTimeWorkRequestBuilder<UploadWorker>()
-                                    .setInputData(
-                                        Data
-                                            .Builder()
-                                            .putInt("ID", it.data)
-                                            .putStringArray(
-                                                "PHOTO_UI",
-                                                photo.value.map { photoUi ->
-                                                    photoUi.uri.toString()
-                                                }.toTypedArray()
-                                            )
-                                            .build()
-                                    )
-                                    .build()
-                            )
-                        _properties.value = State.Success(it.data)
-                    }
+                    analyticsServiceProviders
+                        .setUserProperty(USERNAME, "skashuta")
+                    workManager
+                        .enqueue(
+                            OneTimeWorkRequestBuilder<UploadWorker>()
+                                .setInputData(
+                                    Data
+                                        .Builder()
+                                        .putInt("ID", it.data)
+                                        .putStringArray(
+                                            "PHOTO_UI",
+                                            photo.value.map { photoUi ->
+                                                photoUi.uri.toString()
+                                            }.toTypedArray()
+                                        )
+                                        .build()
+                                )
+                                .build()
+                        )
+                    State.Success(it.data)
                 }
             }
-        }
+        }.stateIn(
+            viewModelScope + Dispatchers.IO,
+            SharingStarted.WhileSubscribed(2_000),
+            State.Loading
+        )
     }
+
+    private fun save(newPropertyUi: NewPropertyUi) = PropertyRequest(
+        newPropertyUi.title,
+        newPropertyUi.description,
+        newPropertyUi.floorPlan,
+        PropertyType(
+            newPropertyUi.propertyType?.id,
+            newPropertyUi.propertyType?.propertyType
+        ),
+        Operation(
+            newPropertyUi.operation?.id,
+            newPropertyUi.operation?.operation
+        ),
+        Attribute(
+            newPropertyUi.price,
+            newPropertyUi.area,
+            Currency(
+                newPropertyUi.currency?.id,
+                newPropertyUi.currency?.currency,
+                newPropertyUi.currency?.symbol,
+                newPropertyUi.currency?.code,
+                newPropertyUi.currency?.decimalMark
+            ),
+            Unit(
+                newPropertyUi.unit?.id,
+                newPropertyUi.unit?.unit
+            ),
+        ),
+        Address(
+            newPropertyUi.address,
+            "TODO-This going to be defined in the future",
+            City(
+                newPropertyUi.city?.id,
+                newPropertyUi.city?.city,
+                newPropertyUi.city?.zipCode,
+                Country(
+                    newPropertyUi.city?.countryUi?.id,
+                    newPropertyUi.city?.countryUi?.country,
+                    newPropertyUi.city?.countryUi?.countryCode
+                )
+            ),
+            Country(
+                newPropertyUi.city?.countryUi?.id,
+                newPropertyUi.city?.countryUi?.country,
+                newPropertyUi.city?.countryUi?.countryCode
+            )
+        ),
+        Location(
+            newPropertyUi.location?.longitude ?: 0.0,
+            newPropertyUi.location?.latitude ?: 0.0
+        )
+    )
 }

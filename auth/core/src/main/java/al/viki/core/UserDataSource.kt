@@ -1,6 +1,6 @@
-package al.bruno.core.data.source
+package al.viki.core
 
-import al.bruno.core.data.source.model.User
+import al.viki.core.model.User
 import retrofit2.Response
 
 interface UserDataSource {

@@ -11,7 +11,6 @@ import al.viki.ui.home.HomeViewModel
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -22,9 +21,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.SupportMapFragment
@@ -35,6 +31,7 @@ import com.google.maps.android.clustering.Cluster
 import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.ClusterManager.OnClusterClickListener
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.update
 
 @AndroidEntryPoint
 class MapViewFragment : Fragment(R.layout.fragment_map_view),
@@ -88,10 +85,8 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view),
                         .Builder()
                         .build()
                         .setOnFilterListener { filter ->
-                            filter?.let { it ->
-                                homeViewModel.clusterProperties(
-                                    query = it.getQuery()
-                                )
+                            filter?.let { query ->
+                                homeViewModel.query.update { query.getQuery() }
                             }
                         }
                         .show(
@@ -145,7 +140,7 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view),
             }
         }
 
-        homeViewModel.clusterProperties(query = args.filter.getQuery())
+        homeViewModel.query.value = args.filter.getQuery()
     }
 
     override fun onDestroyView() {
@@ -153,8 +148,6 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view),
         _binding = null
         googleMap?.clear()
         googleMap = null
-        clusterManager?.clearItems()
-        clusterManager = null
         mapView?.onDestroyView()
         mapView = null
     }
@@ -204,29 +197,7 @@ class MapViewFragment : Fragment(R.layout.fragment_map_view),
                         googleMap?.clear()
                         clusterManager.clearItems()
                         clusterManager.run {
-                            addItems(
-                                items.map { item ->
-                                    Glide
-                                        .with(requireContext())
-                                        .asDrawable()
-                                        .load(item.url)
-                                        .onlyRetrieveFromCache(true)
-                                        .into(object : CustomTarget<Drawable>() {
-                                            override fun onResourceReady(
-                                                resource: Drawable,
-                                                transition: Transition<in Drawable>?
-                                            ) {
-                                                item.drawable = resource
-                                            }
-
-                                            override fun onLoadCleared(placeholder: Drawable?) {
-                                                item.drawable = placeholder
-                                            }
-
-                                        })
-                                    item
-                                }
-                            )
+                            addItems(items)
                             cluster()
                         }
                     }

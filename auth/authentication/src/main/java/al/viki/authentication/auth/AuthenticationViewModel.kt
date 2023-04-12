@@ -3,6 +3,8 @@ package al.viki.authentication.auth
 import al.bruno.core.Result
 import al.bruno.core.State
 import al.viki.core.AuthRepository
+import al.viki.core.UserRepository
+import al.viki.core.di.UserProvider
 import al.viki.core.model.request.AuthRequest
 import al.viki.core.model.response.AuthResponse
 import androidx.lifecycle.ViewModel
@@ -16,7 +18,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userRepository: UserRepository,
+    private val userProvider: UserProvider
 ) :
     ViewModel() {
     val username = MutableStateFlow<String?>(null)
@@ -37,11 +41,17 @@ class AuthenticationViewModel @Inject constructor(
                 )
             )) {
                 is Result.Success -> {
-                    _authentication.value = State.Success(response.data)
+                    when (val userResponse = userRepository.user()) {
+                        is Result.Error -> {
+                            _authentication.value = State.Error(userResponse.error)
+                        }
+                        is Result.Success -> {
+                            userProvider.user = userResponse.data
+                            _authentication.value = State.Success(response.data)
+                        }
+                    }
                 }
-                is Result.Error -> {
-                    _authentication.value = State.Error(response.error)
-                }
+                is Result.Error -> _authentication.value = State.Error(response.error)
             }
         }
 

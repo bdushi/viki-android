@@ -1,12 +1,16 @@
 package al.viki.ui.main
 
+import al.bruno.analytics.AnalyticsServiceProviders
+import al.bruno.analytics.FacebookAnalyticsService
+import al.bruno.analytics.events.APP_BUILD_TYPE
+import al.bruno.analytics.events.APP_PACKAGE_NAME
+import al.bruno.analytics.events.APP_VERSION_NAME
 import al.bruno.core.interceptor.AuthorizationInterceptor
 import al.bruno.core.interceptor.RefreshTokenInterceptor
 import al.viki.BuildConfig
 import al.viki.R
 import al.viki.authentication.auth.AuthenticationActivity
 import al.viki.authentication.auth.NotifyAuthenticationChange
-import al.viki.common.ACCESS_TOKEN
 import al.viki.common.Entry
 import al.viki.common.TOPIC
 import al.viki.model.PropertyUi.Companion.bundleToPropertyUi
@@ -24,14 +28,13 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.NavHostFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,6 +44,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
+
     private val mainViewModel: MainViewModel by viewModels()
 
     @Inject
@@ -49,54 +53,64 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
     @Inject
     lateinit var refreshTokenInterceptor: RefreshTokenInterceptor
 
-    private val notification = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-        if (isGranted) {
-            Firebase
-                .messaging
-                .subscribeToTopic(TOPIC)
-                .addOnCompleteListener { task ->
-                    if (!task.isSuccessful)
-                        Log.d(MainActivity::class.java.name, "Success")
-                }.addOnFailureListener { ex ->
-                    Log.d(
-                        MainActivity::class.java.name,
-                        "Failure: ${ex.message.toString()}"
-                    )
-                }
-        } else {
-            Snackbar
-                .make(
-                    findViewById(android.R.id.content),
-                    getString(R.string.permission_denied),
-                    Snackbar.LENGTH_LONG
-                )
-                .setAction(R.string.settings) {
-                    startActivity(
-                        Intent(
-                            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                            Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+    @Inject
+    lateinit var analyticsServiceProviders: AnalyticsServiceProviders
+
+    private val notification =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                Firebase
+                    .messaging
+                    .subscribeToTopic(TOPIC)
+                    .addOnCompleteListener { task ->
+                        if (!task.isSuccessful)
+                            Log.d(MainActivity::class.java.name, "Success")
+                    }.addOnFailureListener { ex ->
+                        Log.d(
+                            MainActivity::class.java.name,
+                            "Failure: ${ex.message.toString()}"
                         )
+                    }
+            } else {
+                Snackbar
+                    .make(
+                        findViewById(android.R.id.content),
+                        getString(R.string.permission_denied),
+                        Snackbar.LENGTH_LONG
                     )
-                }.show()
+                    .setAction(R.string.settings) {
+                        startActivity(
+                            Intent(
+                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.parse("package:" + BuildConfig.APPLICATION_ID)
+                            )
+                        )
+                    }.show()
+            }
         }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mainViewModel.logEvent()
+        FirebaseInstallations.getInstance().id.addOnSuccessListener {
+            Log.d("TAG", it)
+        }
+        analyticsServiceProviders
+            .setDefaultEventParameters(
+                Pair(APP_PACKAGE_NAME, BuildConfig.APPLICATION_ID),
+                Pair(APP_VERSION_NAME, BuildConfig.VERSION_NAME),
+                Pair(APP_BUILD_TYPE, BuildConfig.BUILD_TYPE),
+            )
         authorizationInterceptor.setOnSessionListen {
             startActivity(
                 Intent(this@MainActivity, AuthenticationActivity::class.java)
                     .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             )
-            finish()
         }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 mainViewModel.token().collectLatest {
-                    val token = it[stringPreferencesKey(ACCESS_TOKEN)]
-                    if (token != null) {
-                        authorizationInterceptor.token = token
+                    if (it != null) {
+                        authorizationInterceptor.token = it
                         setContentView(R.layout.activity_main)
                         val navHostFragment =
                             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -165,7 +179,7 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                                 .messaging
                                 .subscribeToTopic(TOPIC)
                                 .addOnCompleteListener { task ->
-                                    if (!task.isSuccessful)
+                                    if (task.isSuccessful)
                                         Log.d(MainActivity::class.java.name, "Success")
                                 }.addOnFailureListener { ex ->
                                     Log.d(
@@ -179,7 +193,6 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                             Intent(this@MainActivity, AuthenticationActivity::class.java)
                                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         )
-                        finish()
                     }
                 }
             }

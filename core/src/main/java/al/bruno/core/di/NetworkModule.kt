@@ -120,9 +120,5 @@ class NetworkModule {
 
     @Provides
     @Reusable
-    fun userService(retrofit: Retrofit): UserService = retrofit.create(UserService::class.java)
-
-    @Provides
-    @Reusable
     fun imageService(retrofit: Retrofit): ImageService = retrofit.create(ImageService::class.java)
 }
