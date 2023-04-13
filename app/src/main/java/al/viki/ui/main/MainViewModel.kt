@@ -34,7 +34,6 @@ class MainViewModel @Inject constructor(
     suspend fun token() = authRepository
         .token()
         .flatMapMerge {
-            Log.d("TAG", "MainViewModel -> $it")
             if(it != null) {
                 authorizationInterceptor.token = it
                 userRepository.user().map { user ->

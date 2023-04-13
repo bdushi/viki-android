@@ -102,7 +102,7 @@ class HomeViewModel @Inject constructor(
                         }
                         is Result.Success -> {
                             _delete.value =
-                                State.Success((property.data as Boolean) && (images.data as Int) == 200)
+                                State.Success((property.data as Boolean))
                         }
                     }
                 }
