@@ -1,11 +1,9 @@
 package al.viki.ui.main
 
 import al.bruno.analytics.AnalyticsServiceProviders
-import al.bruno.analytics.FacebookAnalyticsService
 import al.bruno.analytics.events.APP_BUILD_TYPE
 import al.bruno.analytics.events.APP_PACKAGE_NAME
 import al.bruno.analytics.events.APP_VERSION_NAME
-import al.bruno.core.interceptor.AuthorizationInterceptor
 import al.bruno.core.interceptor.RefreshTokenInterceptor
 import al.viki.BuildConfig
 import al.viki.R
@@ -38,7 +36,6 @@ import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.ktx.messaging
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,9 +43,6 @@ import javax.inject.Inject
 class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
 
     private val mainViewModel: MainViewModel by viewModels()
-
-    @Inject
-    lateinit var authorizationInterceptor: AuthorizationInterceptor
 
     @Inject
     lateinit var refreshTokenInterceptor: RefreshTokenInterceptor
@@ -100,17 +94,10 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                 Pair(APP_VERSION_NAME, BuildConfig.VERSION_NAME),
                 Pair(APP_BUILD_TYPE, BuildConfig.BUILD_TYPE),
             )
-        authorizationInterceptor.setOnSessionListen {
-            startActivity(
-                Intent(this@MainActivity, AuthenticationActivity::class.java)
-                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            )
-        }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                mainViewModel.token().collectLatest {
-                    if (it != null) {
-                        authorizationInterceptor.token = it
+                mainViewModel.token().collect {
+                    if (it) {
                         setContentView(R.layout.activity_main)
                         val navHostFragment =
                             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -188,7 +175,8 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                                     )
                                 }
                         }
-                    } else {
+                    }
+                    else {
                         startActivity(
                             Intent(this@MainActivity, AuthenticationActivity::class.java)
                                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)

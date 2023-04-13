@@ -18,19 +18,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthenticationViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
-    private val userProvider: UserProvider
+    private val authRepository: AuthRepository
 ) :
     ViewModel() {
     val username = MutableStateFlow<String?>(null)
     val password = MutableStateFlow<String?>(null)
 
     // Backing property to avoid state updates from other classes
-    private val _authentication = MutableStateFlow<State<AuthResponse>?>(null)
+    private val _authentication = MutableStateFlow<State<AuthResponse>>(State.Success(null))
 
     // The UI collects from this StateFlow to get its state updates
-    val authentication: StateFlow<State<AuthResponse>?> = _authentication
+    val authentication: StateFlow<State<AuthResponse>> = _authentication
 
     fun auth() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -40,17 +38,7 @@ class AuthenticationViewModel @Inject constructor(
                     password.value
                 )
             )) {
-                is Result.Success -> {
-                    when (val userResponse = userRepository.user()) {
-                        is Result.Error -> {
-                            _authentication.value = State.Error(userResponse.error)
-                        }
-                        is Result.Success -> {
-                            userProvider.user = userResponse.data
-                            _authentication.value = State.Success(response.data)
-                        }
-                    }
-                }
+                is Result.Success -> _authentication.value = State.Success(response.data)
                 is Result.Error -> _authentication.value = State.Error(response.error)
             }
         }

@@ -39,15 +39,11 @@ class FirebaseAnalyticsEvents @Inject constructor(private val firebaseAnalytics:
         )
     }
 
-    fun logScreenView(screenName: String, screenClass: String) {
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, screenName);
-        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass);
-//        bundle.putString(MyAppAnalyticsConstants.Param.TOPIC, topic);
+    fun logScreenView(screenClass: Class<*>) {
         firebaseAnalytics
             .logEvent(
                 FirebaseAnalytics.Event.SCREEN_VIEW,
-                Pair(FirebaseAnalytics.Param.SCREEN_NAME, screenName),
+                Pair(FirebaseAnalytics.Param.SCREEN_NAME, screenClass.name),
                 Pair(FirebaseAnalytics.Param.SCREEN_CLASS, screenClass),
             )
     }

@@ -10,6 +10,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
@@ -20,8 +21,10 @@ class AuthLocalDataSource @Inject constructor(private val dataStore: DataStore<P
         TODO("Not yet implemented")
     }
 
-    override suspend fun token(): Flow<Preferences> {
-        return dataStore.data
+    override fun token(): Flow<String?> {
+        return dataStore.data.map {
+            it[stringPreferencesKey(ACCESS_TOKEN)]
+        }
     }
 
     override suspend fun token(accessToken: String, refreshToken: String) {

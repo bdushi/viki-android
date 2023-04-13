@@ -1,9 +1,11 @@
 package al.bruno.analytics.events
 
 const val USERNAME = "username"
+
 /**
  *
  */
+
 const val APP_PACKAGE_NAME = "app_package_name"
 const val APP_VERSION_NAME = "app_version_name"
 const val APP_BUILD_TYPE = "app_build_type"

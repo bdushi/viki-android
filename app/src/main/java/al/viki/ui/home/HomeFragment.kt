@@ -108,7 +108,7 @@ class HomeFragment : Fragment() {
                                 )
                             }
                             R.id.properties_delete_item ->
-                                if (t.isRequest()) {
+                                if (!t.isRequest()) {
                                     MaterialAlertDialogBuilder(requireContext())
                                         .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
                                         .setTitle(R.string.delete_property_title)

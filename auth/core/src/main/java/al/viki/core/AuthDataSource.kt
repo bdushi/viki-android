@@ -9,7 +9,7 @@ import retrofit2.Response
 
 interface AuthDataSource {
     suspend fun auth(authRequest: AuthRequest): Response<AuthResponse>
-    suspend fun token(): Flow<Preferences>
+    fun token(): Flow<String?>
     suspend fun token(accessToken: String, refreshToken: String)
     suspend fun clear()
     suspend fun newPassword(password: String): Response<ResponseBody>

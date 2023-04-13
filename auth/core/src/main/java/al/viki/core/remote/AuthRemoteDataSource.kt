@@ -15,7 +15,7 @@ class AuthRemoteDataSource @Inject constructor(private val authService: AuthServ
         return authService.auth(authRequest = authRequest)
     }
 
-    override suspend fun token(): Flow<Preferences> {
+    override fun token(): Flow<String?> {
         TODO("Not yet implemented")
     }
 

@@ -7,8 +7,6 @@ import al.viki.core.model.response.AuthResponse
 import al.bruno.core.Result
 import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
-import retrofit2.Response
 import javax.inject.Inject
 
 class AuthRepository @Inject constructor(
@@ -21,7 +19,10 @@ class AuthRepository @Inject constructor(
             val response = authRemoteDataSource.auth(authRequest)
             val body = response.body()
             if (response.isSuccessful && body != null) {
-                authLocalDataSource.token(accessToken = body.accessToken, refreshToken = body.refreshToken)
+                authLocalDataSource.token(
+                    accessToken = body.accessToken,
+                    refreshToken = body.refreshToken
+                )
                 Result.Success(body)
             } else {
                 Result.Error(response.message())
@@ -58,7 +59,7 @@ class AuthRepository @Inject constructor(
         }
     }
 
-    suspend fun token(): Flow<Preferences> {
+    fun token(): Flow<String?> {
         return authLocalDataSource.token()
     }
 

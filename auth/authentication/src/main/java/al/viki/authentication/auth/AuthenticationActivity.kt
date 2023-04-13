@@ -4,6 +4,7 @@ import al.bruno.core.State
 import al.viki.authentication.databinding.ActivityAuthenticationBinding
 import al.viki.authentication.forgot.password.ForgotPasswordActivity
 import al.viki.authentication.register.RegisterActivity
+import android.R
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
@@ -52,16 +53,25 @@ class AuthenticationActivity : AppCompatActivity() {
                     when (response) {
                         is State.Error -> response.error?.let {
                             Snackbar.make(
-                                findViewById(android.R.id.content),
+                                findViewById(R.id.content),
                                 it, Snackbar.LENGTH_SHORT
                             ).show()
                         }
                         is State.Success -> {
-                            startActivity(Intent().setComponent(ComponentName(packageName, "al.viki.ui.main.MainActivity")))
-                            finish()
+                            if(response.t != null) {
+                                startActivity(
+                                    Intent().setComponent(
+                                        ComponentName(
+                                            packageName,
+                                            "al.viki.ui.main.MainActivity"
+                                        )
+                                    )
+                                )
+                                finish()
+                            }
                         }
-                        else -> {
-
+                        State.Loading -> {
+                            // TODO
                         }
                     }
                 }
