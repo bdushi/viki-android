@@ -2,11 +2,9 @@ package al.viki.ui.main
 
 import al.bruno.core.Result
 import al.bruno.core.interceptor.AuthorizationInterceptor
-import al.bruno.core.interceptor.TokenState
 import al.viki.core.AuthRepository
 import al.viki.core.UserRepository
 import al.viki.core.di.UserProvider
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,7 +32,7 @@ class MainViewModel @Inject constructor(
     suspend fun token() = authRepository
         .token()
         .flatMapMerge {
-            if(it != null) {
+            if (it != null) {
                 authorizationInterceptor.token = it
                 userRepository.user().map { user ->
                     when (user) {
@@ -49,10 +47,9 @@ class MainViewModel @Inject constructor(
                 flowOf(false)
             }
         }
-        .distinctUntilChanged()
-        .combine(authorizationInterceptor.tokenState) { userRetrieved, tokenState ->
-            tokenState != TokenState.ExpiredToken && userRetrieved
-        }
+//        .combine(authorizationInterceptor.tokenState) { userRetrieved, tokenState ->
+//            tokenState != TokenState.ExpiredToken && userRetrieved
+//        }
         .stateIn(
             viewModelScope + Dispatchers.IO
         )

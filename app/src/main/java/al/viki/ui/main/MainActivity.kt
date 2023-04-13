@@ -4,7 +4,7 @@ import al.bruno.analytics.AnalyticsServiceProviders
 import al.bruno.analytics.events.APP_BUILD_TYPE
 import al.bruno.analytics.events.APP_PACKAGE_NAME
 import al.bruno.analytics.events.APP_VERSION_NAME
-import al.bruno.core.interceptor.RefreshTokenInterceptor
+import al.bruno.core.interceptor.AuthorizationInterceptor
 import al.viki.BuildConfig
 import al.viki.R
 import al.viki.authentication.auth.AuthenticationActivity
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
     private val mainViewModel: MainViewModel by viewModels()
 
     @Inject
-    lateinit var refreshTokenInterceptor: RefreshTokenInterceptor
+    lateinit var authorizationInterceptor: AuthorizationInterceptor
 
     @Inject
     lateinit var analyticsServiceProviders: AnalyticsServiceProviders
@@ -82,12 +82,19 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                     }.show()
             }
         }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseInstallations.getInstance().id.addOnSuccessListener {
             Log.d("TAG", it)
         }
+
+        authorizationInterceptor.setOnSessionListen {
+            startActivity(
+                Intent(this@MainActivity, AuthenticationActivity::class.java)
+                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            )
+        }
+
         analyticsServiceProviders
             .setDefaultEventParameters(
                 Pair(APP_PACKAGE_NAME, BuildConfig.APPLICATION_ID),
@@ -97,6 +104,7 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 mainViewModel.token().collect {
+                    Log.d("TAG", "token ---- $it")
                     if (it) {
                         setContentView(R.layout.activity_main)
                         val navHostFragment =
@@ -148,7 +156,10 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                                             .subscribeToTopic(TOPIC)
                                             .addOnCompleteListener { task ->
                                                 if (!task.isSuccessful)
-                                                    Log.d(MainActivity::class.java.name, "Success")
+                                                    Log.d(
+                                                        MainActivity::class.java.name,
+                                                        "Success"
+                                                    )
                                             }.addOnFailureListener { ex ->
                                                 Log.d(
                                                     MainActivity::class.java.name,
@@ -175,8 +186,7 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                                     )
                                 }
                         }
-                    }
-                    else {
+                    } else {
                         startActivity(
                             Intent(this@MainActivity, AuthenticationActivity::class.java)
                                 .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
