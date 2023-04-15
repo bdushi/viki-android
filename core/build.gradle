@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
-    id "com.google.protobuf" version "0.8.17"
+    id "com.google.protobuf" version '0.9.0'
 }
 
 android {
@@ -27,23 +27,23 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = '11'
+        jvmTarget = '17'
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.core:core-ktx:1.10.0'
     api project(path: ':domain')
     // DateStore
     api 'androidx.preference:preference-ktx:1.2.0'
-    api "androidx.datastore:datastore-preferences:1.0.0"
-    api  "com.google.protobuf:protobuf-javalite:3.19.2"
-    api  "androidx.datastore:datastore-core:1.0.0"
+    api 'androidx.datastore:datastore-preferences:1.1.0-alpha04'
+    api  'com.google.protobuf:protobuf-javalite:3.19.2'
+    api 'androidx.datastore:datastore-core:1.1.0-alpha04'
     // Retrofit
     api 'com.squareup.retrofit2:retrofit:2.9.0'
     api 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.9'

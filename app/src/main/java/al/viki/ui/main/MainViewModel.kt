@@ -1,7 +1,12 @@
 package al.viki.ui.main
 
+import al.bruno.analytics.AnalyticsServiceProviders
+import al.bruno.analytics.events.APP_BUILD_TYPE
+import al.bruno.analytics.events.APP_PACKAGE_NAME
+import al.bruno.analytics.events.APP_VERSION_NAME
 import al.bruno.core.Result
 import al.bruno.core.interceptor.AuthorizationInterceptor
+import al.viki.BuildConfig
 import al.viki.core.AuthRepository
 import al.viki.core.UserRepository
 import al.viki.core.di.UserProvider
@@ -21,8 +26,14 @@ class MainViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val authorizationInterceptor: AuthorizationInterceptor,
     private val userRepository: UserRepository,
-    private val userProvider: UserProvider
+    private val userProvider: UserProvider,
+    private val analyticsServiceProviders: AnalyticsServiceProviders
 ) : ViewModel() {
+
+    init {
+        logDefaultEventParameters()
+    }
+
     fun clear() {
         viewModelScope.launch {
             authRepository.clear()
@@ -47,10 +58,16 @@ class MainViewModel @Inject constructor(
                 flowOf(false)
             }
         }
-//        .combine(authorizationInterceptor.tokenState) { userRetrieved, tokenState ->
-//            tokenState != TokenState.ExpiredToken && userRetrieved
-//        }
         .stateIn(
             viewModelScope + Dispatchers.IO
         )
+
+    private fun logDefaultEventParameters() {
+        analyticsServiceProviders
+            .setDefaultEventParameters(
+                Pair(APP_PACKAGE_NAME, BuildConfig.APPLICATION_ID),
+                Pair(APP_VERSION_NAME, BuildConfig.VERSION_NAME),
+                Pair(APP_BUILD_TYPE, BuildConfig.BUILD_TYPE),
+            )
+    }
 }

@@ -24,6 +24,7 @@
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="@{ auth.authentication instanceof State.Loading ? View.GONE : View.VISIBLE }"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -32,8 +33,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:layout_margin="@dimen/large_dimen"
-                android:visibility="@{ auth.authentication instanceof State.Loading ? View.GONE : View.VISIBLE }">
+                android:layout_margin="@dimen/large_dimen">
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_authentication_title"
                     android:layout_width="wrap_content"

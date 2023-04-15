@@ -32,6 +32,7 @@ class AuthenticationViewModel @Inject constructor(
 
     fun auth() {
         viewModelScope.launch(Dispatchers.IO) {
+            _authentication.value = State.Loading
             when (val response = authRepository.auth(
                 AuthRequest(
                     username.value,

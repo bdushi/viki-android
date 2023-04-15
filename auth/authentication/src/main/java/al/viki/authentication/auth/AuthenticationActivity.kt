@@ -1,10 +1,10 @@
 package al.viki.authentication.auth
 
 import al.bruno.core.State
+import al.viki.authentication.R
 import al.viki.authentication.databinding.ActivityAuthenticationBinding
 import al.viki.authentication.forgot.password.ForgotPasswordActivity
 import al.viki.authentication.register.RegisterActivity
-import android.R
 import android.content.ComponentName
 import android.content.Intent
 import android.os.Bundle
@@ -38,9 +38,9 @@ class AuthenticationActivity : AppCompatActivity() {
             // Disable BackPress for AuthenticationActivity
         }
         val binding = ActivityAuthenticationBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         binding.lifecycleOwner = this
         binding.auth = authenticationViewModel
-        setContentView(binding.root)
         binding.tvRequestNewPassword.setOnClickListener {
             startActivity(Intent(this@AuthenticationActivity, ForgotPasswordActivity::class.java))
         }
@@ -53,7 +53,7 @@ class AuthenticationActivity : AppCompatActivity() {
                     when (response) {
                         is State.Error -> response.error?.let {
                             Snackbar.make(
-                                findViewById(R.id.content),
+                                findViewById(android.R.id.content),
                                 it, Snackbar.LENGTH_SHORT
                             ).show()
                         }

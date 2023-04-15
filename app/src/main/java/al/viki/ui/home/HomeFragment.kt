@@ -99,7 +99,7 @@ class HomeFragment : Fragment() {
                                     FirebaseAnalytics.Event.SCREEN_VIEW,
                                     Pair(
                                         FirebaseAnalytics.Param.SCREEN_NAME,
-                                        HomeFragment::class.java.name
+                                        HomeFragment::class.java.simpleName
                                     ),
                                     Pair(
                                         FirebaseAnalytics.Param.SCREEN_CLASS,

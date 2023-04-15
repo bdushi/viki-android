@@ -1,6 +1,9 @@
 package al.viki.ui.main
 
-import al.bruno.analytics.AnalyticsServiceProviders
+/**
+ * https://developer.android.com/guide/topics/resources/app-languages
+ */
+
 import al.bruno.analytics.events.APP_BUILD_TYPE
 import al.bruno.analytics.events.APP_PACKAGE_NAME
 import al.bruno.analytics.events.APP_VERSION_NAME
@@ -41,15 +44,9 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
-
     private val mainViewModel: MainViewModel by viewModels()
-
     @Inject
     lateinit var authorizationInterceptor: AuthorizationInterceptor
-
-    @Inject
-    lateinit var analyticsServiceProviders: AnalyticsServiceProviders
-
     private val notification =
         registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
             if (isGranted) {
@@ -95,16 +92,9 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
             )
         }
 
-        analyticsServiceProviders
-            .setDefaultEventParameters(
-                Pair(APP_PACKAGE_NAME, BuildConfig.APPLICATION_ID),
-                Pair(APP_VERSION_NAME, BuildConfig.VERSION_NAME),
-                Pair(APP_BUILD_TYPE, BuildConfig.BUILD_TYPE),
-            )
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
                 mainViewModel.token().collect {
-                    Log.d("TAG", "token ---- $it")
                     if (it) {
                         setContentView(R.layout.activity_main)
                         val navHostFragment =
