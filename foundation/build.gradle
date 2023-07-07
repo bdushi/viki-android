@@ -6,10 +6,10 @@ plugins {
 
 android {
     namespace 'al.viki.foundation'
-    compileSdk 33
+    compileSdk 34
     defaultConfig {
         minSdk 24
-        targetSdk 33
+        targetSdk 34
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -39,11 +39,11 @@ android {
 dependencies {
     api 'androidx.appcompat:appcompat:1.7.0-alpha02'
     api 'androidx.appcompat:appcompat-resources:1.7.0-alpha02'
-    api 'androidx.core:core-splashscreen:1.0.0'
-    api 'androidx.constraintlayout:constraintlayout:2.2.0-alpha09'
+    api 'androidx.core:core-splashscreen:1.0.1'
+    api 'androidx.constraintlayout:constraintlayout:2.2.0-alpha10'
     api 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    api 'androidx.core:core-ktx:1.10.0'
-    api 'com.google.android.material:material:1.9.0-alpha01'
+    api 'androidx.core:core-ktx:1.10.1'
+    api 'com.google.android.material:material:1.10.0-alpha05'
     api 'com.github.bumptech.glide:glide:4.15.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'

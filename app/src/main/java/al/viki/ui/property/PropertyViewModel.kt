@@ -94,6 +94,7 @@ class PropertyViewModel @Inject constructor(
                         }
                     )
                 }
+
                 is Result.Error -> {
                     _units.value = State.Error(response.error)
                 }
@@ -114,6 +115,7 @@ class PropertyViewModel @Inject constructor(
                         }
                     )
                 }
+
                 is Result.Error -> {
                     _propertyTypes.value = State.Error(response.error)
                 }
@@ -134,6 +136,7 @@ class PropertyViewModel @Inject constructor(
                         }
                     )
                 }
+
                 is Result.Error -> {
                     _operations.value = State.Error(response.error)
                 }
@@ -157,6 +160,7 @@ class PropertyViewModel @Inject constructor(
                         }
                     )
                 }
+
                 is Result.Error -> {
                     _currencies.value = State.Error(response.error)
                 }
@@ -183,6 +187,7 @@ class PropertyViewModel @Inject constructor(
                         }
                     )
                 }
+
                 is Result.Error -> {
                     _cities.value = State.Error(response.error)
                 }
@@ -202,56 +207,57 @@ class PropertyViewModel @Inject constructor(
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val properties = saveProperties.flatMapLatest { newProperty ->
-        propertyRepository.property(
-            save(newProperty)
-        ).map {
-            when (it) {
-                is Result.Error -> State.Error(it.error)
-                is Result.Success -> {
-                    analyticsServiceProviders
-                        .logEvent(
-                            CREATE_NEW_PROPERTY_EVENT,
-                            Pair(USERNAME, userProvider.user?.username),
-                            Pair(PROPERTY_ID, it.data.toString()),
-                            Pair(FLOOR_PLAN, newProperty.floorPlan),
-                            Pair(OPERATION, newProperty.operation),
-                            Pair(PROPERTY_TYPE, newProperty.propertyType),
-                            Pair(CURRENCY, newProperty.currency),
-                            Pair(UNIT, newProperty.unit),
-                            Pair(AREA, newProperty.area),
-                            Pair(PRICE, newProperty.price),
-                            Pair(LONGITUDE, newProperty.location?.longitude),
-                            Pair(LATITUDE, newProperty.location?.latitude)
-                        )
-                    analyticsServiceProviders
-                        .setUserProperty(USERNAME, "skashuta")
-                    workManager
-                        .enqueue(
-                            OneTimeWorkRequestBuilder<UploadWorker>()
-                                .setInputData(
-                                    Data
-                                        .Builder()
-                                        .putInt("ID", it.data)
-                                        .putStringArray(
-                                            "PHOTO_UI",
-                                            photo.value.map { photoUi ->
-                                                photoUi.uri.toString()
-                                            }.toTypedArray()
-                                        )
-                                        .build()
-                                )
-                                .build()
-                        )
-                    State.Success(it.data)
+    val properties = saveProperties
+        .flatMapLatest { newProperty ->
+            propertyRepository.property(
+                save(newProperty)
+            ).map {
+                when (it) {
+                    is Result.Error -> State.Error(it.error)
+                    is Result.Success -> {
+                        analyticsServiceProviders
+                            .logEvent(
+                                CREATE_NEW_PROPERTY_EVENT,
+                                Pair(USERNAME, userProvider.user?.username),
+                                Pair(PROPERTY_ID, it.data.toString()),
+                                Pair(FLOOR_PLAN, newProperty.floorPlan),
+                                Pair(OPERATION, newProperty.operation),
+                                Pair(PROPERTY_TYPE, newProperty.propertyType),
+                                Pair(CURRENCY, newProperty.currency),
+                                Pair(UNIT, newProperty.unit),
+                                Pair(AREA, newProperty.area),
+                                Pair(PRICE, newProperty.price),
+                                Pair(LONGITUDE, newProperty.location?.longitude),
+                                Pair(LATITUDE, newProperty.location?.latitude)
+                            )
+                        analyticsServiceProviders
+                            .setUserProperty(USERNAME, "skashuta")
+                        workManager
+                            .enqueue(
+                                OneTimeWorkRequestBuilder<UploadWorker>()
+                                    .setInputData(
+                                        Data
+                                            .Builder()
+                                            .putInt("ID", it.data)
+                                            .putStringArray(
+                                                "PHOTO_UI",
+                                                photo.value.map { photoUi ->
+                                                    photoUi.uri.toString()
+                                                }.toTypedArray()
+                                            )
+                                            .build()
+                                    )
+                                    .build()
+                            )
+                        State.Success(it.data)
+                    }
                 }
-            }
-        }.stateIn(
-            viewModelScope + Dispatchers.IO,
-            SharingStarted.WhileSubscribed(2_000),
-            State.Loading
-        )
-    }
+            }.stateIn(
+                viewModelScope + Dispatchers.IO,
+                SharingStarted.WhileSubscribed(2_000),
+                State.Loading
+            )
+        }
 
     private fun save(newPropertyUi: NewPropertyUi) = PropertyRequest(
         newPropertyUi.title,

@@ -4,9 +4,6 @@ package al.viki.ui.main
  * https://developer.android.com/guide/topics/resources/app-languages
  */
 
-import al.bruno.analytics.events.APP_BUILD_TYPE
-import al.bruno.analytics.events.APP_PACKAGE_NAME
-import al.bruno.analytics.events.APP_VERSION_NAME
 import al.bruno.core.interceptor.AuthorizationInterceptor
 import al.viki.BuildConfig
 import al.viki.R

@@ -2,14 +2,15 @@ plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'org.jetbrains.kotlin.kapt'
+    id 'maven-publish'
 }
 
 android {
-    compileSdk 33
+    compileSdk 34
     namespace 'al.bruno.adapter'
     defaultConfig {
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -35,10 +36,26 @@ android {
     }
 }
 
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'al.bruno'
+            artifactId 'adapter'
+            version '1.0.0'
+            artifact("$buildDir/outputs/aar/adapter-release.aar")
+        }
+    }
+
+    repositories {
+        mavenLocal()
+    }
+}
+
+
 dependencies {
     api 'androidx.recyclerview:recyclerview:1.3.0'
-    api 'androidx.paging:paging-runtime:3.2.0-alpha04'
-    testImplementation 'androidx.paging:paging-common:3.2.0-alpha04'
+    api 'androidx.paging:paging-runtime:3.2.0-rc01'
+    testImplementation 'androidx.paging:paging-common:3.2.0-rc01'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

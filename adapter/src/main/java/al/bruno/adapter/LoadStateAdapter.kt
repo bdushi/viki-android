@@ -7,7 +7,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.paging.LoadState
 import androidx.paging.LoadStateAdapter
 
-class LoadStateAdapter<VM: ViewDataBinding>(
+open class LoadStateAdapter<VM: ViewDataBinding>(
     private val r: Int,
     private val bindingData: (loadState: LoadState, vm: VM) -> Unit
 ) : LoadStateAdapter<LoadViewHolder<VM>>() {

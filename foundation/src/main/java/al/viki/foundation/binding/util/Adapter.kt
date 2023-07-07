@@ -29,14 +29,15 @@ object Adapter {
 
     @JvmStatic
     @BindingAdapter("bind:profile")
-    fun profile(photoProfile: ShapeableImageView, username: String?) {
+    fun profile(profilePicture: ShapeableImageView, name: String?) {
         Glide
-            .with(photoProfile.context)
-            .load("https://firebasestorage.googleapis.com/v0/b/viki-135b4.appspot.com/o/photos%2F${username}%2F${username}?alt=media")
-            .error(ContextCompat.getDrawable(photoProfile.context, R.drawable.ic_outline_person)?.also {
-                it.setTint(ContextCompat.getColor(photoProfile.context, R.color.vikiColorBackground))
-            })
-            .into(photoProfile)
+            .with(profilePicture.context)
+            .asDrawable()
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+//            .load("https://firebasestorage.googleapis.com/v0/b/viki-135b4.appspot.com/o/photos%2F${username}%2F${username}?alt=media")
+            .load("https://ui-avatars.com/api/?name=${name}&color=ff0000&background=random&rounded=true&size=512&bold=true")
+            .error(ContextCompat.getDrawable(profilePicture.context, R.drawable.ic_outline_person))
+            .into(profilePicture)
     }
 
     @JvmStatic

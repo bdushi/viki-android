@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="user"
@@ -37,7 +39,9 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center"
                     android:padding="@dimen/micro_dimen"
-                    app:srcCompat="@drawable/ic_outline_person"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    bind:profile="@{@string/personal_information_first_and_last_name(user.firstName, user.lastName)}"
                     app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.App.CornerSize50Percent"
                     app:strokeWidth="@dimen/shape_dimen"
                     app:strokeColor="@android:color/darker_gray"/>
@@ -59,7 +63,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Username"
+                            android:text="@string/username"
                             style="@style/TextAppearance.Material3.TitleSmall"/>
                         <TextView
                             android:layout_width="match_parent"
@@ -76,7 +80,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="E-mail"
+                            android:text="@string/email"
                             style="@style/TextAppearance.Material3.TitleSmall"/>
                         <TextView
                             android:layout_width="match_parent"
@@ -93,7 +97,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Name"
+                            android:text="@string/name"
                             style="@style/TextAppearance.Material3.TitleSmall"/>
                         <TextView
                             android:layout_width="match_parent"
@@ -110,7 +114,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Phone"
+                            android:text="@string/phone"
                             style="@style/TextAppearance.Material3.TitleSmall"/>
                         <TextView
                             android:layout_width="match_parent"
@@ -127,7 +131,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Address"
+                            android:text="@string/address"
                             style="@style/TextAppearance.Material3.TitleSmall"/>
                         <TextView
                             android:layout_width="match_parent"
@@ -140,7 +144,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableEnd="@drawable/ic_outline_navigate_next"
+                    app:drawableEndCompat="@drawable/ic_outline_navigate_next"
                     android:text="@string/change_password"
                     android:layout_marginTop="@dimen/micro_dimen"
                     android:layout_marginBottom="@dimen/micro_dimen"
