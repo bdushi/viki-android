@@ -18,11 +18,12 @@ import javax.inject.Inject
 class VikiApplication : Application(), Configuration.Provider {
     @Inject
     lateinit var vikiWorkerFactory: HiltWorkerFactory
-    override fun getWorkManagerConfiguration() = Configuration
-        .Builder()
-        .setMinimumLoggingLevel(android.util.Log.DEBUG)
-        .setWorkerFactory(vikiWorkerFactory)
-        .build()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration
+            .Builder()
+            .setMinimumLoggingLevel(android.util.Log.DEBUG)
+            .setWorkerFactory(vikiWorkerFactory)
+            .build()
 
 }
 

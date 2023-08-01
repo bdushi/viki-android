@@ -2,7 +2,6 @@ package al.viki.core
 
 import al.viki.core.model.request.AuthRequest
 import al.viki.core.model.response.AuthResponse
-import androidx.datastore.preferences.core.Preferences
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
 import retrofit2.Response

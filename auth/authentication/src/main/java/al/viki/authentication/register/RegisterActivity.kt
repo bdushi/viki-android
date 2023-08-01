@@ -163,7 +163,7 @@ class RegisterActivity : AppCompatActivity() {
                                 .setCancelable(false)
                                 .setTitle("Token has been expired")
                                 .setMessage("Please contact your administrator to send new invitation")
-                                .setPositiveButton("Ok") { d, i ->
+                                .setPositiveButton("Ok") { d, _ ->
                                     d.dismiss()
                                     finish()
                                 }

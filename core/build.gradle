@@ -37,34 +37,34 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation 'androidx.core:core-ktx:1.12.0-beta01'
     api project(path: ':domain')
     // DateStore
     api 'androidx.preference:preference-ktx:1.2.0'
-    api 'androidx.datastore:datastore-preferences:1.1.0-alpha04'
-    api  'com.google.protobuf:protobuf-javalite:3.23.0'
-    api 'androidx.datastore:datastore-core:1.1.0-alpha04'
+    api 'androidx.datastore:datastore-preferences:1.0.0'
+    api 'androidx.datastore:datastore-core:1.0.0'
+    api 'com.google.protobuf:protobuf-javalite:4.0.0-rc-2'
     // Retrofit
     api 'com.squareup.retrofit2:retrofit:2.9.0'
-    api 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.9'
+    api 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11'
     api 'com.squareup.retrofit2:converter-moshi:2.9.0'
 //    api 'com.squareup.moshi:moshi-kotlin:1.14.0'
     // RxJava
     api 'io.reactivex.rxjava3:rxandroid:3.0.2'
     api 'io.reactivex.rxjava3:rxjava:3.1.6'
     // worker
-    api "androidx.work:work-runtime-ktx:2.8.1"
+    api 'androidx.work:work-runtime-ktx:2.9.0-alpha02'
     api 'androidx.hilt:hilt-work:1.0.0'
     kapt "androidx.hilt:hilt-compiler:1.0.0"
     api 'id.zelory:compressor:3.0.1'
 //    implementation 'com.google.firebase:firebase-perf-ktx'
     // hilt
-    implementation "com.google.dagger:hilt-android:2.46.1"
-    kapt "com.google.dagger:hilt-compiler:2.46.1"
-    kapt "com.google.dagger:hilt-android-compiler:2.45"
+    implementation "com.google.dagger:hilt-android:2.47"
+    kapt "com.google.dagger:hilt-compiler:2.47"
+    kapt "com.google.dagger:hilt-android-compiler:2.47"
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.0-alpha01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.0-alpha01'
 }
 
 protobuf {

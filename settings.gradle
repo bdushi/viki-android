@@ -17,9 +17,9 @@ dependencyResolutionManagement {
      * https://developer.android.com/build/migrate-to-catalogs
      */
     versionCatalogs {
-
         libs {
-            version('kotlin', '1.6.10')
+            version('kotlin', '1.9.0')
+            version('dagger', '2.47')
             version('paging', '1.0.0-alpha14')
             version('navigation', '2.4.2')
             version('hilt', '2.41')
@@ -27,7 +27,16 @@ dependencyResolutionManagement {
             version('datastore', '1.0.0')
             version('retrofit', '2.9.0')
             version('lifecycle', '2.4.0')
+
             library('kotlin-stdlib', 'org.jetbrains.kotlin', 'kotlin-stdlib').versionRef('kotlin')
+            /**
+             * Dagger Version Catalog
+             */
+            library('dagger2', 'com.google.dagger', 'dagger').versionRef('dagger')
+            library('dagger2-compiler', 'com.google.dagger', 'dagger-compiler').versionRef('dagger')
+            library('dagger2-android', 'com.google.dagger', 'dagger-android').versionRef('dagger')
+            library('dagger2-android-support', 'com.google.dagger', 'dagger-android-support').versionRef('dagger')
+            library('dagger2-android-processor', 'com.google.dagger', 'dagger-android-processor').versionRef('dagger')
 //            library('app-compat', 'androidx.appcompat', 'appcompat').versionRef('1.6.0')
 //            library('google-android-material', 'com.google.android.material', 'material').versionRef('1.9.0-alpha01')
 //            library('android-core').to('androidx.core:core-ktx:1.7.0-rc01')
