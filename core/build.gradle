@@ -51,7 +51,7 @@ dependencies {
 //    api 'com.squareup.moshi:moshi-kotlin:1.14.0'
     // RxJava
     api 'io.reactivex.rxjava3:rxandroid:3.0.2'
-    api 'io.reactivex.rxjava3:rxjava:3.1.6'
+    api 'io.reactivex.rxjava3:rxjava:3.1.7'
     // worker
     api 'androidx.work:work-runtime-ktx:2.9.0-alpha02'
     api 'androidx.hilt:hilt-work:1.0.0'
