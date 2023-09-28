@@ -6,12 +6,10 @@ import al.viki.R
 import al.viki.databinding.FragmentRequestDetailsBinding
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.PropertiesUi
-import al.viki.model.RequestUi
 import al.viki.ui.home.HomeViewModel
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController

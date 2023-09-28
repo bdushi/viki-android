@@ -9,12 +9,10 @@ import al.viki.R
 import al.viki.authentication.auth.NotifyAuthenticationChange
 import al.viki.common.hideSoftKeyBoard
 import al.viki.common.propertiesDiffUtil
-import al.viki.common.toUserUi
 import al.viki.core.di.UserProvider
 import al.viki.databinding.*
 import al.viki.foundation.common.collectLatestFlow
 import al.viki.model.FilterUi
-import al.viki.model.UserUi
 import al.viki.ui.filter.FilterDialog
 import android.annotation.SuppressLint
 import android.content.Context
@@ -279,16 +277,18 @@ class HomeFragment : Fragment() {
                     true
                 }
                 R.id.menu_profile -> {
+                    // toUserUi(userProvider.user)
                     findNavController()
                         .navigate(
-                            HomeFragmentDirections.actionHomeFragmentToProfileFragment(toUserUi(userProvider.user))
+                            HomeFragmentDirections.actionHomeFragmentToProfileFragment()
                         )
                     true
                 }
                 R.id.menu_settings -> {
+                    // toUserUi(userProvider.user)
                     findNavController()
                         .navigate(
-                            HomeFragmentDirections.actionHomeFragmentToSettingsFragment(toUserUi(userProvider.user))
+                            HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
                         )
                     true
                 }

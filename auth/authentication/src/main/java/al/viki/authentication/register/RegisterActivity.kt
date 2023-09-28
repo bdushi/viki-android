@@ -1,49 +1,40 @@
 package al.viki.authentication.register
 
-import al.bruno.core.State
 import al.viki.authentication.R
-import al.viki.authentication.databinding.ActivityRegisterBinding
-import al.bruno.core.data.source.model.response.ValidationResponse
-import al.viki.foundation.common.collectLatestFlow
 import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.Settings
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class RegisterActivity : AppCompatActivity() {
-    private val registerViewModel: RegisterViewModel by viewModels()
-    private val requestGallery =
-        registerForActivityResult(
-            object : ActivityResultContract<Intent, Uri?>() {
-                override fun createIntent(context: Context, input: Intent): Intent {
-                    return input
-                }
-
-                override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
-                    return if (resultCode == Activity.RESULT_OK) {
-                        intent?.data
-                    } else {
-                        null
-                    }
-                }
-            }
-        ) { uri: Uri? ->
-            registerViewModel.setPhotoUi(uri)
-        }
+//    private val registerViewModel: RegisterViewModel by viewModels()
+//    private val requestGallery =
+//        registerForActivityResult(
+//            object : ActivityResultContract<Intent, Uri?>() {
+//                override fun createIntent(context: Context, input: Intent): Intent {
+//                    return input
+//                }
+//
+//                override fun parseResult(resultCode: Int, intent: Intent?): Uri? {
+//                    return if (resultCode == Activity.RESULT_OK) {
+//                        intent?.data
+//                    } else {
+//                        null
+//                    }
+//                }
+//            }
+//        ) { uri: Uri? ->
+//            registerViewModel.setPhotoUi(uri)
+//        }
 
     private val requestFilePermissions =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
@@ -56,7 +47,7 @@ class RegisterActivity : AppCompatActivity() {
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         )
                     intent.type = "image/*"
-                    requestGallery.launch(intent)
+//                    requestGallery.launch(intent)
                 }
                 else -> {
                     Snackbar
@@ -79,144 +70,144 @@ class RegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = ActivityRegisterBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        binding.lifecycleOwner = this
-        binding.registerViewModel = registerViewModel
-        binding.topAppBar.setNavigationOnClickListener {
-            finish()
-        }
-        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.new_photo -> {
-                    when (PackageManager.PERMISSION_GRANTED) {
-                        ContextCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.READ_EXTERNAL_STORAGE
-                        ),
-                        ContextCompat.checkSelfPermission(
-                            this,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ) -> {
-                            val intent = Intent()
-                            intent.action = Intent.ACTION_GET_CONTENT
-                            intent.type = "image/*"
-                            requestGallery.launch(intent)
-                        }
-                        else -> {
-                            requestFilePermissions.launch(
-                                arrayOf(
-                                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                                )
-                            )
-                        }
-                    }
-                    true
-                }
-                else ->
-                    false
-            }
-        }
-
-        binding.setOnClick {
-            intent.data?.let {
-                registerViewModel.register(
-                    it.getQueryParameter("authority").toString().toLong(),
-                    it.getQueryParameter("token").toString()
-                )
-            } ?: run {
-                Snackbar.make(
-                    binding.root,
-                    "Invitation has been expired, Please request New One",
-                    Snackbar.LENGTH_SHORT
-                ).show()
-            }
-        }
-
-        intent.data?.let {
-            registerViewModel.email.value = it.getQueryParameter("email").toString()
-            registerViewModel.validateToken(it.getQueryParameter("token").toString())
-        } ?: run {
-            Snackbar.make(
-                binding.root,
-                "Invitation has been expired, Please request New One",
-                Snackbar.LENGTH_SHORT
-            ).show()
-        }
-
-        collectLatestFlow(registerViewModel.validate) {
-            when (it) {
-                is State.Error -> {
-                    Snackbar.make(
-                        binding.root,
-                        al.viki.foundation.R.string.error,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }
-                is State.Success -> {
-                    when (it.t) {
-                        ValidationResponse.EXPIRED,
-                        ValidationResponse.NOT_FOUND ->
-                            MaterialAlertDialogBuilder(this)
-                                .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
-                                .setCancelable(false)
-                                .setTitle("Token has been expired")
-                                .setMessage("Please contact your administrator to send new invitation")
-                                .setPositiveButton("Ok") { d, _ ->
-                                    d.dismiss()
-                                    finish()
-                                }
-                                .show()
-                        else -> {
-
-                        }
-                    }
-                }
-                else -> {
-                }
-            }
-        }
-
-        collectLatestFlow(registerViewModel.register) {
-            when (it) {
-                is State.Success -> {
-                    if (it.t != null) {
-//                        val uploadWorkRequest: WorkRequest =
-//                            OneTimeWorkRequestBuilder<UploadProfilePictureWorker>()
-//                                .setInputData(
-//                                    Data
-//                                        .Builder()
-//                                        .putString("USERNAME", it.t?.username)
-//                                        .putString(
-//                                            "PHOTO_UI",
-//                                            registerViewModel.photo.value.toString()
-//                                        )
-//                                        .build()
+//        val binding = ActivityRegisterBinding.inflate(layoutInflater)
+//        setContentView(binding.root)
+//        binding.lifecycleOwner = this
+//        binding.registerViewModel = registerViewModel
+//        binding.topAppBar.setNavigationOnClickListener {
+//            finish()
+//        }
+//        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+//            when (menuItem.itemId) {
+//                R.id.new_photo -> {
+//                    when (PackageManager.PERMISSION_GRANTED) {
+//                        ContextCompat.checkSelfPermission(
+//                            this,
+//                            Manifest.permission.READ_EXTERNAL_STORAGE
+//                        ),
+//                        ContextCompat.checkSelfPermission(
+//                            this,
+//                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                        ) -> {
+//                            val intent = Intent()
+//                            intent.action = Intent.ACTION_GET_CONTENT
+//                            intent.type = "image/*"
+//                            requestGallery.launch(intent)
+//                        }
+//                        else -> {
+//                            requestFilePermissions.launch(
+//                                arrayOf(
+//                                    Manifest.permission.READ_EXTERNAL_STORAGE,
+//                                    Manifest.permission.WRITE_EXTERNAL_STORAGE
 //                                )
-//                                .build()
-//                        WorkManager
-//                            .getInstance(this)
-//                            .enqueue(uploadWorkRequest)
-                        startActivity(
-                            packageManager.getLaunchIntentForPackage(
-                                packageName
-                            )
-                        )
-                        finish()
-                    }
-                }
-                is State.Error -> {
-                    Snackbar.make(
-                        binding.root,
-                        al.viki.foundation.R.string.error,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-                }
-                else -> {
-                    
-                }
-            }
-        }
+//                            )
+//                        }
+//                    }
+//                    true
+//                }
+//                else ->
+//                    false
+//            }
+//        }
+//
+//        binding.setOnClick {
+//            intent.data?.let {
+//                registerViewModel.register(
+//                    it.getQueryParameter("authority").toString().toLong(),
+//                    it.getQueryParameter("token").toString()
+//                )
+//            } ?: run {
+//                Snackbar.make(
+//                    binding.root,
+//                    "Invitation has been expired, Please request New One",
+//                    Snackbar.LENGTH_SHORT
+//                ).show()
+//            }
+//        }
+//
+//        intent.data?.let {
+//            registerViewModel.email.value = it.getQueryParameter("email").toString()
+//            registerViewModel.validateToken(it.getQueryParameter("token").toString())
+//        } ?: run {
+//            Snackbar.make(
+//                binding.root,
+//                "Invitation has been expired, Please request New One",
+//                Snackbar.LENGTH_SHORT
+//            ).show()
+//        }
+//
+//        collectLatestFlow(registerViewModel.validate) {
+//            when (it) {
+//                is State.Error -> {
+//                    Snackbar.make(
+//                        binding.root,
+//                        al.viki.foundation.R.string.error,
+//                        Snackbar.LENGTH_SHORT
+//                    ).show()
+//                }
+//                is State.Success -> {
+//                    when (it.t) {
+//                        ValidationResponse.EXPIRED,
+//                        ValidationResponse.NOT_FOUND ->
+//                            MaterialAlertDialogBuilder(this)
+//                                .setIcon(al.viki.foundation.R.drawable.ic_outline_warning_amber)
+//                                .setCancelable(false)
+//                                .setTitle("Token has been expired")
+//                                .setMessage("Please contact your administrator to send new invitation")
+//                                .setPositiveButton("Ok") { d, _ ->
+//                                    d.dismiss()
+//                                    finish()
+//                                }
+//                                .show()
+//                        else -> {
+//
+//                        }
+//                    }
+//                }
+//                else -> {
+//                }
+//            }
+//        }
+//
+//        collectLatestFlow(registerViewModel.register) {
+//            when (it) {
+//                is State.Success -> {
+//                    if (it.t != null) {
+////                        val uploadWorkRequest: WorkRequest =
+////                            OneTimeWorkRequestBuilder<UploadProfilePictureWorker>()
+////                                .setInputData(
+////                                    Data
+////                                        .Builder()
+////                                        .putString("USERNAME", it.t?.username)
+////                                        .putString(
+////                                            "PHOTO_UI",
+////                                            registerViewModel.photo.value.toString()
+////                                        )
+////                                        .build()
+////                                )
+////                                .build()
+////                        WorkManager
+////                            .getInstance(this)
+////                            .enqueue(uploadWorkRequest)
+//                        startActivity(
+//                            packageManager.getLaunchIntentForPackage(
+//                                packageName
+//                            )
+//                        )
+//                        finish()
+//                    }
+//                }
+//                is State.Error -> {
+//                    Snackbar.make(
+//                        binding.root,
+//                        al.viki.foundation.R.string.error,
+//                        Snackbar.LENGTH_SHORT
+//                    ).show()
+//                }
+//                else -> {
+//
+//                }
+//            }
+//        }
     }
 }

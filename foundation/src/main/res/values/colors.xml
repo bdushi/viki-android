@@ -1,4 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="vikiColorBackground">#34000000</color>
+
+<!--    <color name="vikiColorPrimary">#474747</color>-->
+<!--    <color name="vikiColorPrimaryDark">#202020</color>-->
+<!--    <color name="vikiColorOnPrimary">#DCDCDC</color>-->
+<!--    <color name="primaryTextColor">#DCDCDC</color>-->
+
+<!--    <color name="vikiColorPrimaryContainer">#8E8E8E</color>-->
+<!--    <color name="vikiColorOnPrimaryContainer">#000B49</color>-->
+
+<!--    <color name="vikiColorSecondary">#4a6267</color>-->
+<!--    <color name="vikiColorOnSecondary">#ffffff</color>-->
+<!--    <color name="vikiColorSecondaryContainer">#cde7ec</color>-->
+<!--    <color name="vikiColorOnSecondaryContainer">#051f23</color>-->
+
+<!--    <color name="vikiColorTertiary">#525e7d</color>-->
+<!--    <color name="vikiColorOnTertiary">#ffffff</color>-->
+<!--    <color name="vikiColorSecondaryTertiary">#dae2ff</color>-->
+<!--    <color name="vikiColorOnSecondaryTertiary">#0e1b37</color>-->
 </resources>

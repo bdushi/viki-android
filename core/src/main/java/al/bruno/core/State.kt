@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.onStart
  * Represents different states for the screens
  */
 sealed class State<out T> {
-    object Loading : State<Nothing>()
+    data object Loading : State<Nothing>()
     data class Success<out T>(val t: T?): State<T>()
     data class Error(val error: String?): State<Nothing>()
 }

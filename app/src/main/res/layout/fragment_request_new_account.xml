@@ -11,7 +11,7 @@
             name="adapter"
             type="al.bruno.adapter.DropDownAdapter" />
 
-        <import type="al.viki.foundation.ui.utils.ValidationKt"/>
+        <import type="al.bruno.common.ValidationKt"/>
         <import type="android.view.View"/>
         <import type="al.bruno.core.State"/>
     </data>

@@ -1,17 +1,16 @@
 package al.viki.foundation.common
 
 import android.content.Context
+import android.view.View
+import android.widget.EditText
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.bumptech.glide.load.model.GlideUrl
-import com.bumptech.glide.load.model.LazyHeaders
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.InputStream
@@ -63,4 +62,20 @@ fun InputStream.toFile(context: Context): File {
         }
     }
     return outputFile
+}
+
+fun View.visible() {
+    this.visibility = View.VISIBLE
+}
+
+fun View.gone() {
+    this.visibility = View.GONE
+}
+
+fun EditText.isNotEmpty() : Boolean {
+    return this.text.isNotEmpty()
+}
+
+fun EditText.isEmpty() : Boolean {
+    return this.text.isEmpty()
 }
