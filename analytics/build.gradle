@@ -9,7 +9,7 @@ android {
     namespace 'al.bruno.analytics'
     compileSdk 34
     defaultConfig {
-        minSdk 24
+        minSdk 21
         targetSdk 34
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -32,7 +32,7 @@ android {
 
 dependencies {
     // Import the BoM for the Firebase platform
-    api platform('com.google.firebase:firebase-bom:32.2.3')
+    api platform('com.google.firebase:firebase-bom:32.3.1')
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.dagger:hilt-android:2.48'
     implementation 'com.facebook.android:facebook-android-sdk:16.2.0'

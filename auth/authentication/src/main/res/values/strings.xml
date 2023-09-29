@@ -29,4 +29,5 @@
     <string name="password_requirement">Password must contain: one digit 0–9,one lowercase character, one uppercase character, length at least 6–20 characters</string>
     <string name="password_requirement_error">Not Valid Password</string>
     <string name="phone_nr_requirement_error">Not Valid Phone Nr</string>
+    <string name="password_expire_token_error">"Token has been expired and is not valid anymore, Please Generate new One"</string>
 </resources>

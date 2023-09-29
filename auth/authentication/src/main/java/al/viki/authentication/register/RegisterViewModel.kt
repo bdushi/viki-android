@@ -8,6 +8,7 @@ import al.viki.core.model.request.UserRegister
 import al.viki.core.model.response.AuthResponse
 import android.net.Uri
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,65 +21,44 @@ class RegisterViewModel @Inject constructor(private val registrationRepository: 
     ViewModel() {
 
     val photo = MutableStateFlow<Uri?>(null)
-    val username = MutableStateFlow("")
-    val email = MutableStateFlow<String?>(null)
-    val password = MutableStateFlow<String?>(null)
-    val reTypePassword = MutableStateFlow<String?>(null)
-    val firstName = MutableStateFlow("")
-    val lastName = MutableStateFlow("")
-    val address = MutableStateFlow("")
-    val phone = MutableStateFlow<String?>(null)
 
-    // Backing property to avoid state updates from other classes
     private val _register = MutableStateFlow<State<AuthResponse>>(State.Success(null))
+    val register: StateFlow<State<AuthResponse>>
+        get() = _register
 
-    // The UI collects from this StateFlow to get its state updates
-    val register: StateFlow<State<AuthResponse>> = _register
-
-    // Backing property to avoid state updates from other classes
     private val _validate = MutableStateFlow<State<ValidationResponse>>(State.Success(null))
+    val validate: StateFlow<State<ValidationResponse>>
+        get() = _validate
 
-    // The UI collects from this StateFlow to get its state updates
-    val validate: StateFlow<State<ValidationResponse>> = _validate
+    fun register(userRegister: UserRegister, token: String) {
+        _register.value = State.Loading
+        viewModelScope.launch {
+            when (val response = registrationRepository.register(
+                user = userRegister, token = token
+            )) {
+                is Result.Error -> {
+                    _register.value = State.Error(response.error)
+                }
+                is Result.Success -> {
+                    _register.value = State.Success(response.data)
+                }
+            }
+        }
+    }
 
-//    fun register(authority: Long, token: String) {
-//        _register.value = State.Loading
-//        viewModelScope.launch {
-//            when (val response = registrationRepository.register(
-//                user = UserRegister(
-//                    username = username.value,
-//                    email = email.value.toString(),
-//                    firstName = firstName.value,
-//                    lastName = lastName.value,
-//                    password = password.value.toString(),
-//                    phone = phone.value.toString(),
-//                    address = address.value,
-//                    authorities = listOf(authority)
-//                ), token = token
-//            )) {
-//                is Result.Error -> {
-//                    _register.value = State.Error(response.error)
-//                }
-//                is Result.Success -> {
-//                    _register.value = State.Success(response.data)
-//                }
-//            }
-//        }
-//    }
-//
-//    fun validateToken(token: String) {
-//        viewModelScope.launch(Dispatchers.IO) {
-//            _validate.value = State.Loading
-//            when (val response = registrationRepository.validateToken(token = token)) {
-//                is Result.Error -> {
-//                    _validate.value = State.Error(response.error)
-//                }
-//                is Result.Success -> {
-//                    _validate.value = State.Success(response.data)
-//                }
-//            }
-//        }
-//    }
+    fun validateToken(token: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _validate.value = State.Loading
+            when (val response = registrationRepository.validateToken(token = token)) {
+                is Result.Error -> {
+                    _validate.value = State.Error(response.error)
+                }
+                is Result.Success -> {
+                    _validate.value = State.Success(response.data)
+                }
+            }
+        }
+    }
 
     /**
      *

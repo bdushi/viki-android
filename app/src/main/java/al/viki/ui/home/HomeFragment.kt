@@ -9,6 +9,7 @@ import al.viki.R
 import al.viki.authentication.auth.NotifyAuthenticationChange
 import al.viki.common.hideSoftKeyBoard
 import al.viki.common.propertiesDiffUtil
+import al.viki.common.toUserUi
 import al.viki.core.di.UserProvider
 import al.viki.databinding.*
 import al.viki.foundation.common.collectLatestFlow
@@ -277,18 +278,16 @@ class HomeFragment : Fragment() {
                     true
                 }
                 R.id.menu_profile -> {
-                    // toUserUi(userProvider.user)
                     findNavController()
                         .navigate(
-                            HomeFragmentDirections.actionHomeFragmentToProfileFragment()
+                            HomeFragmentDirections.actionHomeFragmentToProfileFragment(user = toUserUi(userProvider.user))
                         )
                     true
                 }
                 R.id.menu_settings -> {
-                    // toUserUi(userProvider.user)
                     findNavController()
                         .navigate(
-                            HomeFragmentDirections.actionHomeFragmentToSettingsFragment()
+                            HomeFragmentDirections.actionHomeFragmentToSettingsFragment(user = toUserUi(userProvider.user))
                         )
                     true
                 }

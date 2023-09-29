@@ -27,7 +27,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class AuthenticationActivity : AppCompatActivity() {
     private val authenticationViewModel: AuthenticationViewModel by viewModels()
-    private lateinit var binding: ActivityAuthenticationBinding
     override fun onCreate(savedInstanceState: Bundle?) {
 //        DaggerAuthComponent.builder()
 //            .context(this)
@@ -40,7 +39,7 @@ class AuthenticationActivity : AppCompatActivity() {
 //            .build()
 //            .inject(this)
         super.onCreate(savedInstanceState)
-        binding = ActivityAuthenticationBinding.inflate(layoutInflater)
+        val binding = ActivityAuthenticationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         onBackPressedDispatcher.addCallback {
             // Disable BackPress for AuthenticationActivity

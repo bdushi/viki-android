@@ -1,7 +1,7 @@
 package al.bruno.core.data.source.local
 
+import al.bruno.common.CONSENT
 import al.bruno.core.data.source.SettingsDataSource
-import al.viki.common.CONSENT
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey

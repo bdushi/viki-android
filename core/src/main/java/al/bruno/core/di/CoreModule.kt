@@ -1,6 +1,6 @@
 package al.bruno.core.di
 
-import al.viki.common.VIKI_PREFERENCES
+import al.bruno.common.VIKI_PREFERENCES
 import android.content.Context
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.preferencesDataStoreFile

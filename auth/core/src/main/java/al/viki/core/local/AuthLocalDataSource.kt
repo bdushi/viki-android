@@ -1,7 +1,7 @@
 package al.viki.core.local
 
-import al.viki.common.ACCESS_TOKEN
-import al.viki.common.REFRESH_TOKEN
+import al.bruno.common.ACCESS_TOKEN
+import al.bruno.common.REFRESH_TOKEN
 import al.viki.core.AuthDataSource
 import al.viki.core.model.request.AuthRequest
 import al.viki.core.model.response.AuthResponse

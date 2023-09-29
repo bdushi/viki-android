@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:bind="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -21,11 +19,14 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <ProgressBar
+        android:id="@+id/reg_progress"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/reg_form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -58,6 +59,7 @@
                 android:layout_marginTop="@dimen/large_dimen">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_email_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:cursorVisible="false"
@@ -73,6 +75,7 @@
                 android:layout_marginTop="@dimen/small_dimen">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_username_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/username"
@@ -86,6 +89,7 @@
                 android:layout_marginTop="@dimen/small_dimen">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_first_name_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/first_name"
@@ -99,6 +103,7 @@
                 android:layout_marginTop="@dimen/small_dimen">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_last_name_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/last_name"
@@ -114,6 +119,7 @@
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_password_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/password"
@@ -128,6 +134,7 @@
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_re_type_password_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/re_type_password"
@@ -141,6 +148,7 @@
                 android:layout_marginTop="@dimen/small_dimen">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_phone_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/phone"
@@ -154,6 +162,7 @@
                 android:layout_marginTop="@dimen/small_dimen">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/reg_address_input"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/address"
@@ -162,6 +171,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/reg_submit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
