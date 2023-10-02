@@ -53,7 +53,6 @@ dependencies {
     // worker
     api 'androidx.work:work-runtime-ktx:2.9.0-beta01'
     api 'androidx.hilt:hilt-work:1.1.0-alpha01'
-//    ksp "androidx.hilt:hilt-compiler:1.1.0-alpha01"
     api 'id.zelory:compressor:3.0.1'
 //    implementation 'com.google.firebase:firebase-perf-ktx'
 

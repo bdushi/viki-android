@@ -1,6 +1,7 @@
 package al.viki.core
 
 import al.bruno.core.Result
+import al.bruno.core.interceptor.AuthorizationInterceptor
 import al.viki.core.local.AuthLocalDataSource
 import al.viki.core.remote.TokenRemoteDataSource
 import al.viki.core.model.response.AuthResponse
@@ -8,7 +9,7 @@ import javax.inject.Inject
 
 class TokeRepository @Inject constructor(
     private val tokenRemoteDataSource: TokenRemoteDataSource,
-    private val authLocalDataSource: AuthLocalDataSource
+    private val authorizationInterceptor: AuthorizationInterceptor
 ) {
 
     suspend fun resetPassword(email: String): Result<Boolean>{
@@ -29,7 +30,7 @@ class TokeRepository @Inject constructor(
             val response = tokenRemoteDataSource.validateToken(token)
             val body = response.body()
             if (response.isSuccessful && body != null) {
-                authLocalDataSource.token(body.accessToken, body.refreshToken)
+                authorizationInterceptor.token = body.accessToken
                 Result.Success(body)
             } else {
                 Result.Error(response.message())

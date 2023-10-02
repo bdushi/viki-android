@@ -1,6 +1,5 @@
 package al.viki.authentication.forgot.password
 
-import al.bruno.common.ACCESS_TOKEN
 import al.bruno.common.TOKEN
 import al.bruno.core.State
 import al.viki.authentication.auth.AuthenticationActivity
@@ -15,11 +14,14 @@ import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import al.viki.authentication.R
 import al.viki.foundation.common.collectLatestFlow
+import al.viki.foundation.common.gone
+import al.viki.foundation.common.isNotEmpty
+import al.viki.foundation.common.visible
 import android.content.ComponentName
+import androidx.core.widget.addTextChangedListener
 
 @AndroidEntryPoint
 class ChangePasswordActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityChangePasswordBinding
     private val passwordViewModel: PasswordViewModel by viewModels ()
     private val handler = Handler(Looper.getMainLooper())
     private val runnable = {
@@ -34,6 +36,7 @@ class ChangePasswordActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val binding = ActivityChangePasswordBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         binding.changePasswordTopAppBar.setNavigationOnClickListener {
@@ -66,6 +69,14 @@ class ChangePasswordActivity : AppCompatActivity() {
                 }.show()
         }
 
+        binding.newPasswordInput.addTextChangedListener {
+            binding.btSubmitNewPassword.isEnabled = binding.newPasswordInput.isNotEmpty()
+        }
+
+        binding.btSubmitNewPassword.setOnClickListener {
+            passwordViewModel.newPassword(binding.newPasswordInput.text.toString())
+        }
+
         collectLatestFlow(passwordViewModel.change) {
             when (it) {
                 is State.Error -> it.error?.let { error ->
@@ -90,7 +101,8 @@ class ChangePasswordActivity : AppCompatActivity() {
 
         collectLatestFlow(passwordViewModel.validate) {
             when (it) {
-                is State.Error ->
+                is State.Error -> {
+                    binding.newPasswordProgressIndicator.gone()
                     it.error?.let { error ->
                         Snackbar.make(
                             binding.root,
@@ -98,11 +110,12 @@ class ChangePasswordActivity : AppCompatActivity() {
                             Snackbar.LENGTH_SHORT
                         ).show()
                     }
+                }
                 is State.Loading -> {
-
+                    binding.newPasswordProgressIndicator.visible()
                 }
                 is State.Success -> {
-
+                    binding.newPasswordProgressIndicator.gone()
                 }
             }
         }
