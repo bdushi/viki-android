@@ -14,7 +14,7 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         libs {
-            version('kotlin', '1.9.10')
+            version('kotlin', '1.9.22')
             version('paging', '3.3.0-alpha02')
             version('dagger', '2.48')
             version('datastore', '1.1.0-alpha01')

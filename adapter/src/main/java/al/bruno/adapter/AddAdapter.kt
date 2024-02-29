@@ -4,6 +4,7 @@ import al.bruno.adapter.holder.ItemViewHolder
 import al.bruno.adapter.holder.HeaderViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.DiffUtil
 
@@ -15,8 +16,7 @@ class AddAdapter<T, VM: ViewDataBinding, VH: ViewDataBinding>(
     diffUtil: DiffUtil.ItemCallback<T>
 ) : CustomEditAdapter<T, ItemViewHolder<T, VM>, HeaderViewHolder<VH>>(diffUtil) {
     override fun onItemViewHolder(itemViewGroup: ViewGroup, viewType: Int): ItemViewHolder<T, VM> {
-        return ItemViewHolder(
-            LayoutInflater.from(itemViewGroup.context).inflate(item, itemViewGroup, false), bindingItem)
+        return ItemViewHolder(DataBindingUtil.bind(LayoutInflater.from(itemViewGroup.context).inflate(item, itemViewGroup, false))!!, bindingItem)
     }
 
     override fun onBindItemViewHolder(itemViewHolder: ItemViewHolder<T, VM>, t: T) {

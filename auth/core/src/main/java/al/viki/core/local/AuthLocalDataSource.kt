@@ -15,8 +15,7 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import javax.inject.Inject
 
-class AuthLocalDataSource @Inject constructor(private val dataStore: DataStore<Preferences>) :
-    AuthDataSource {
+class AuthLocalDataSource @Inject constructor(private val dataStore: DataStore<Preferences>) : AuthDataSource {
     override suspend fun auth(authRequest: AuthRequest): Response<AuthResponse> {
         TODO("Not yet implemented")
     }

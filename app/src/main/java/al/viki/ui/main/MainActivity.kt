@@ -42,6 +42,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
     private val mainViewModel: MainViewModel by viewModels()
+
     @Inject
     lateinit var authorizationInterceptor: AuthorizationInterceptor
     private val notification =
@@ -76,6 +77,7 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                     }.show()
             }
         }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         FirebaseInstallations.getInstance().id.addOnSuccessListener {
@@ -91,38 +93,82 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.CREATED) {
-                mainViewModel.token().collect {
-                    if (it) {
-                        setContentView(R.layout.activity_main)
-                        val navHostFragment =
-                            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-                        val navController = navHostFragment.navController
-                        intent.extras?.let { bundle ->
-                            if (bundle.getString("entry") == Entry.PROPERTY.name) {
-                                navController.navigate(
-                                    R.id.propertyDetailsFragment,
-                                    bundleOf("property" to bundleToPropertyUi(bundle))
-                                )
-                            } else if (bundle.getString("entry") == Entry.REQUEST.name) {
-                                navController.navigate(
-                                    R.id.requestDetailsFragment,
-                                    bundleOf("request" to bundleToRequestUi(bundle))
-                                )
+                mainViewModel
+                    .token()
+                    .collect {
+                        if (it) {
+                            setContentView(R.layout.activity_main)
+                            val navHostFragment =
+                                supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                            val navController = navHostFragment.navController
+                            intent.extras?.let { bundle ->
+                                if (bundle.getString("entry") == Entry.PROPERTY.name) {
+                                    navController.navigate(
+                                        R.id.propertyDetailsFragment,
+                                        bundleOf("property" to bundleToPropertyUi(bundle))
+                                    )
+                                } else if (bundle.getString("entry") == Entry.REQUEST.name) {
+                                    navController.navigate(
+                                        R.id.requestDetailsFragment,
+                                        bundleOf("request" to bundleToRequestUi(bundle))
+                                    )
+                                }
                             }
-                        }
 
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            if (
-                                ContextCompat.checkSelfPermission(
-                                    this@MainActivity,
-                                    POST_NOTIFICATIONS
-                                ) == PackageManager.PERMISSION_GRANTED
-                            ) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                if (
+                                    ContextCompat.checkSelfPermission(
+                                        this@MainActivity,
+                                        POST_NOTIFICATIONS
+                                    ) == PackageManager.PERMISSION_GRANTED
+                                ) {
+                                    Firebase
+                                        .messaging
+                                        .subscribeToTopic(TOPIC)
+                                        .addOnCompleteListener { task ->
+                                            if (!task.isSuccessful)
+                                                Log.d(MainActivity::class.java.name, "Success")
+                                        }.addOnFailureListener { ex ->
+                                            Log.d(
+                                                MainActivity::class.java.name,
+                                                "Failure: ${ex.message.toString()}"
+                                            )
+                                        }
+
+                                } else if (shouldShowRequestPermissionRationale(POST_NOTIFICATIONS)) {
+                                    // https://developer.android.com/training/permissions/requesting
+                                    MaterialAlertDialogBuilder(this@MainActivity)
+                                        .setTitle(R.string.allow_access)
+                                        .setMessage(R.string.allow_access_detail_location)
+                                        .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
+                                            dialogInterface.dismiss()
+                                            Firebase
+                                                .messaging
+                                                .subscribeToTopic(TOPIC)
+                                                .addOnCompleteListener { task ->
+                                                    if (!task.isSuccessful)
+                                                        Log.d(
+                                                            MainActivity::class.java.name,
+                                                            "Success"
+                                                        )
+                                                }.addOnFailureListener { ex ->
+                                                    Log.d(
+                                                        MainActivity::class.java.name,
+                                                        "Failure: ${ex.message.toString()}"
+                                                    )
+                                                }
+                                        }
+                                        .setNegativeButton(R.string.cancel_title) { dialogInterface, _ -> dialogInterface.dismiss() }
+                                        .show()
+                                } else {
+                                    notification.launch(POST_NOTIFICATIONS)
+                                }
+                            } else {
                                 Firebase
                                     .messaging
                                     .subscribeToTopic(TOPIC)
                                     .addOnCompleteListener { task ->
-                                        if (!task.isSuccessful)
+                                        if (task.isSuccessful)
                                             Log.d(MainActivity::class.java.name, "Success")
                                     }.addOnFailureListener { ex ->
                                         Log.d(
@@ -130,56 +176,14 @@ class MainActivity : AppCompatActivity(), NotifyAuthenticationChange {
                                             "Failure: ${ex.message.toString()}"
                                         )
                                     }
-
-                            } else if (shouldShowRequestPermissionRationale(POST_NOTIFICATIONS)) {
-                                // https://developer.android.com/training/permissions/requesting
-                                MaterialAlertDialogBuilder(this@MainActivity)
-                                    .setTitle(R.string.allow_access)
-                                    .setMessage(R.string.allow_access_detail_location)
-                                    .setPositiveButton(R.string.ok_title) { dialogInterface, _ ->
-                                        dialogInterface.dismiss()
-                                        Firebase
-                                            .messaging
-                                            .subscribeToTopic(TOPIC)
-                                            .addOnCompleteListener { task ->
-                                                if (!task.isSuccessful)
-                                                    Log.d(
-                                                        MainActivity::class.java.name,
-                                                        "Success"
-                                                    )
-                                            }.addOnFailureListener { ex ->
-                                                Log.d(
-                                                    MainActivity::class.java.name,
-                                                    "Failure: ${ex.message.toString()}"
-                                                )
-                                            }
-                                    }
-                                    .setNegativeButton(R.string.cancel_title) { dialogInterface, _ -> dialogInterface.dismiss() }
-                                    .show()
-                            } else {
-                                notification.launch(POST_NOTIFICATIONS)
                             }
                         } else {
-                            Firebase
-                                .messaging
-                                .subscribeToTopic(TOPIC)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful)
-                                        Log.d(MainActivity::class.java.name, "Success")
-                                }.addOnFailureListener { ex ->
-                                    Log.d(
-                                        MainActivity::class.java.name,
-                                        "Failure: ${ex.message.toString()}"
-                                    )
-                                }
+                            startActivity(
+                                Intent(this@MainActivity, AuthenticationActivity::class.java)
+                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            )
                         }
-                    } else {
-                        startActivity(
-                            Intent(this@MainActivity, AuthenticationActivity::class.java)
-                                .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        )
                     }
-                }
             }
         }
     }
