@@ -36,34 +36,30 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     api project(path: ':common')
     api project(path: ':domain')
     // DateStore
-    api 'androidx.datastore:datastore-preferences:1.0.0'
-    api 'androidx.datastore:datastore-core:1.0.0'
-    api 'com.google.protobuf:protobuf-javalite:4.0.0-rc-2'
+    api libs.datastore.preferences
+    api libs.datastore.core
+    api libs.protobuf.javalite
     // Retrofit
-    api 'com.squareup.retrofit2:retrofit:2.9.0'
-    api 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11'
-    api 'com.squareup.retrofit2:converter-moshi:2.9.0'
-    // RxJava
-    api 'io.reactivex.rxjava3:rxandroid:3.0.2'
-    api 'io.reactivex.rxjava3:rxjava:3.1.7'
+    api libs.retrofit
+    api libs.okhttp3.logging.interceptor
+    api libs.converter.moshi
     // worker
-    api 'androidx.work:work-runtime-ktx:2.9.0'
-    api 'androidx.hilt:hilt-work:1.1.0'
-    api 'id.zelory:compressor:3.0.1'
+    api libs.androidx.work.runtime.ktx
+    api libs.androidx.hilt.work
+    api libs.compressor
 //    implementation 'com.google.firebase:firebase-perf-ktx'
 
     // Hilt
-    implementation 'com.google.dagger:hilt-android:2.48'
-    ksp 'com.google.dagger:hilt-compiler:2.48'
-    ksp 'com.google.dagger:hilt-android-compiler:2.48'
+    implementation libs.hilt.android
+    ksp libs.hilt.compiler
+    ksp libs.dagger.hilt.android.compiler
 
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.2.0-alpha03'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.0-alpha03'
+    testImplementation libs.junit
+    androidTestImplementation libs.androidx.test.ext.junit
+    androidTestImplementation libs.espresso.core
 }
 
 protobuf {
