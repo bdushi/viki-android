@@ -44,7 +44,7 @@ dependencies {
     api libs.protobuf
     // Retrofit
     api libs.retrofit
-    api libs.okhttp3.logging.interceptor
+    api libs.logging.interceptor
     api libs.converter.moshi
     // worker
     api libs.androidx.work.runtime.ktx
