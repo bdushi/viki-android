@@ -4,15 +4,15 @@ plugins {
     alias libs.plugins.hilt.android
     alias libs.plugins.devtools.ksp
     alias libs.plugins.google.maps.secrets
-    id "com.google.protobuf" version '0.9.0'
+    id "com.google.protobuf" version '0.9.4'
 }
 
 android {
     namespace 'al.bruno.core'
-    compileSdk 34
+    compileSdk 35
     defaultConfig {
         minSdk 21
-        targetSdk 34
+        targetSdk 35
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -27,11 +27,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = '21'
     }
 }
 

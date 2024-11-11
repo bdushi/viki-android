@@ -252,12 +252,12 @@ class PropertyViewModel @Inject constructor(
                         State.Success(it.data)
                     }
                 }
-            }.stateIn(
-                viewModelScope + Dispatchers.IO,
-                SharingStarted.WhileSubscribed(2_000),
-                State.Loading
-            )
-        }
+            }
+        }.stateIn(
+            viewModelScope + Dispatchers.IO,
+            SharingStarted.WhileSubscribed(2_000),
+            State.Loading
+        )
 
     private fun save(newPropertyUi: NewPropertyUi) = PropertyRequest(
         newPropertyUi.title,
