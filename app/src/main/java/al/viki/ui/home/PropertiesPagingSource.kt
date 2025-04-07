@@ -7,7 +7,7 @@ import al.bruno.core.Result
 import al.bruno.core.data.source.PropertiesRepository
 import al.viki.common.NETWORK_PAGE_SIZE
 
-class PropertiesPagingSource constructor(
+class PropertiesPagingSource(
     private val propertiesRepository: PropertiesRepository,
     private val query: Map<String, String>
 ) : PagingSource<Int, PropertiesResponse>() {

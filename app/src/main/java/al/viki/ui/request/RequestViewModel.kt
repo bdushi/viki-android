@@ -2,17 +2,35 @@ package al.viki.ui.request
 
 import al.bruno.core.Result
 import al.bruno.core.State
-import al.bruno.core.data.source.*
-import al.bruno.core.data.source.model.*
+import al.bruno.core.data.source.CityRepository
+import al.bruno.core.data.source.CurrencyRepository
+import al.bruno.core.data.source.PropertyTypeRepository
+import al.bruno.core.data.source.RequestRepository
+import al.bruno.core.data.source.UnitRepository
+import al.bruno.core.data.source.model.Address
+import al.bruno.core.data.source.model.Attribute
+import al.bruno.core.data.source.model.City
+import al.bruno.core.data.source.model.Country
+import al.bruno.core.data.source.model.Currency
+import al.bruno.core.data.source.model.Location
+import al.bruno.core.data.source.model.PropertyType
 import al.bruno.core.data.source.model.Unit
 import al.bruno.core.data.source.model.request.RequestRequest
-import al.viki.model.*
+import al.viki.model.CityUi
+import al.viki.model.CountryUi
+import al.viki.model.CurrencyUi
+import al.viki.model.NewRequestUi
+import al.viki.model.PropertyTypeUi
+import al.viki.model.UnitUi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -55,80 +73,82 @@ class RequestViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            coroutineScope {
-                val (cities, currencies, propertyTypes, units) = awaitAll(
-                    async { cityRepository.cities() },
-                    async { currencyRepository.currencies() },
-                    async { propertyTypeRepository.propertyTypes() },
-                    async { unitRepository.units() }
-                )
+            val (cities, currencies, propertyTypes, units) = awaitAll(
+                async { cityRepository.cities() },
+                async { currencyRepository.currencies() },
+                async { propertyTypeRepository.propertyTypes() },
+                async { unitRepository.units() }
+            )
 
-                when (cities) {
-                    is Result.Error -> {
-                        _cities.value = State.Error(cities.error)
-                    }
-                    is Result.Success -> {
-                        _cities.value = State.Success((cities.data as List<City>).map {
-                            CityUi(
-                                it.id ?: 0,
-                                it.city ?: "",
-                                it.zipCode ?: "",
-                                CountryUi(
-                                    it.country.id ?: 0,
-                                    it.country.country ?: "",
-                                    it.country.countryCode ?: ""
-                                )
+            when (cities) {
+                is Result.Error -> {
+                    _cities.value = State.Error(cities.error)
+                }
+
+                is Result.Success -> {
+                    _cities.value = State.Success((cities.data as List<City>).map {
+                        CityUi(
+                            it.id ?: 0,
+                            it.city ?: "",
+                            it.zipCode ?: "",
+                            CountryUi(
+                                it.country.id ?: 0,
+                                it.country.country ?: "",
+                                it.country.countryCode ?: ""
                             )
-                        })
-                    }
-                }
-                when (currencies) {
-                    is Result.Error -> {
-                        _currencies.value = State.Error(currencies.error)
-                    }
-                    is Result.Success -> {
-                        _currencies.value = State.Success(
-                            (currencies.data as List<Currency>).map {
-                                CurrencyUi(
-                                    it.id ?: 0,
-                                    it.currency ?: "",
-                                    it.symbol ?: "",
-                                    it.code ?: "",
-                                    it.decimalMark ?: ""
-                                )
-                            }
                         )
-                    }
+                    })
                 }
-                when (propertyTypes) {
-                    is Result.Error -> {
-                        _propertyTypes.value = State.Error(propertyTypes.error)
-                    }
-                    is Result.Success -> {
-                        _propertyTypes.value = State.Success(
-                            (propertyTypes.data as List<PropertyType>).map {
-                                PropertyTypeUi(
-                                    it.id ?: 0,
-                                    it.type ?: ""
-                                )
-                            }
-                        )
-                    }
+            }
+            when (currencies) {
+                is Result.Error -> {
+                    _currencies.value = State.Error(currencies.error)
                 }
-                when (units) {
-                    is Result.Error -> {
-                        _units.value = State.Error(units.error)
-                    }
-                    is Result.Success -> {
-                        _units.value = State.Success(
-                            (units.data as List<Unit>).map {
-                                UnitUi(
-                                    it.id ?: 0,
-                                    it.unit ?: ""
-                                )
-                            }
-                        )
-                    }
+
+                is Result.Success -> {
+                    _currencies.value = State.Success(
+                        (currencies.data as List<Currency>).map {
+                            CurrencyUi(
+                                it.id ?: 0,
+                                it.currency ?: "",
+                                it.symbol ?: "",
+                                it.code ?: "",
+                                it.decimalMark ?: ""
+                            )
+                        }
+                    )
+                }
+            }
+            when (propertyTypes) {
+                is Result.Error -> {
+                    _propertyTypes.value = State.Error(propertyTypes.error)
+                }
+
+                is Result.Success -> {
+                    _propertyTypes.value = State.Success(
+                        (propertyTypes.data as List<PropertyType>).map {
+                            PropertyTypeUi(
+                                it.id ?: 0,
+                                it.type ?: ""
+                            )
+                        }
+                    )
+                }
+            }
+            when (units) {
+                is Result.Error -> {
+                    _units.value = State.Error(units.error)
+                }
+
+                is Result.Success -> {
+                    _units.value = State.Success(
+                        (units.data as List<Unit>).map {
+                            UnitUi(
+                                it.id ?: 0,
+                                it.unit ?: ""
+                            )
+                        }
+                    )
                 }
             }
         }

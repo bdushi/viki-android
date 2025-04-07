@@ -1,6 +1,7 @@
 package al.viki
 
 import android.app.Application
+import android.util.Log
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
@@ -21,7 +22,7 @@ class VikiApplication : Application(), Configuration.Provider {
     override val workManagerConfiguration: Configuration
         get() = Configuration
             .Builder()
-            .setMinimumLoggingLevel(android.util.Log.DEBUG)
+            .setMinimumLoggingLevel(Log.DEBUG)
             .setWorkerFactory(vikiWorkerFactory)
             .build()
 
